@@ -16,21 +16,24 @@
                 <div class="container">
                     <div class="hero-text-box text-center position-relative">
                         <h1 class="text-primary hero-title display-6 fw-extrabold">
-                            One dashboard to manage all your businesses
+                            Simplify Life in Your Society
                         </h1>
                         <h2 class="hero-sub-title h6 mb-6">
-                            Production-ready & easy to use Admin Template<br class="d-none d-lg-block" />
-                            for Reliability and Customizability.
+                            HiveHomes helps society members buy/sell items, post community updates,<br
+                                class="d-none d-lg-block" />
+                            and find trusted local professionals.
                         </h2>
-                        <div class="landing-hero-btn d-inline-block position-relative">
-                            <span class="hero-btn-item position-absolute d-none d-md-flex fw-medium">Join community
+                        {{-- <div class="landing-hero-btn d-inline-block position-relative">
+                            <span class="hero-btn-item position-absolute d-none d-md-flex fw-medium">
+                                Join your society today
                                 <img src="{{ asset('assets/img/front-pages/icons/Join-community-arrow.png') }}"
-                                    alt="Join community arrow" class="scaleX-n1-rtl" /></span>
-                            <a href="#landingPricing" class="btn btn-primary btn-lg">Get early access</a>
-                        </div>
+                                    alt="Join community arrow" class="scaleX-n1-rtl" />
+                            </span>
+                            <a href="#registerSociety" class="btn btn-primary btn-lg">Get Started</a>
+                        </div> --}}
                     </div>
                     <div id="heroDashboardAnimation" class="hero-animation-img">
-                        <a href="../vertical-menu-template/app-ecommerce-dashboard.html" target="_blank">
+                        <a href="#" target="_blank">
                             <div id="heroAnimationImg" class="position-relative hero-dashboard-img">
                                 <img src="{{ asset('assets/img/front-pages/landing-page/hero-dashboard-light.png') }}"
                                     alt="hero dashboard" class="animation-img"
@@ -49,6 +52,7 @@
             <div class="landing-hero-blank"></div>
         </section>
         <!-- Hero: End -->
+
 
         <!-- Useful features: Start -->
         <section id="landingFeatures" class="section-py landing-features">
