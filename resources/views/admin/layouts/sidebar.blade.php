@@ -91,7 +91,24 @@
                 </li>
             </ul>
         </li>
-
+        <li class="menu-item active open">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon icon-base ti tabler-settings"></i>
+                <div data-i18n="Roles &amp; Permissions">Roles &amp; Permissions</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item active">
+                    <a href="{{ route('roles.index') }}" class="menu-link">
+                        <div data-i18n="Roles">Roles</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="app-access-permission.html" class="menu-link">
+                        <div data-i18n="Permission">Permission</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
 
 
     </ul>

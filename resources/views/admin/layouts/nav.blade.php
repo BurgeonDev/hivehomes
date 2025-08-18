@@ -20,161 +20,7 @@
            <!-- /Search -->
 
            <ul class="navbar-nav flex-row align-items-center ms-md-auto">
-               <li class="nav-item dropdown-language dropdown">
-                   <a class="nav-link dropdown-toggle hide-arrow btn btn-icon btn-text-secondary rounded-pill"
-                       href="javascript:void(0);" data-bs-toggle="dropdown">
-                       <i class="icon-base ti tabler-language icon-22px text-heading"></i>
-                   </a>
-                   <ul class="dropdown-menu dropdown-menu-end">
-                       <li>
-                           <a class="dropdown-item" href="javascript:void(0);" data-language="en"
-                               data-text-direction="ltr">
-                               <span>English</span>
-                           </a>
-                       </li>
-                       <li>
-                           <a class="dropdown-item" href="javascript:void(0);" data-language="fr"
-                               data-text-direction="ltr">
-                               <span>French</span>
-                           </a>
-                       </li>
-                       <li>
-                           <a class="dropdown-item" href="javascript:void(0);" data-language="ar"
-                               data-text-direction="rtl">
-                               <span>Arabic</span>
-                           </a>
-                       </li>
-                       <li>
-                           <a class="dropdown-item" href="javascript:void(0);" data-language="de"
-                               data-text-direction="ltr">
-                               <span>German</span>
-                           </a>
-                       </li>
-                   </ul>
-               </li>
-               <!--/ Language -->
 
-               <!-- Style Switcher -->
-               <li class="nav-item dropdown">
-                   <a class="nav-link dropdown-toggle hide-arrow btn btn-icon btn-text-secondary rounded-pill"
-                       id="nav-theme" href="javascript:void(0);" data-bs-toggle="dropdown">
-                       <i class="icon-base ti tabler-sun icon-22px theme-icon-active text-heading"></i>
-                       <span class="d-none ms-2" id="nav-theme-text">Toggle theme</span>
-                   </a>
-                   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-theme-text">
-                       <li>
-                           <button type="button" class="dropdown-item align-items-center active"
-                               data-bs-theme-value="light" aria-pressed="false">
-                               <span><i class="icon-base ti tabler-sun icon-22px me-3" data-icon="sun"></i>Light</span>
-                           </button>
-                       </li>
-                       <li>
-                           <button type="button" class="dropdown-item align-items-center" data-bs-theme-value="dark"
-                               aria-pressed="true">
-                               <span><i class="icon-base ti tabler-moon-stars icon-22px me-3"
-                                       data-icon="moon-stars"></i>Dark</span>
-                           </button>
-                       </li>
-                       <li>
-                           <button type="button" class="dropdown-item align-items-center" data-bs-theme-value="system"
-                               aria-pressed="false">
-                               <span><i class="icon-base ti tabler-device-desktop-analytics icon-22px me-3"
-                                       data-icon="device-desktop-analytics"></i>System</span>
-                           </button>
-                       </li>
-                   </ul>
-               </li>
-               <!-- / Style Switcher-->
-
-               <!-- Quick links  -->
-               <li class="nav-item dropdown-shortcuts navbar-dropdown dropdown">
-                   <a class="nav-link dropdown-toggle hide-arrow btn btn-icon btn-text-secondary rounded-pill"
-                       href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-auto-close="outside"
-                       aria-expanded="false">
-                       <i class="icon-base ti tabler-layout-grid-add icon-22px text-heading"></i>
-                   </a>
-                   <div class="dropdown-menu dropdown-menu-end p-0">
-                       <div class="dropdown-menu-header border-bottom">
-                           <div class="dropdown-header d-flex align-items-center py-3">
-                               <h6 class="mb-0 me-auto">Shortcuts</h6>
-                               <a href="javascript:void(0)"
-                                   class="dropdown-shortcuts-add py-2 btn btn-text-secondary rounded-pill btn-icon"
-                                   data-bs-toggle="tooltip" data-bs-placement="top" title="Add shortcuts"><i
-                                       class="icon-base ti tabler-plus icon-20px text-heading"></i></a>
-                           </div>
-                       </div>
-                       <div class="dropdown-shortcuts-list scrollable-container">
-                           <div class="row row-bordered overflow-visible g-0">
-                               <div class="dropdown-shortcuts-item col">
-                                   <span class="dropdown-shortcuts-icon rounded-circle mb-3">
-                                       <i class="icon-base ti tabler-calendar icon-26px text-heading"></i>
-                                   </span>
-                                   <a href="app-calendar.html" class="stretched-link">Calendar</a>
-                                   <small>Appointments</small>
-                               </div>
-                               <div class="dropdown-shortcuts-item col">
-                                   <span class="dropdown-shortcuts-icon rounded-circle mb-3">
-                                       <i class="icon-base ti tabler-file-dollar icon-26px text-heading"></i>
-                                   </span>
-                                   <a href="app-invoice-list.html" class="stretched-link">Invoice
-                                       App</a>
-                                   <small>Manage Accounts</small>
-                               </div>
-                           </div>
-                           <div class="row row-bordered overflow-visible g-0">
-                               <div class="dropdown-shortcuts-item col">
-                                   <span class="dropdown-shortcuts-icon rounded-circle mb-3">
-                                       <i class="icon-base ti tabler-user icon-26px text-heading"></i>
-                                   </span>
-                                   <a href="app-user-list.html" class="stretched-link">User App</a>
-                                   <small>Manage Users</small>
-                               </div>
-                               <div class="dropdown-shortcuts-item col">
-                                   <span class="dropdown-shortcuts-icon rounded-circle mb-3">
-                                       <i class="icon-base ti tabler-users icon-26px text-heading"></i>
-                                   </span>
-                                   <a href="app-access-roles.html" class="stretched-link">Role
-                                       Management</a>
-                                   <small>Permission</small>
-                               </div>
-                           </div>
-                           <div class="row row-bordered overflow-visible g-0">
-                               <div class="dropdown-shortcuts-item col">
-                                   <span class="dropdown-shortcuts-icon rounded-circle mb-3">
-                                       <i
-                                           class="icon-base ti tabler-device-desktop-analytics icon-26px text-heading"></i>
-                                   </span>
-                                   <a href="index.html" class="stretched-link">Dashboard</a>
-                                   <small>User Dashboard</small>
-                               </div>
-                               <div class="dropdown-shortcuts-item col">
-                                   <span class="dropdown-shortcuts-icon rounded-circle mb-3">
-                                       <i class="icon-base ti tabler-settings icon-26px text-heading"></i>
-                                   </span>
-                                   <a href="pages-account-settings-account.html" class="stretched-link">Setting</a>
-                                   <small>Account Settings</small>
-                               </div>
-                           </div>
-                           <div class="row row-bordered overflow-visible g-0">
-                               <div class="dropdown-shortcuts-item col">
-                                   <span class="dropdown-shortcuts-icon rounded-circle mb-3">
-                                       <i class="icon-base ti tabler-help-circle icon-26px text-heading"></i>
-                                   </span>
-                                   <a href="pages-faq.html" class="stretched-link">FAQs</a>
-                                   <small>FAQs & Articles</small>
-                               </div>
-                               <div class="dropdown-shortcuts-item col">
-                                   <span class="dropdown-shortcuts-icon rounded-circle mb-3">
-                                       <i class="icon-base ti tabler-square icon-26px text-heading"></i>
-                                   </span>
-                                   <a href="modal-examples.html" class="stretched-link">Modals</a>
-                                   <small>Useful Popups</small>
-                               </div>
-                           </div>
-                       </div>
-                   </div>
-               </li>
-               <!-- Quick links -->
 
                <!-- Notification -->
                <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3 me-xl-2">
@@ -415,76 +261,44 @@
                    <a class="nav-link dropdown-toggle hide-arrow p-0" href="javascript:void(0);"
                        data-bs-toggle="dropdown">
                        <div class="avatar avatar-online">
-                           <img src="../../assets/img/avatars/1.png" alt class="rounded-circle" />
+                           <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="rounded-circle" />
                        </div>
                    </a>
                    <ul class="dropdown-menu dropdown-menu-end">
                        <li>
-                           <a class="dropdown-item mt-0" href="pages-account-settings-account.html">
+                           <a class="dropdown-item mt-0" href="{{ route('profile.edit') }}">
                                <div class="d-flex align-items-center">
                                    <div class="flex-shrink-0 me-2">
                                        <div class="avatar avatar-online">
-                                           <img src="../../assets/img/avatars/1.png" alt class="rounded-circle" />
+                                           <img src="{{ asset('assets/img/avatars/1.png') }}" alt
+                                               class="rounded-circle" />
                                        </div>
                                    </div>
                                    <div class="flex-grow-1">
-                                       <h6 class="mb-0">John Doe</h6>
-                                       <small class="text-body-secondary">Admin</small>
+                                       <h6 class="mb-0">{{ Auth::user()->name }}</h6>
+                                       <small class="text-body-secondary">{{ Auth::user()->role ?? 'User' }}</small>
                                    </div>
                                </div>
                            </a>
                        </li>
+
                        <li>
                            <div class="dropdown-divider my-1 mx-n2"></div>
                        </li>
+
                        <li>
-                           <a class="dropdown-item" href="pages-profile-user.html">
-                               <i class="icon-base ti tabler-user me-3 icon-md"></i><span class="align-middle">My
-                                   Profile</span>
-                           </a>
-                       </li>
-                       <li>
-                           <a class="dropdown-item" href="pages-account-settings-account.html">
-                               <i class="icon-base ti tabler-settings me-3 icon-md"></i><span
-                                   class="align-middle">Settings</span>
-                           </a>
-                       </li>
-                       <li>
-                           <a class="dropdown-item" href="pages-account-settings-billing.html">
-                               <span class="d-flex align-items-center align-middle">
-                                   <i class="flex-shrink-0 icon-base ti tabler-file-dollar me-3 icon-md"></i><span
-                                       class="flex-grow-1 align-middle">Billing</span>
-                                   <span
-                                       class="flex-shrink-0 badge bg-danger d-flex align-items-center justify-content-center">4</span>
-                               </span>
-                           </a>
-                       </li>
-                       <li>
-                           <div class="dropdown-divider my-1 mx-n2"></div>
-                       </li>
-                       <li>
-                           <a class="dropdown-item" href="pages-pricing.html">
-                               <i class="icon-base ti tabler-currency-dollar me-3 icon-md"></i><span
-                                   class="align-middle">Pricing</span>
-                           </a>
-                       </li>
-                       <li>
-                           <a class="dropdown-item" href="pages-faq.html">
-                               <i class="icon-base ti tabler-question-mark me-3 icon-md"></i><span
-                                   class="align-middle">FAQ</span>
-                           </a>
-                       </li>
-                       <li>
-                           <div class="d-grid px-2 pt-2 pb-1">
-                               <a class="btn btn-sm btn-danger d-flex" href="auth-login-cover.html" target="_blank">
-                                   <small class="align-middle">Logout</small>
-                                   <i class="icon-base ti tabler-logout ms-2 icon-14px"></i>
-                               </a>
-                           </div>
+                           <form method="POST" action="{{ route('logout') }}">
+                               @csrf
+                               <button class="dropdown-item d-flex align-items-center text-danger" type="submit">
+                                   <i class="icon-base ti tabler-logout me-3 icon-md"></i>
+                                   <span class="align-middle">Logout</span>
+                               </button>
+                           </form>
                        </li>
                    </ul>
                </li>
                <!--/ User -->
+
            </ul>
        </div>
    </nav>

@@ -34,7 +34,7 @@
                         <p class="mb-6">Please sign-in to your account and start the adventure</p>
 
                         <!-- Laravel Form -->
-                        <form method="POST" action="{{ route('login') }}" class="mb-4" id="formAuthentication">
+                        <form method="POST" action="{{ route('login') }}" class="mb-4">
                             @csrf
 
                             <!-- Session Status -->

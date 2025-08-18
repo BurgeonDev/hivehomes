@@ -31,13 +31,13 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/nouislider/nouislider.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/swiper/swiper.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/front-page-landing.css') }}" />
+    <link rel="stylesheet" href="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+    <!-- endbuild -->
     <!-- Vendors CSS -->
     @yield('vendor-css')
     <!-- Page CSS -->
     @yield('page-css')
-    <script src="{{ asset('assets/vendor/js/helpers.js') }}"></script>
-    <script src="{{ asset('assets/vendor/js/template-customizer.js') }}"></script>
-    <script src="{{ asset('assets/js/front-config.js') }}"></script>
+
 </head>
 
 <body>
@@ -46,14 +46,13 @@
 
     @yield('content')
 
-    <script src="{{ asset('assets/vendor/libs/popper/popper.js') }}"></script>
     <script src="{{ asset('assets/vendor/js/bootstrap.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/node-waves/node-waves.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/@algolia/autocomplete-js.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/pickr/pickr.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/nouislider/nouislider.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/swiper/swiper.js') }}"></script>
-    <script src="{{ asset('assets/js/front-main.js') }}"></script>
+    {{-- <script src="{{ asset('assets/js/front-main.js') }}"></script> --}}
     <script src="{{ asset('assets/js/front-page-landing.js') }}"></script>
 
     <!-- Vendors JS -->
