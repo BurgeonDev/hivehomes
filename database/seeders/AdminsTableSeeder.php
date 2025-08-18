@@ -11,7 +11,7 @@ class AdminsTableSeeder extends Seeder
     public function run(): void
     {
         $superAdmin = User::firstOrCreate([
-            'email' => 'superadmin@hivehomes.com',
+            'email' => 'superadmin@example.com',
         ], [
             'name' => 'Super Admin',
             'password' => bcrypt('password'),
@@ -19,7 +19,7 @@ class AdminsTableSeeder extends Seeder
         $superAdmin->assignRole('super_admin');
 
         $societyAdmin = User::firstOrCreate([
-            'email' => 'societyadmin@hivehomes.com',
+            'email' => 'admin@example.com',
         ], [
             'name' => 'Society Admin',
             'password' => bcrypt('password'),
