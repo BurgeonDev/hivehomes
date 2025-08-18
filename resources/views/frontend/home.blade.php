@@ -218,7 +218,7 @@
                                                         alt="client logo" class="client-logo img-fluid" />
                                                 </div>
                                                 <p>
-                                                    “Vuexy is hands down the most useful front end Bootstrap theme I've
+                                                    “HivesHomes is hands down the most useful front end Bootstrap theme I've
                                                     ever used. I can't wait
                                                     to use it again for my next project.”
                                                 </p>
@@ -251,7 +251,8 @@
                                                         alt="client logo" class="client-logo img-fluid" />
                                                 </div>
                                                 <p>
-                                                    “I've never used a theme as versatile and flexible as Vuexy. It's my
+                                                    “I've never used a theme as versatile and flexible as HivesHomes. It's
+                                                    my
                                                     go to for building
                                                     dashboard sites on almost any project.”
                                                 </p>
@@ -353,7 +354,8 @@
                                                         alt="client logo" class="client-logo img-fluid" />
                                                 </div>
                                                 <p>
-                                                    “I've never used a theme as versatile and flexible as Vuexy. It's my
+                                                    “I've never used a theme as versatile and flexible as HivesHomes. It's
+                                                    my
                                                     go to for building
                                                     dashboard sites on almost any project.”
                                                 </p>

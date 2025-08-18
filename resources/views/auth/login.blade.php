@@ -25,12 +25,12 @@
                                         <!-- ... -->
                                     </span>
                                 </span>
-                                <span class="app-brand-text demo text-heading fw-bold">Vuexy</span>
+                                <span class="app-brand-text demo text-heading fw-bold">HivesHomes</span>
                             </a>
                         </div>
                         <!-- /Logo -->
 
-                        <h4 class="mb-1">Welcome to Vuexy! 👋</h4>
+                        <h4 class="mb-1">Welcome to HivesHomes! 👋</h4>
                         <p class="mb-6">Please sign-in to your account and start the adventure</p>
 
                         <!-- Laravel Form -->

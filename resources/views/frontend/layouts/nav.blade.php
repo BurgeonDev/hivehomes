@@ -30,7 +30,7 @@
                             </svg>
                         </span>
                     </span>
-                    <span class="app-brand-text demo menu-text fw-bold ms-2 ps-1">Vuexy</span>
+                    <span class="app-brand-text demo menu-text fw-bold ms-2 ps-1">HivesHomes</span>
                 </a>
             </div>
             <!-- Menu logo wrapper: End -->

@@ -25,7 +25,7 @@
                                   </svg>
                               </span>
                           </span>
-                          <span class="app-brand-text demo footer-link fw-bold ms-2 ps-1">Vuexy</span>
+                          <span class="app-brand-text demo footer-link fw-bold ms-2 ps-1">HivesHomes</span>
                       </a>
                       <p class="footer-text footer-logo-description mb-6">
                           Most developer friendly & highly customisable Admin Dashboard Template.
