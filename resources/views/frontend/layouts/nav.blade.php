@@ -277,47 +277,41 @@
             <!-- Menu wrapper: End -->
             <!-- Toolbar: Start -->
             <ul class="navbar-nav flex-row align-items-center ms-auto">
-                <!-- Style Switcher -->
-                <li class="nav-item dropdown-style-switcher dropdown me-2 me-xl-1">
-                    <a class="nav-link dropdown-toggle hide-arrow" id="nav-theme" href="javascript:void(0);"
-                        data-bs-toggle="dropdown">
-                        <i class="icon-base ti tabler-sun icon-lg theme-icon-active"></i>
-                        <span class="d-none ms-2" id="nav-theme-text">Toggle theme</span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-theme-text">
-                        <li>
-                            <button type="button" class="dropdown-item align-items-center active"
-                                data-bs-theme-value="light" aria-pressed="false">
-                                <span><i class="icon-base ti tabler-sun icon-md me-3" data-icon="sun"></i>Light</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button" class="dropdown-item align-items-center"
-                                data-bs-theme-value="dark" aria-pressed="true">
-                                <span><i class="icon-base ti tabler-moon-stars icon-md me-3"
-                                        data-icon="moon-stars"></i>Dark</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button" class="dropdown-item align-items-center"
-                                data-bs-theme-value="system" aria-pressed="false">
-                                <span><i class="icon-base ti tabler-device-desktop-analytics icon-md me-3"
-                                        data-icon="device-desktop-analytics"></i>System</span>
-                            </button>
-                        </li>
-                    </ul>
-                </li>
-                <!-- / Style Switcher-->
 
                 <!-- navbar button: Start -->
-                <li>
-                    <a href="../vertical-menu-template/auth-login-cover.html" class="btn btn-primary"
-                        target="_blank"><span
-                            class="tf-icons icon-base ti tabler-login scaleX-n1-rtl me-md-1"></span><span
-                            class="d-none d-md-block">Login/Register</span></a>
-                </li>
+                @guest
+                    <li>
+                        <a href="{{ route('login') }}" class="btn btn-primary">
+                            <span class="tf-icons icon-base ti tabler-login scaleX-n1-rtl me-md-1"></span>
+                            <span class="d-none d-md-block">Login/Register</span>
+                        </a>
+                    </li>
+                @else
+                    {{-- Optional: Dashboard link for admins only --}}
+                    @if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('super_admin'))
+                        <li class="me-2">
+                            <a href="{{ route('dashboard') }}" class="btn btn-success">
+                                <span class="tf-icons icon-base ti tabler-layout-dashboard scaleX-n1-rtl me-md-1"></span>
+                                <span class="d-none d-md-block">Dashboard</span>
+                            </a>
+                        </li>
+                    @endif
+
+                    {{-- Logout Button --}}
+                    <li>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="btn btn-outline-danger">
+                                <span class="tf-icons icon-base ti tabler-logout scaleX-n1-rtl me-md-1"></span>
+                                <span class="d-none d-md-block">Logout</span>
+                            </button>
+                        </form>
+                    </li>
+                @endguest
                 <!-- navbar button: End -->
+
             </ul>
+
             <!-- Toolbar: End -->
         </div>
     </div>
