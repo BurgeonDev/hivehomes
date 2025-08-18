@@ -31,79 +31,55 @@
 
     <ul class="menu-inner py-1">
         <!-- Dashboards -->
-        <li class="menu-item active open">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
+
+        <li class="menu-item {{ request()->routeIs('dashboard') ? 'active open' : '' }}">
+            <a href="{{ route('dashboard') }}" class="menu-link">
                 <i class="menu-icon icon-base ti tabler-smart-home"></i>
-                <div data-i18n="Dashboards">Dashboards</div>
-                <div class="badge text-bg-danger rounded-pill ms-auto">5</div>
+                <div data-i18n="Dashboard">Dashboard</div>
             </a>
-            <ul class="menu-sub">
-                <li class="menu-item active">
-                    <a href="index.html" class="menu-link">
-                        <div data-i18n="Analytics">Analytics</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="dashboards-crm.html" class="menu-link">
-                        <div data-i18n="CRM">CRM</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="app-ecommerce-dashboard.html" class="menu-link">
-                        <div data-i18n="eCommerce">eCommerce</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="app-logistics-dashboard.html" class="menu-link">
-                        <div data-i18n="Logistics">Logistics</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="app-academy-dashboard.html" class="menu-link">
-                        <div data-i18n="Academy">Academy</div>
-                    </a>
-                </li>
-            </ul>
         </li>
 
+
         <!-- Location -->
-        <li class="menu-item">
+        <li class="menu-item {{ request()->routeIs('countries.*', 'states.*', 'cities.*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon icon-base ti tabler-map"></i>
                 <div data-i18n="Location">Location</div>
             </a>
 
             <ul class="menu-sub">
-                <li class="menu-item">
+                <li class="menu-item {{ request()->routeIs('countries.*') ? 'active' : '' }}">
                     <a href="{{ route('countries.index') }}" class="menu-link">
                         <div data-i18n="Countries">Countries</div>
                     </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item {{ request()->routeIs('states.*') ? 'active' : '' }}">
                     <a href="{{ route('states.index') }}" class="menu-link">
                         <div data-i18n="States">States</div>
                     </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item {{ request()->routeIs('cities.*') ? 'active' : '' }}">
                     <a href="{{ route('cities.index') }}" class="menu-link">
                         <div data-i18n="Cities">Cities</div>
                     </a>
                 </li>
             </ul>
         </li>
-        <li class="menu-item active open">
+
+        <li class="menu-item {{ request()->routeIs('roles.*') ? 'active open' : '' }}">
             <a href="{{ route('roles.index') }}" class="menu-link">
                 <i class="menu-icon icon-base ti tabler-settings"></i>
                 <div data-i18n="Roles &amp; Permissions">Roles &amp; Permissions</div>
             </a>
-
         </li>
-        <li class="menu-item active open">
+
+        <li class="menu-item {{ request()->routeIs('users.*') ? 'active open' : '' }}">
             <a href="{{ route('users.index') }}" class="menu-link">
                 <i class="menu-icon icon-base ti tabler-users"></i>
                 <div data-i18n="Users">Users</div>
             </a>
         </li>
+
     </ul>
 </aside>
 
