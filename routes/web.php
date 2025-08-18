@@ -36,6 +36,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('cities', CityController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
+    Route::resource('societies', SocietyController::class);
 });
 
 Route::get('/get-cities-by-state/{state_id}', [CityController::class, 'getCitiesByState']);

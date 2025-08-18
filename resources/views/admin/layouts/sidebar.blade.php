@@ -79,6 +79,12 @@
                 <div data-i18n="Users">Users</div>
             </a>
         </li>
+        <li class="menu-item {{ request()->routeIs('societies.*') ? 'active open' : '' }}">
+            <a href="{{ route('societies.index') }}" class="menu-link">
+                <i class="menu-icon icon-base ti tabler-building-skyscraper"></i>
+                <div data-i18n="Societies">Societies</div>
+            </a>
+        </li>
 
     </ul>
 </aside>
