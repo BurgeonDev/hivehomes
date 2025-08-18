@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SocietyController;
 use App\Http\Controllers\StateController;
+use App\Http\Controllers\UserController;
 use App\Models\State;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +35,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('states', StateController::class);
     Route::resource('cities', CityController::class);
     Route::resource('roles', RoleController::class);
+    Route::resource('users', UserController::class);
 });
 
 Route::get('/get-cities-by-state/{state_id}', [CityController::class, 'getCitiesByState']);

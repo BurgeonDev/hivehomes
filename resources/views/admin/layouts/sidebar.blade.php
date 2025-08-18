@@ -98,6 +98,12 @@
             </a>
 
         </li>
+        <li class="menu-item active open">
+            <a href="{{ route('users.index') }}" class="menu-link">
+                <i class="menu-icon icon-base ti tabler-users"></i>
+                <div data-i18n="Users">Users</div>
+            </a>
+        </li>
     </ul>
 </aside>
 
