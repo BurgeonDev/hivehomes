@@ -5,6 +5,7 @@ use App\Http\Controllers\CountryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SocietyController;
 use App\Http\Controllers\StateController;
+use App\Models\State;
 use Illuminate\Support\Facades\Route;
 
 
@@ -24,12 +25,17 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth', 'role:super_admin'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/societies', [SocietyController::class, 'index'])->name('societies.index');
 });
-Route::middleware(['auth', 'role:super_admin'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::resource('countries', CountryController::class);
     Route::resource('states', StateController::class);
     Route::resource('cities', CityController::class);
 });
+
+Route::get('/get-cities-by-state/{state_id}', [CityController::class, 'getCitiesByState']);
+Route::get('/get-states-by-country/{country_id}', [StateController::class, 'getStatesByCountry']);
+
+
 require __DIR__ . '/auth.php';

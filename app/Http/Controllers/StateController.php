@@ -3,65 +3,83 @@
 namespace App\Http\Controllers;
 
 use App\Models\State;
+use App\Models\Country;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StateController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the states.
      */
     public function index()
     {
-        $states = State::with('country')->get();
-        return view('locations.states.index', compact('states'));
+        $states = State::with('country')->latest()->get();
+        return view('admin.locations.states.index', compact('states'));
     }
 
-
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new state.
      */
-    public function create()
-    {
-        //
-    }
+
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created state in storage.
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name'       => 'required|string|max:255',
+            'country_id' => 'required|exists:countries,id',
+        ]);
+
+        State::create([
+            'name'       => $request->name,
+            'country_id' => $request->country_id,
+            'created_by' => Auth::id(),
+        ]);
+
+        return redirect()->route('states.index')->with('success', 'State created successfully.');
     }
 
     /**
-     * Display the specified resource.
+     * Show the form for editing the specified state.
      */
-    public function show(string $id)
+
+    /**
+     * Update the specified state in storage.
+     */
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name'       => 'required|string|max:255',
+            'country_id' => 'required|exists:countries,id',
+        ]);
+
+        $state = State::findOrFail($id);
+        $state->update([
+            'name'       => $request->name,
+            'country_id' => $request->country_id,
+            'updated_by' => Auth::id(),
+        ]);
+
+        return redirect()->route('states.index')->with('success', 'State updated successfully.');
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Remove the specified state from storage.
      */
-    public function edit(string $id)
+    public function destroy($id)
     {
-        //
-    }
+        $state = State::findOrFail($id);
+        $state->delete();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
+        return redirect()->route('states.index')->with('success', 'State deleted successfully.');
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function getStatesByCountry($country_id)
     {
-        //
+        return response()->json(
+            State::where('country_id', $country_id)->get()
+        );
     }
 }

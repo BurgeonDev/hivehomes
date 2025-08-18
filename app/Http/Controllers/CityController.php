@@ -3,65 +3,61 @@
 namespace App\Http\Controllers;
 
 use App\Models\City;
+use App\Models\State;
 use Illuminate\Http\Request;
 
 class CityController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $cities = City::with('state.country')->get();
-        return view('locations.cities.index', compact('cities'));
+        return view('admin.locations.cities.index', compact('cities'));
     }
 
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $states = State::with('country')->get();
+        return view('admin.locations.cities.create', compact('states'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'state_id' => 'required|exists:states,id',
+        ]);
+
+        City::create($request->only('name', 'state_id'));
+
+        return redirect()->route('cities.index')->with('success', 'City created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(City $city)
     {
-        //
+        $states = State::with('country')->get();
+        return view('admin.locations.cities.edit', compact('city', 'states'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, City $city)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'state_id' => 'required|exists:states,id',
+        ]);
+
+        $city->update($request->only('name', 'state_id'));
+
+        return redirect()->route('cities.index')->with('success', 'City updated successfully.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(City $city)
     {
-        //
+        $city->delete();
+        return redirect()->route('cities.index')->with('success', 'City deleted successfully.');
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function getCitiesByState($state_id)
     {
-        //
+        $cities = City::where('state_id', $state_id)->get();
+        return response()->json($cities);
     }
 }

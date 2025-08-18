@@ -137,6 +137,102 @@
         });
     </script>
 
+    <script>
+        $(document).ready(function() {
+            const table = $('.datatables-basic').DataTable({
+                responsive: true,
+                lengthChange: true,
+                layout: {
+                    topStart: {
+                        rowClass: 'row mx-3 my-0 justify-content-between',
+                        features: [{
+                            pageLength: {
+                                menu: [7, 10, 25, 50, 100],
+                                text: 'Show _MENU_ entries'
+                            }
+                        }]
+                    },
+                    topEnd: {
+                        search: {
+                            placeholder: 'Search...'
+                        }
+                    },
+                    bottomStart: {
+                        rowClass: 'row mx-3 justify-content-between',
+                        features: ['info']
+                    },
+                    bottomEnd: 'paging'
+                },
+                displayLength: 7,
+                language: {
+                    paginate: {
+                        next: '<i class="icon-base ti tabler-chevron-right scaleX-n1-rtl icon-18px"></i>',
+                        previous: '<i class="icon-base ti tabler-chevron-left scaleX-n1-rtl icon-18px"></i>',
+                        first: '<i class="icon-base ti tabler-chevrons-left scaleX-n1-rtl icon-18px"></i>',
+                        last: '<i class="icon-base ti tabler-chevrons-right scaleX-n1-rtl icon-18px"></i>'
+                    }
+                },
+                buttons: [{
+                        extend: 'csv',
+                        title: 'Countries',
+                        className: 'd-none',
+                        exportOptions: {
+                            columns: [0, 1]
+                        }
+                    },
+                    {
+                        extend: 'excel',
+                        title: 'Countries',
+                        className: 'd-none',
+                        exportOptions: {
+                            columns: [0, 1]
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        title: 'Countries',
+                        className: 'd-none',
+                        exportOptions: {
+                            columns: [0, 1]
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Countries',
+                        className: 'd-none',
+                        exportOptions: {
+                            columns: [0, 1]
+                        }
+                    }
+                ]
+            });
+
+            // Manually trigger export buttons
+            $('#export-csv').on('click', function(e) {
+                e.preventDefault();
+                table.button(0).trigger();
+            });
+
+            $('#export-excel').on('click', function(e) {
+                e.preventDefault();
+                table.button(1).trigger();
+            });
+
+            $('#export-pdf').on('click', function(e) {
+                e.preventDefault();
+                table.button(2).trigger();
+            });
+
+            $('#export-print').on('click', function(e) {
+                e.preventDefault();
+                table.button(3).trigger();
+            });
+        });
+    </script>
+
+
+
+
 </body>
 
 </html>
