@@ -1,47 +1,137 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+@extends('auth.layouts.app')
+@section('title', 'Login')
+@section('vendor-css')
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/@form-validation/form-validation.css') }}" />
+@endsection
+@section('page-css')
+    <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/page-auth.css') }}" />
+@endsection
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+@section('content')
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+    <div class="container-xxl">
+        <div class="authentication-wrapper authentication-basic container-p-y">
+            <div class="authentication-inner py-6">
+                <!-- Login -->
+                <div class="card">
+                    <div class="card-body">
+                        <!-- Logo -->
+                        <div class="app-brand justify-content-center mb-6">
+                            <a href="{{ url('/') }}" class="app-brand-link">
+                                <span class="app-brand-logo demo">
+                                    <span class="text-primary">
+                                        <!-- Your SVG Logo Here -->
+                                        <!-- ... -->
+                                    </span>
+                                </span>
+                                <span class="app-brand-text demo text-heading fw-bold">Vuexy</span>
+                            </a>
+                        </div>
+                        <!-- /Logo -->
+
+                        <h4 class="mb-1">Welcome to Vuexy! 👋</h4>
+                        <p class="mb-6">Please sign-in to your account and start the adventure</p>
+
+                        <!-- Laravel Form -->
+                        <form method="POST" action="{{ route('login') }}" class="mb-4" id="formAuthentication">
+                            @csrf
+
+                            <!-- Session Status -->
+                            @if (session('status'))
+                                <div class="mb-4 text-success">
+                                    {{ session('status') }}
+                                </div>
+                            @endif
+
+                            <!-- Email -->
+                            <div class="mb-6">
+                                <label for="email" class="form-label">Email or Username</label>
+                                <input type="text" id="email" name="email"
+                                    class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}"
+                                    required autofocus placeholder="Enter your email or username" />
+                                @error('email')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Password -->
+                            <div class="mb-6 form-password-toggle">
+                                <label class="form-label" for="password">Password</label>
+                                <div class="input-group input-group-merge">
+                                    <input type="password" id="password"
+                                        class="form-control @error('password') is-invalid @enderror" name="password"
+                                        required placeholder="••••••••••••" />
+                                    <span class="input-group-text cursor-pointer"><i
+                                            class="icon-base ti tabler-eye-off"></i></span>
+                                </div>
+                                @error('password')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Remember Me + Forgot Password -->
+                            <div class="my-8">
+                                <div class="d-flex justify-content-between">
+                                    <div class="form-check mb-0 ms-2">
+                                        <input class="form-check-input" type="checkbox" id="remember_me" name="remember" />
+                                        <label class="form-check-label" for="remember_me"> Remember Me </label>
+                                    </div>
+                                    @if (Route::has('password.request'))
+                                        <a href="{{ route('password.request') }}">
+                                            <p class="mb-0">Forgot Password?</p>
+                                        </a>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <!-- Submit -->
+                            <div class="mb-6">
+                                <button class="btn btn-primary d-grid w-100" type="submit">Login</button>
+                            </div>
+                        </form>
+
+                        <!-- Register -->
+                        <p class="text-center">
+                            <span>New on our platform?</span>
+                            <a href="{{ route('register') }}">
+                                <span>Create an account</span>
+                            </a>
+                        </p>
+
+                        <!-- Social -->
+                        <div class="divider my-6">
+                            <div class="divider-text">or</div>
+                        </div>
+
+                        <div class="d-flex justify-content-center">
+                            <a href="javascript:;" class="btn btn-icon rounded-circle btn-text-facebook me-1_5">
+                                <i class="icon-base ti tabler-brand-facebook-filled icon-20px"></i>
+                            </a>
+                            <a href="javascript:;" class="btn btn-icon rounded-circle btn-text-twitter me-1_5">
+                                <i class="icon-base ti tabler-brand-twitter-filled icon-20px"></i>
+                            </a>
+                            <a href="javascript:;" class="btn btn-icon rounded-circle btn-text-github me-1_5">
+                                <i class="icon-base ti tabler-brand-github-filled icon-20px"></i>
+                            </a>
+                            <a href="javascript:;" class="btn btn-icon rounded-circle btn-text-google-plus">
+                                <i class="icon-base ti tabler-brand-google-filled icon-20px"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Login -->
+            </div>
         </div>
+    </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+@endsection
+@section('vendor-js')
+    <script src="{{ asset('assets/vendor/libs/@form-validation/popular.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/@form-validation/bootstrap5.j') }}s"></script>
+    <script src="{{ asset('assets/vendor/libs/@form-validation/auto-focus.js') }}"></script>
+@endsection
+@section('page-js')
+    <script src="{{ asset('assets/js/pages-auth.js') }}"></script>
+@endsection
