@@ -1,12 +1,6 @@
 @extends('auth.layouts.app')
 @section('title', 'Password')
-@section('vendor-css')
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/@form-validation/form-validation.css') }}" />
-@endsection
-@section('page-css')
-    <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/page-auth.css') }}" />
-@endsection
+
 @section('content')
     <div class="container-xxl">
         <div class="authentication-wrapper authentication-basic container-p-y">
@@ -65,12 +59,4 @@
             </div>
         </div>
     </div>
-@endsection
-@section('vendor-js')
-    <script src="{{ asset('assets/vendor/libs/@form-validation/popular.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/@form-validation/bootstrap5.j') }}s"></script>
-    <script src="{{ asset('assets/vendor/libs/@form-validation/auto-focus.js') }}"></script>
-@endsection
-@section('page-js')
-    <script src="{{ asset('assets/js/pages-auth.js') }}"></script>
 @endsection

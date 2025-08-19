@@ -1,23 +1,21 @@
 @extends('auth.layouts.app')
 @section('title', 'Login')
 @section('vendor-css')
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/@form-validation/form-validation.css') }}" />
+
 @endsection
 @section('page-css')
-    <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/page-auth.css') }}" />
 @endsection
 
 @section('content')
 
     <div class="container-xxl">
         <div class="authentication-wrapper authentication-basic container-p-y">
-            <div class="authentication-inner py-6">
+            <div class="py-6 authentication-inner">
                 <!-- Login -->
                 <div class="card">
                     <div class="card-body">
                         <!-- Logo -->
-                        <div class="app-brand justify-content-center mb-6">
+                        <div class="mb-6 app-brand justify-content-center">
                             <a href="{{ url('/') }}" class="app-brand-link">
                                 <span class="app-brand-logo demo">
                                     <span class="text-primary">
@@ -51,7 +49,7 @@
                                     class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}"
                                     required autofocus placeholder="Enter your email or username" />
                                 @error('email')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                    <div class="mt-1 text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
 
@@ -62,18 +60,18 @@
                                     <input type="password" id="password"
                                         class="form-control @error('password') is-invalid @enderror" name="password"
                                         required placeholder="••••••••••••" />
-                                    <span class="input-group-text cursor-pointer"><i
+                                    <span class="cursor-pointer input-group-text"><i
                                             class="icon-base ti tabler-eye-off"></i></span>
                                 </div>
                                 @error('password')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                    <div class="mt-1 text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <!-- Remember Me + Forgot Password -->
                             <div class="my-8">
                                 <div class="d-flex justify-content-between">
-                                    <div class="form-check mb-0 ms-2">
+                                    <div class="mb-0 form-check ms-2">
                                         <input class="form-check-input" type="checkbox" id="remember_me" name="remember" />
                                         <label class="form-check-label" for="remember_me"> Remember Me </label>
                                     </div>
@@ -100,7 +98,7 @@
                         </p>
 
                         <!-- Social -->
-                        <div class="divider my-6">
+                        <div class="my-6 divider">
                             <div class="divider-text">or</div>
                         </div>
 
@@ -128,10 +126,7 @@
 
 @endsection
 @section('vendor-js')
-    <script src="{{ asset('assets/vendor/libs/@form-validation/popular.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/@form-validation/bootstrap5.j') }}s"></script>
-    <script src="{{ asset('assets/vendor/libs/@form-validation/auto-focus.js') }}"></script>
+
 @endsection
 @section('page-js')
-    <script src="{{ asset('assets/js/pages-auth.js') }}"></script>
 @endsection

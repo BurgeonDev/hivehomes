@@ -26,20 +26,14 @@
     <link rel="stylesheet" href="{{ asset('/assets/vendor/css/pages/page-auth.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/bs-stepper/bs-stepper.css') }}" />
+    @yield('page-css')
 </head>
 
 <body>
     <!-- Content -->
-
-
-
     <div class="authentication-wrapper authentication-cover">
         @yield('content')
     </div>
-
-
-    <!-- Core JS -->
-    <!-- build:js assets/vendor/js/theme.js -->
 
     <script src="{{ asset('/assets/vendor/libs/jquery/jquery.js') }}"></script>
     <script src="{{ asset('/assets/vendor/libs/popper/popper.js') }}"></script>

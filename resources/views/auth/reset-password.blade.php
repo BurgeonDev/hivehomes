@@ -1,23 +1,17 @@
 @extends('auth.layouts.app')
 @section('title', 'Reset Password')
-@section('vendor-css')
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/@form-validation/form-validation.css') }}" />
-@endsection
-@section('page-css')
-    <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/page-auth.css') }}" />
-@endsection
+
 
 @section('content')
 
     <div class="container-xxl">
         <div class="authentication-wrapper authentication-basic container-p-y">
-            <div class="authentication-inner py-6">
+            <div class="py-6 authentication-inner">
                 <!-- Reset Password -->
                 <div class="card">
                     <div class="card-body">
                         <!-- Logo -->
-                        <div class="app-brand justify-content-center mb-6">
+                        <div class="mb-6 app-brand justify-content-center">
                             <a href="{{ route('login') }}" class="app-brand-link">
                                 <span class="app-brand-logo demo">
                                     <span class="text-primary">
@@ -59,7 +53,7 @@
                                     <input type="password" id="password"
                                         class="form-control @error('password') is-invalid @enderror" name="password"
                                         required autocomplete="new-password" placeholder="••••••••••••" />
-                                    <span class="input-group-text cursor-pointer">
+                                    <span class="cursor-pointer input-group-text">
                                         <i class="icon-base ti tabler-eye-off"></i>
                                     </span>
                                 </div>
@@ -75,7 +69,7 @@
                                     <input type="password" id="password_confirmation" class="form-control"
                                         name="password_confirmation" required autocomplete="new-password"
                                         placeholder="••••••••••••" />
-                                    <span class="input-group-text cursor-pointer">
+                                    <span class="cursor-pointer input-group-text">
                                         <i class="icon-base ti tabler-eye-off"></i>
                                     </span>
                                 </div>
@@ -85,7 +79,7 @@
                             </div>
 
                             <!-- Submit Button -->
-                            <button class="btn btn-primary d-grid w-100 mb-6">
+                            <button class="mb-6 btn btn-primary d-grid w-100">
                                 Set New Password
                             </button>
 
@@ -105,12 +99,4 @@
     </div>
 
 
-@endsection
-@section('vendor-js')
-    <script src="{{ asset('assets/vendor/libs/@form-validation/popular.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/@form-validation/bootstrap5.j') }}s"></script>
-    <script src="{{ asset('assets/vendor/libs/@form-validation/auto-focus.js') }}"></script>
-@endsection
-@section('page-js')
-    <script src="{{ asset('assets/js/pages-auth.js') }}"></script>
 @endsection
