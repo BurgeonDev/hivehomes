@@ -7,18 +7,13 @@
 @section('page-css')
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/page-auth.css') }}" />
 @endsection
-
 @section('content')
-
-
     <div class="container-xxl">
         <div class="authentication-wrapper authentication-basic container-p-y">
-            <div class="authentication-inner py-6">
-                <!-- Forgot Password -->
+            <div class="py-6 authentication-inner">
                 <div class="card">
                     <div class="card-body">
-                        <!-- Logo -->
-                        <div class="app-brand justify-content-center mb-6">
+                        <div class="mb-6 app-brand justify-content-center">
                             <a href="{{ url('/') }}" class="app-brand-link">
                                 <span class="app-brand-logo demo">
                                     <span class="text-primary">
@@ -43,38 +38,21 @@
                                 <span class="app-brand-text demo text-heading fw-bold">HiveHomes</span>
                             </a>
                         </div>
-                        <!-- /Logo -->
-
                         <h4 class="mb-1">Forgot Password? 🔒</h4>
                         <p class="mb-6">Enter your email and we'll send you instructions to reset your password</p>
-
-                        <!-- Laravel Form -->
-                        <form method="POST" action="{{ route('password.email') }}" class="mb-6" id="formAuthentication">
+                        <form method="POST" action="{{ route('password.email') }}" class="mb-6">
                             @csrf
-
-                            <!-- Session Status -->
-                            @if (session('status'))
-                                <div class="mb-4 text-success">
-                                    {{ session('status') }}
-                                </div>
-                            @endif
-
-                            <!-- Email -->
                             <div class="mb-6">
                                 <label for="email" class="form-label">Email</label>
                                 <input type="email" class="form-control @error('email') is-invalid @enderror"
                                     id="email" name="email" value="{{ old('email') }}" placeholder="Enter your email"
                                     required autofocus />
                                 @error('email')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                    <div class="mt-1 text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
-
-                            <!-- Submit -->
                             <button type="submit" class="btn btn-primary d-grid w-100">Send Reset Link</button>
                         </form>
-
-                        <!-- Back to Login -->
                         <div class="text-center">
                             <a href="{{ route('login') }}" class="d-flex justify-content-center">
                                 <i class="icon-base ti tabler-chevron-left scaleX-n1-rtl me-1_5"></i>
@@ -83,14 +61,10 @@
                         </div>
                     </div>
                 </div>
-                <!-- /Forgot Password -->
+
             </div>
         </div>
     </div>
-
-
-
-
 @endsection
 @section('vendor-js')
     <script src="{{ asset('assets/vendor/libs/@form-validation/popular.js') }}"></script>
