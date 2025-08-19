@@ -4,7 +4,7 @@
               <span class="badge bg-label-primary">Contact US</span>
           </div>
           <h4 class="mb-1 text-center">
-              <span class="position-relative fw-extrabold z-1">Let's work
+              <span class="position-relative fw-extrabold z-1">Let's Connect
                   <img src="{{ asset('assets/img/front-pages/icons/section-title-icon.png') }}" alt="laptop charging"
                       class="bottom-0 section-title-img position-absolute object-fit-contain z-n1" />
               </span>

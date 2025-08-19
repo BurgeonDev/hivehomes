@@ -39,7 +39,7 @@
                                                  alt="client logo" class="client-logo img-fluid" />
                                          </div>
                                          <p>
-                                             “HivesHomes is hands down the most useful front end Bootstrap theme
+                                             “HiveHomes is hands down the most useful front end Bootstrap theme
                                              I've
                                              ever used. I can't wait
                                              to use it again for my next project.”
@@ -72,7 +72,7 @@
                                                  alt="client logo" class="client-logo img-fluid" />
                                          </div>
                                          <p>
-                                             “I've never used a theme as versatile and flexible as HivesHomes.
+                                             “I've never used a theme as versatile and flexible as HiveHomes.
                                              It's
                                              my
                                              go to for building
@@ -173,7 +173,7 @@
                                                  alt="client logo" class="client-logo img-fluid" />
                                          </div>
                                          <p>
-                                             “I've never used a theme as versatile and flexible as HivesHomes.
+                                             “I've never used a theme as versatile and flexible as HiveHomes.
                                              It's
                                              my
                                              go to for building

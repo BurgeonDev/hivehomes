@@ -3,7 +3,7 @@
          <div class="container">
              <div class="text-center hero-text-box position-relative">
                  <h1 class="text-primary hero-title display-5 fw-extrabold">
-                     HiveHomes
+                     HiveHomes <i class="icon-base ti tabler-home icon-xl" style="width:35px; height: 35px;"></i>
                  </h1>
                  <h3 class="mb-3 text-dark fw-bold">
                      Simplify Life in Your Society

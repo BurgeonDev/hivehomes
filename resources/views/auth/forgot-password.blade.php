@@ -40,7 +40,7 @@
                                         </svg>
                                     </span>
                                 </span>
-                                <span class="app-brand-text demo text-heading fw-bold">HivesHomes</span>
+                                <span class="app-brand-text demo text-heading fw-bold">HiveHomes</span>
                             </a>
                         </div>
                         <!-- /Logo -->
