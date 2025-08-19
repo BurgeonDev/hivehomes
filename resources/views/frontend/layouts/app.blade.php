@@ -31,6 +31,7 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/nouislider/nouislider.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/swiper/swiper.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/front-page-landing.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/notyf/notyf.css') }}">
     <!-- Vendors CSS -->
     @yield('vendor-css')
     <!-- Page CSS -->
@@ -65,11 +66,33 @@
     <script src="{{ asset('assets/vendor/libs/swiper/swiper.js') }}"></script>
     <script src="{{ asset('assets/js/front-main.js') }}"></script>
     <script src="{{ asset('assets/js/front-page-landing.js') }}"></script>
-
+    <script src="{{ asset('assets/vendor/libs/notyf/notyf.js') }}"></script>
+    <script src="{{ asset('assets/js/ui-toasts.js') }}"></script>
     <!-- Vendors JS -->
     @yield('vendor-js')
     <!-- Page JS -->
     @yield('page-js')
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const notyf = new Notyf();
+
+            @if (session('success'))
+                notyf.success("{{ session('success') }}");
+            @endif
+
+            @if (session('error'))
+                notyf.error("{{ session('error') }}");
+            @endif
+
+
+            @if ($errors->any())
+                @foreach ($errors->all() as $error)
+                    notyf.error("{{ $error }}");
+                @endforeach
+            @endif
+        });
+    </script>
 </body>
 
 </html>
