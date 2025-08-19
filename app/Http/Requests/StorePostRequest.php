@@ -16,6 +16,7 @@ class StorePostRequest extends FormRequest
         return [
             'title'      => 'required|string|max:255',
             'body'       => 'required|string',
+            'category_id' => 'nullable|exists:categories,id',
             'image'      => 'nullable|image|max:2048', // optional image ≤2MB
             'society_id' => 'required|exists:societies,id',
         ];

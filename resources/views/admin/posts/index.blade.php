@@ -53,6 +53,7 @@
                         <tr>
                             <th>#</th>
                             <th>Title</th>
+                            <th>Category</th>
                             <th>Society</th>
                             <th>Author</th>
                             <th>Status</th>
@@ -70,6 +71,7 @@
                                     @endif
                                     {{ $post->title }}
                                 </td>
+                                <td>{{ $post->category->name ?? '-' }}</td>
                                 <td>{{ $post->society->name }}</td>
                                 <td>{{ $post->user->name }}</td>
                                 <td>
@@ -115,6 +117,16 @@
                         @csrf
                         <input type="hidden" name="_method" id="postFormMethod" value="POST">
                         <input type="hidden" name="id" id="post-id">
+                        <!-- inside your form, after Title -->
+                        <div class="mb-3">
+                            <label class="form-label">Category</label>
+                            <select name="category_id" id="post-category" class="form-select">
+                                <option value="">— Select Category —</option>
+                                @foreach ($categories as $cat)
+                                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
                         <!-- Title -->
                         <div class="mb-3">
@@ -128,17 +140,23 @@
                             <textarea name="body" id="post-body" class="form-control" rows="5" required></textarea>
                         </div>
 
+
                         <!-- Current Image Preview -->
                         <div class="mb-3" id="current-image-wrapper" style="display:none;">
                             <label class="form-label">Current Image</label><br>
                             <img src="" id="current-image" class="rounded" style="max-width:100px;">
                         </div>
 
-                        <!-- Upload New Image -->
                         <div class="mb-3">
                             <label class="form-label">Image (optional)</label>
-                            <input type="file" name="image" class="form-control" accept="image/*">
+                            <input type="file" name="image"
+                                class="form-control @error('image') is-invalid @enderror" accept="image/*" />
+                            @error('image')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            {{-- JS error will insert a <div id="image-size-error"> here --}}
                         </div>
+
 
                         <!-- Society -->
                         {{-- only super_admin can choose society --}}
@@ -181,6 +199,7 @@
             $('#post-id').val(post.id);
             $('#post-title').val(post.title);
             $('#post-body').val(post.body);
+            $('#post-category').val(post.category_id);
 
             // show current image if exists
             if (post.image) {
@@ -206,6 +225,28 @@
             $('#post-title,#post-body,#post-id').val('');
             $('#current-image-wrapper').hide();
             $('#offcanvasTitle').text('Add Post');
+        });
+    </script>
+    <script>
+        document.getElementById('postForm').addEventListener('submit', function(e) {
+            const input = document.querySelector('input[name="image"]');
+            if (input.files.length) {
+                const file = input.files[0];
+                const maxBytes = 2 * 1024 * 1024; // 2 MB in bytes
+                if (file.size > maxBytes) {
+                    e.preventDefault();
+                    // display an error message next to the field
+                    let errorEl = document.getElementById('image-size-error');
+                    if (!errorEl) {
+                        errorEl = document.createElement('div');
+                        errorEl.id = 'image-size-error';
+                        errorEl.className = 'invalid-feedback d-block';
+                        input.parentNode.appendChild(errorEl);
+                    }
+                    errorEl.textContent = 'Image is too large; maximum size is 2 MB.';
+                    input.classList.add('is-invalid');
+                }
+            }
         });
     </script>
 @endsection

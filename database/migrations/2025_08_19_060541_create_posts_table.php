@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('image')->nullable(); // moved before status for clean order
             $table->enum('status', ['pending', 'approved', 'rejected', 'expired'])
                 ->default('pending');
-
+            $table->unsignedBigInteger('category_id')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('society_id');
 

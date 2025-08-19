@@ -16,7 +16,8 @@ class Post extends Model
         'image',
         'status',
         'user_id',
-        'society_id'
+        'society_id',
+        'category_id'
     ];
 
 
@@ -28,5 +29,9 @@ class Post extends Model
     public function society()
     {
         return $this->belongsTo(Society::class);
+    }
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 }

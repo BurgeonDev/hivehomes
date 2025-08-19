@@ -18,6 +18,7 @@ class UpdatePostRequest extends FormRequest
             'body'       => 'required|string',
             'status'     => 'nullable|in:pending,approved,rejected',
             'image'      => 'nullable|image|max:2048',
+            'category_id' => 'nullable|exists:categories,id',
             'society_id' => 'required|exists:societies,id',
         ];
     }

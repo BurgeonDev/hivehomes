@@ -12,9 +12,10 @@ class DatabaseSeeder extends Seeder
             PermissionsTableSeeder::class,
             RolesTableSeeder::class,
             LocationSeeder::class,
-            AdminsTableSeeder::class,      // ✅ Admins first
-            SocietiesTableSeeder::class,   // ✅ Now this will work
+            AdminsTableSeeder::class,
+            SocietiesTableSeeder::class,
             MembersTableSeeder::class,
+            CategorySeeder::class,
         ]);
     }
 }

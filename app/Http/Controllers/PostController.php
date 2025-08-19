@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Post;
 use App\Models\Society;
 use Illuminate\Support\Facades\Storage; // ← add this
@@ -11,13 +12,15 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+
     public function index()
     {
-        $posts = Post::with('user', 'society')->latest()->get();
-        $societies = auth()->user()->hasRole('super_admin')
+        $posts      = Post::with('user', 'society', 'category')->latest()->get();
+        $categories = Category::all();
+        $societies  = auth()->user()->hasRole('super_admin')
             ? Society::all()
             : collect();
-        return view('admin.posts.index', compact('posts', 'societies'));
+        return view('admin.posts.index', compact('posts', 'categories', 'societies'));
     }
 
     public function store(StorePostRequest $request)
