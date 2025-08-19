@@ -67,7 +67,7 @@
 
                     @auth
                         <li class="nav-item">
-                            <a class="nav-link fw-medium" href="{{ route('profile.edit') }}" target="_blank">Profile</a>
+                            <a class="nav-link fw-medium" href="{{ route('profile.show') }}" target="_blank">Profile</a>
                         </li>
                     @endauth
 
