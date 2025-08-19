@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SocietyController;
@@ -44,3 +45,12 @@ Route::get('/get-states-by-country/{country_id}', [StateController::class, 'getS
 Route::get('roles/users/data', [RoleController::class, 'usersData'])->name('roles.users.data');
 
 require __DIR__ . '/auth.php';
+Route::prefix('admin')
+    ->name('admin.')
+    ->middleware(['auth'])
+    ->group(function () {
+
+        Route::resource('posts', PostController::class);
+        Route::post('posts/{post}/status', [PostController::class, 'changeStatus'])
+            ->name('posts.changeStatus');
+    });

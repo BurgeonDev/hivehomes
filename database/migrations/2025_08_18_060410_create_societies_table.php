@@ -11,10 +11,14 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->text('address')->nullable();
-            $table->foreignId('city_id')->constrained()->onDelete('cascade');
-            $table->foreignId('state_id')->constrained()->onDelete('cascade');
-            $table->foreignId('country_id')->constrained()->onDelete('cascade');
-            $table->foreignId('admin_user_id')->constrained('users')->onDelete('cascade');
+
+            $table->unsignedBigInteger('city_id');
+            $table->unsignedBigInteger('state_id');
+            $table->unsignedBigInteger('country_id');
+            $table->unsignedBigInteger('admin_user_id');
+
+
+
             $table->timestamps();
         });
     }

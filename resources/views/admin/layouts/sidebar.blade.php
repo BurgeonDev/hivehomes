@@ -29,7 +29,7 @@
 
     <div class="menu-inner-shadow"></div>
 
-    <ul class="menu-inner py-1">
+    <ul class="py-1 menu-inner">
         <!-- Dashboards -->
 
         <li class="menu-item {{ request()->routeIs('dashboard') ? 'active open' : '' }}">
@@ -85,12 +85,18 @@
                 <div data-i18n="Societies">Societies</div>
             </a>
         </li>
+        <li class="menu-item {{ request()->routeIs('admin.posts.*') ? 'active open' : '' }}">
+            <a href="{{ route('admin.posts.index') }}" class="menu-link">
+                <i class="menu-icon icon-base ti tabler-article"></i>
+                <div data-i18n="Posts">Posts</div>
+            </a>
+        </li>
 
     </ul>
 </aside>
 
 <div class="menu-mobile-toggler d-xl-none rounded-1">
-    <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large text-bg-secondary p-2 rounded-1">
+    <a href="javascript:void(0);" class="p-2 layout-menu-toggle menu-link text-large text-bg-secondary rounded-1">
         <i class="ti tabler-menu icon-base"></i>
         <i class="ti tabler-chevron-right icon-base"></i>
     </a>
