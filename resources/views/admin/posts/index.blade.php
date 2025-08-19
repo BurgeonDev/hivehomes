@@ -65,13 +65,17 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
-                                    @if ($post->image)
-                                        <img src="{{ asset('storage/' . $post->image) }}" class="rounded me-2"
-                                            style="width:40px;height:40px;object-fit:cover;">
-                                    @endif
-                                    {{ $post->title }}
+                                    <a href="{{ url('/posts/' . $post->id) }}"
+                                        class="d-flex align-items-center text-decoration-none text-dark">
+                                        @if ($post->image)
+                                            <img src="{{ asset('storage/' . $post->image) }}" class="rounded me-2"
+                                                style="width:40px;height:40px;object-fit:cover;">
+                                        @endif
+                                        <span>{{ $post->title }}</span>
+                                    </a>
                                 </td>
                                 <td>{{ $post->category->name ?? '-' }}</td>
+
                                 <td>{{ $post->society->name }}</td>
                                 <td>{{ $post->user->name }}</td>
                                 <td>

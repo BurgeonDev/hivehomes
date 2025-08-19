@@ -1,5 +1,5 @@
 @extends('frontend.layouts.app')
-@section('title', 'Lead Pipeline')
+@section('title', 'Home ')
 @section('vendor-css')
 
 @endsection

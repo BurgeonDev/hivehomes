@@ -56,6 +56,15 @@ class PostController extends Controller
         $post->update(['status' => $request->status]);
         return back()->with('success', 'Status updated.');
     }
+    public function show($id)
+    {
+        $post = Post::with(['user', 'society'])
+            ->where('status', 'approved')
+            ->findOrFail($id);
+
+        return view('frontend.posts.index', compact('post'));
+    }
+
 
     // destroy(), approve(), reject() can be removed or kept if desired...
 }

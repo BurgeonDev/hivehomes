@@ -1,38 +1,34 @@
 <?php
 
-use App\Http\Controllers\CityController;
-use App\Http\Controllers\CountryController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\PostController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\SocietyController;
-use App\Http\Controllers\StateController;
-use App\Http\Controllers\UserController;
-use App\Models\State;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\{
+    CityController,
+    CountryController,
+    HomeController,
+    PostController,
+    ProfileController,
+    RoleController,
+    SocietyController,
+    StateController,
+    UserController
+};
+use App\Http\Controllers\Admin\ContactController;
 
+// Frontend Home
+Route::get('/', fn() => view('frontend.home'))->name('home');
 
-Route::get('/', function () {
-    return view('frontend.home');
-})->name('home');
+// Authenticated Dashboard
+Route::middleware(['auth', 'verified'])->get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
 
-
-Route::get('/dashboard', function () {
-    return view('admin.dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-
+// Profile Routes
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/societies', [SocietyController::class, 'index'])->name('societies.index');
-});
-Route::middleware(['auth'])->group(function () {
+// Location Resources (Authenticated)
+Route::middleware('auth')->group(function () {
     Route::resource('countries', CountryController::class);
     Route::resource('states', StateController::class);
     Route::resource('cities', CityController::class);
@@ -41,23 +37,25 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('societies', SocietyController::class);
 });
 
+// Dynamic Dropdown Endpoints
 Route::get('/get-cities-by-state/{state_id}', [CityController::class, 'getCitiesByState']);
 Route::get('/get-states-by-country/{country_id}', [StateController::class, 'getStatesByCountry']);
 Route::get('roles/users/data', [RoleController::class, 'usersData'])->name('roles.users.data');
 
-require __DIR__ . '/auth.php';
-Route::prefix('admin')
-    ->name('admin.')
-    ->middleware(['auth'])
-    ->group(function () {
-
-        Route::resource('posts', PostController::class);
-        Route::post('posts/{post}/status', [PostController::class, 'changeStatus'])
-            ->name('posts.changeStatus');
-    });
-
+// Contact Form (Frontend User)
 Route::post('/contact', [HomeController::class, 'contactStore'])->name('contact.store');
-Route::prefix('admin')->middleware(['auth'])->group(function () {
-    Route::get('/contacts', [\App\Http\Controllers\Admin\ContactController::class, 'index'])->name('admin.contacts.index');
-    Route::post('/contacts/{contact}/reply', [\App\Http\Controllers\Admin\ContactController::class, 'reply'])->name('admin.contacts.reply');
+Route::get('/posts/{id}', [HomeController::class, 'show'])->name('posts.show');
+
+// Admin Routes
+Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () {
+    // Posts
+    Route::resource('posts', PostController::class);
+    Route::post('posts/{post}/status', [PostController::class, 'changeStatus'])->name('posts.changeStatus');
+
+    // Contact Management
+    Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
+    Route::post('/contacts/{contact}/reply', [ContactController::class, 'reply'])->name('contacts.reply');
 });
+
+// Auth Routes
+require __DIR__ . '/auth.php';

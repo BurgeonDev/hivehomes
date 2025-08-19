@@ -21,9 +21,6 @@ return new class extends Migration
             $table->unsignedBigInteger('category_id')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('society_id');
-
-
-
             $table->timestamps();
         });
     }
