@@ -19,16 +19,16 @@
 
         <div class="card">
             <!-- Card Header -->
-            <div class="row card-header flex-column flex-md-row border-bottom mx-0 px-3">
+            <div class="px-3 mx-0 row card-header flex-column flex-md-row border-bottom">
                 <div class="col-md-auto me-auto">
-                    <h5 class="card-title mb-0">Users</h5>
+                    <h5 class="mb-0 card-title">Users</h5>
                 </div>
                 <div class="col-md-auto ms-auto">
-                    <div class="dt-buttons btn-group flex-wrap mb-0">
+                    <div class="flex-wrap mb-0 dt-buttons btn-group">
                         <div class="btn-group">
                             <button class="btn btn-label-primary dropdown-toggle me-4" type="button" id="exportDropdown"
                                 data-bs-toggle="dropdown" aria-expanded="false">
-                                <span class="d-flex align-items-center gap-2">
+                                <span class="gap-2 d-flex align-items-center">
                                     <i class="icon-base ti tabler-upload icon-xs me-sm-1"></i>
                                     <span class="d-none d-sm-inline-block">Export</span>
                                 </span>
@@ -51,14 +51,17 @@
             </div>
 
             <!-- DataTable -->
-            <div class="card-datatable table-responsive p-3">
+            <div class="p-3 card-datatable table-responsive">
                 <table class="table datatables-basic">
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th>Photo</th>
                             <th>Name</th>
                             <th>Email</th>
+                            <th>Phone</th>
                             <th>Roles</th>
+                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -66,26 +69,42 @@
                         @foreach ($users as $user)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
+                                <td>
+                                    @if ($user->profile_pic)
+                                        <img src="{{ asset('storage/' . $user->profile_pic) }}" class="rounded-circle"
+                                            style="width:40px;height:40px;object-fit:cover;">
+                                    @else
+                                        <span class="text-muted">—</span>
+                                    @endif
+                                </td>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
+                                <td>{{ $user->phone ?? '—' }}</td>
                                 <td>
                                     @foreach ($user->roles as $role)
                                         <span class="badge bg-label-secondary">{{ $role->name }}</span>
                                     @endforeach
                                 </td>
                                 <td>
+                                    <span class="badge {{ $user->status === 'active' ? 'bg-success' : 'bg-danger' }}">
+                                        {{ ucfirst($user->status) }}
+                                    </span>
+                                </td>
+                                <td>
                                     <button class="btn btn-sm btn-info"
-                                        onclick="editUser({{ $user }}, '{{ $user->roles->first()->name ?? '' }}')">Edit</button>
-
-                                    <form method="POST" action="{{ route('users.destroy', $user->id) }}" class="d-inline">
+                                        onclick="editUser({{ $user }}, '{{ $user->roles->first()->name ?? '' }}')">
+                                        Edit
+                                    </button>
+                                    <form method="POST" action="{{ route('users.destroy', $user) }}" class="d-inline">
                                         @csrf @method('DELETE')
                                         <button class="btn btn-sm btn-danger"
-                                            onclick="return confirm('Delete this user?')">Delete</button>
+                                            onclick="return confirm('Delete?')">Delete</button>
                                     </form>
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
+
                 </table>
             </div>
 
@@ -97,11 +116,11 @@
             <h5 id="offcanvasAddUserLabel" class="offcanvas-title">Add User</h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
         </div>
-        <div class="offcanvas-body mx-0 flex-grow-0 p-4 h-100">
-            <form method="POST" action="{{ route('users.store') }}" id="userForm">
+        <div class="flex-grow-0 p-4 mx-0 offcanvas-body h-100">
+            <form method="POST" action="{{ route('users.store') }}" id="userForm" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="_method" id="userFormMethod" value="POST">
-                <input type="hidden" id="user-id" name="user_id" value="">
+                <input type="hidden" id="user-id" name="user_id">
 
                 <div class="mb-3">
                     <label class="form-label" for="user-name">Full Name</label>
@@ -111,6 +130,27 @@
                 <div class="mb-3">
                     <label class="form-label" for="user-email">Email</label>
                     <input type="email" class="form-control" id="user-email" name="email" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="user-phone">Phone</label>
+                    <input type="text" class="form-control" id="user-phone" name="phone">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="user-status">Status</label>
+                    <select name="status" id="user-status" class="form-select">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Profile Picture</label>
+                    <input type="file" name="profile_pic" class="form-control">
+                    <div id="current-pic-wrapper" class="mt-2" style="display:none;">
+                        <img src="" id="current-pic" class="rounded-circle"
+                            style="width:60px;height:60px;object-fit:cover;">
+                    </div>
                 </div>
 
                 <div class="mb-3">
@@ -143,31 +183,41 @@
 
 @section('page-js')
     <script>
+        const userStoreUrl = "{{ route('users.store') }}";
+        const userUpdateUrl = "{{ url('users') }}/";
+
         function editUser(user, role) {
-            $('#userForm').attr('action', `/users/${user.id}`);
+            $('#userForm').attr('action', userUpdateUrl + user.id);
             $('#userFormMethod').val('PUT');
             $('#user-id').val(user.id);
             $('#user-name').val(user.name);
             $('#user-email').val(user.email);
+            $('#user-phone').val(user.phone);
+            $('#user-status').val(user.status);
             $('#user-role').val(role);
             $('#user-password').removeAttr('required').closest('#passwordField').hide();
 
+            if (user.profile_pic) {
+                $('#current-pic-wrapper').show();
+                $('#current-pic').attr('src', `/storage/${user.profile_pic}`);
+            } else {
+                $('#current-pic-wrapper').hide();
+            }
+
             $('#offcanvasAddUserLabel').text('Edit User');
-            const canvas = new bootstrap.Offcanvas(document.getElementById('offcanvasAddUser'));
-            canvas.show();
+            new bootstrap.Offcanvas($('#offcanvasAddUser')).show();
         }
 
-        document.getElementById('offcanvasAddUser').addEventListener('hidden.bs.offcanvas', function() {
-            $('#userForm').attr('action', "{{ route('users.store') }}");
+        $('#offcanvasAddUser').on('hidden.bs.offcanvas', function() {
+            $('#userForm').attr('action', userStoreUrl);
             $('#userFormMethod').val('POST');
-            $('#user-id').val('');
-            $('#user-name').val('');
-            $('#user-email').val('');
-            $('#user-role').val('');
+            $('#user-id,#user-name,#user-email,#user-phone').val('');
+            $('#user-status,#user-role').val('');
             $('#user-password').val('').attr('required', true).closest('#passwordField').show();
+            $('#current-pic-wrapper').hide();
             $('#offcanvasAddUserLabel').text('Add User');
-            $('#userFormSubmit').text('Submit');
         });
     </script>
+
 
 @endsection

@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -20,49 +21,67 @@ class UserController extends Controller
 
 
 
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
+            'role'     => 'required',
+            'phone'    => 'nullable|string|max:20',
+            'profile_pic' => 'nullable|image|max:2048',
+            'status'   => 'required|in:active,inactive',
+        ]);
+
+        if ($request->hasFile('profile_pic')) {
+            $data['profile_pic'] = $request->file('profile_pic')
+                ->store('users', 'public');
+        }
+
+        $data['password']   = Hash::make($data['password']);
+        $user = User::create($data);
+        $user->assignRole($data['role']);
+
+        return redirect()->route('users.index')
+            ->with('success', 'User created successfully.');
+    }
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'password' => 'nullable|min:6|confirmed',
-            'role' => 'required'
+        $data = $request->validate([
+            'name'         => 'required|string|max:255',
+            'email'        => 'required|email|unique:users,email,' . $id,
+            'password'     => 'nullable|min:6|confirmed',
+            'role'         => 'required',
+            'phone'        => 'nullable|string|max:20',
+            'profile_pic'  => 'nullable|image|max:2048',
+            'status'       => 'required|in:active,inactive',
         ]);
 
-        $user->name = $validated['name'];
-        $user->email = $validated['email'];
+        if (! empty($data['password'])) {
+            $user->password = Hash::make($data['password']);
+        }
+        // remove password fields so 'fill' won’t try to set them
+        unset($data['password'], $data['password_confirmation']);
 
-        if ($validated['password']) {
-            $user->password = Hash::make($validated['password']);
+        if ($request->hasFile('profile_pic')) {
+            if ($user->profile_pic) {
+                Storage::disk('public')->delete($user->profile_pic);
+            }
+            $data['profile_pic'] = $request->file('profile_pic')
+                ->store('users', 'public');
         }
 
-        $user->save();
+        $user->fill($data)->save();
+        $user->syncRoles([$data['role']]);
 
-        $user->syncRoles([$validated['role']]);
-
-        return redirect()->route('users.index')->with('success', 'User updated successfully.');
+        return redirect()->route('users.index')
+            ->with('success', 'User updated successfully.');
     }
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6',
-            'role' => 'required'
-        ]);
 
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-        ]);
 
-        $user->assignRole($validated['role']);
-
-        return redirect()->route('users.index')->with('success', 'User created successfully.');
-    }
 
     public function destroy($id)
     {
