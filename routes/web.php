@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\ContactController;
 // Frontend Home
 Route::get('/', fn() => view('frontend.home'))->name('home');
 Route::get('/contact-us', fn() => view('frontend.contact.index'))->name('contact');
+Route::get('/faq', fn() => view('frontend.faq.index'))->name('faq');
 
 // Authenticated Dashboard
 Route::middleware(['auth', 'verified'])->get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');

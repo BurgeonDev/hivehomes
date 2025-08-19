@@ -49,20 +49,11 @@
                             Home
                         </a>
                     </li>
-
-                    {{-- Features --}}
-                    <li class="nav-item">
-                        <a class="nav-link fw-medium" href="#landingFeatures">Features</a>
-                    </li>
-
-                    {{-- Team --}}
-                    <li class="nav-item">
-                        <a class="nav-link fw-medium" href="#landingTeam">Team</a>
-                    </li>
-
                     {{-- FAQ --}}
                     <li class="nav-item">
-                        <a class="nav-link fw-medium" href="#landingFAQ">FAQ</a>
+                        <a class="nav-link fw-medium {{ request()->is('faq') ? 'active' : '' }}"
+                            href="{{ route('faq') }}"> FAQ
+                        </a>
                     </li>
 
                     {{-- Contact Us --}}
@@ -73,10 +64,24 @@
                         </a>
                     </li>
 
-                    {{-- Admin (example external link) --}}
-                    <li class="nav-item">
-                        <a class="nav-link fw-medium" href="{{ url('/admin') }}" target="_blank">Admin</a>
-                    </li>
+
+                    @auth
+                        <li class="nav-item">
+                            <a class="nav-link fw-medium" href="{{ route('profile.edit') }}" target="_blank">Profile</a>
+                        </li>
+                    @endauth
+
+
+                    @php
+                        $user = auth()->user();
+                    @endphp
+
+                    @if ($user && ($user->hasRole('society_admin') || $user->hasRole('super_admin')))
+                        <li class="nav-item">
+                            <a class="nav-link fw-medium" href="{{ route('dashboard') }}" target="_blank">Admin</a>
+                        </li>
+                    @endif
+
                 </ul>
             </div>
 
@@ -94,16 +99,6 @@
                         </a>
                     </li>
                 @else
-                    {{-- Optional: Dashboard link for admins only --}}
-                    @if (auth()->user()->hasRole('society_admin') || auth()->user()->hasRole('super_admin'))
-                        <li class="me-2">
-                            <a href="{{ route('dashboard') }}" class="btn btn-success">
-                                <span class="tf-icons icon-base ti tabler-layout-dashboard scaleX-n1-rtl me-md-1"></span>
-                                <span class="d-none d-md-block">Dashboard</span>
-                            </a>
-                        </li>
-                    @endif
-
                     {{-- Logout Button --}}
                     <li>
                         <form method="POST" action="{{ route('logout') }}">
