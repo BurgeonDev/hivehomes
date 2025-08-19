@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Society;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
@@ -12,12 +13,29 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::with('roles')->get();
-        $roles = Role::all(); // ← Add this line
+        // Super Admin sees all users; Society Admin & Members see only their own society’s users
+        if (auth()->user()->hasRole('super_admin')) {
+            $users = User::with('roles', 'society')->get();
+        } else {
+            $users = User::with('roles', 'society')
+                ->where('society_id', auth()->user()->society_id)
+                ->get();
+        }
 
-        return view('admin.users.index', compact('users', 'roles'));
+        // Super Admin sees all roles; others only “member”
+        if (auth()->user()->hasRole('super_admin')) {
+            $roles = Role::all();
+        } else {
+            $roles = Role::where('name', 'member')->get();
+        }
+
+        // Societies for Super Admin only (for the create form)
+        $societies = auth()->user()->hasRole('super_admin')
+            ? Society::all()
+            : collect();
+
+        return view('admin.users.index', compact('users', 'roles', 'societies'));
     }
-
 
 
 
@@ -32,6 +50,7 @@ class UserController extends Controller
             'phone'    => 'nullable|string|max:20',
             'profile_pic' => 'nullable|image|max:2048',
             'status'   => 'required|in:active,inactive',
+            'society_id'  => 'required|exists:societies,id',
         ]);
 
         if ($request->hasFile('profile_pic')) {
@@ -58,6 +77,7 @@ class UserController extends Controller
             'phone'        => 'nullable|string|max:20',
             'profile_pic'  => 'nullable|image|max:2048',
             'status'       => 'required|in:active,inactive',
+            'society_id'  => 'required|exists:societies,id',
         ]);
 
         if (! empty($data['password'])) {

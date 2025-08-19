@@ -15,6 +15,7 @@ class AdminsTableSeeder extends Seeder
         ], [
             'name' => 'Super Admin',
             'password' => bcrypt('password'),
+            'phone' => '1234567890',
         ]);
         $superAdmin->assignRole('super_admin');
 
@@ -23,6 +24,8 @@ class AdminsTableSeeder extends Seeder
         ], [
             'name' => 'Society Admin',
             'password' => bcrypt('password'),
+            'society_id' => 1, // Assuming society with ID 1 exists
+            'phone' => '12345678910',
         ]);
         $societyAdmin->assignRole('society_admin');
     }

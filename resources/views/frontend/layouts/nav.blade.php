@@ -1,13 +1,13 @@
-<nav class="layout-navbar shadow-none py-0">
+<nav class="py-0 shadow-none layout-navbar">
     <div class="container">
-        <div class="navbar navbar-expand-lg landing-navbar px-3 px-md-8">
+        <div class="px-3 navbar navbar-expand-lg landing-navbar px-md-8">
             <!-- Menu logo wrapper: Start -->
-            <div class="navbar-brand app-brand demo d-flex py-0 me-4 me-xl-8 ms-0">
+            <div class="py-0 navbar-brand app-brand demo d-flex me-4 me-xl-8 ms-0">
                 <!-- Mobile menu toggle: Start-->
-                <button class="navbar-toggler border-0 px-0 me-4" type="button" data-bs-toggle="collapse"
+                <button class="px-0 border-0 navbar-toggler me-4" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                     aria-label="Toggle navigation">
-                    <i class="icon-base ti tabler-menu-2 icon-lg align-middle text-heading fw-medium"></i>
+                    <i class="align-middle icon-base ti tabler-menu-2 icon-lg text-heading fw-medium"></i>
                 </button>
                 <!-- Mobile menu toggle: End-->
                 <a href="landing-page.html" class="app-brand-link">
@@ -36,7 +36,7 @@
             <!-- Menu logo wrapper: End -->
             <!-- Menu wrapper: Start -->
             <div class="collapse navbar-collapse landing-nav-menu" id="navbarSupportedContent">
-                <button class="navbar-toggler border-0 text-heading position-absolute end-0 top-0 scaleX-n1-rtl p-2"
+                <button class="top-0 p-2 border-0 navbar-toggler text-heading position-absolute end-0 scaleX-n1-rtl"
                     type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="icon-base ti tabler-x icon-lg"></i>
@@ -63,12 +63,12 @@
                             aria-expanded="false" data-bs-toggle="mega-dropdown" data-trigger="hover">
                             <span data-i18n="Pages">Pages</span>
                         </a>
-                        <div class="dropdown-menu p-4 p-xl-8">
+                        <div class="p-4 dropdown-menu p-xl-8">
                             <div class="row gy-4">
                                 <div class="col-12 col-lg">
-                                    <div class="h6 d-flex align-items-center mb-3 mb-lg-5">
-                                        <div class="avatar flex-shrink-0 me-3">
-                                            <span class="avatar-initial rounded bg-label-primary"><i
+                                    <div class="mb-3 h6 d-flex align-items-center mb-lg-5">
+                                        <div class="flex-shrink-0 avatar me-3">
+                                            <span class="rounded avatar-initial bg-label-primary"><i
                                                     class="icon-base ti tabler-layout-grid icon-lg"></i></span>
                                         </div>
                                         <span class="ps-1">Other</span>
@@ -101,9 +101,9 @@
                                     </ul>
                                 </div>
                                 <div class="col-12 col-lg">
-                                    <div class="h6 d-flex align-items-center mb-3 mb-lg-5">
-                                        <div class="avatar flex-shrink-0 me-3">
-                                            <span class="avatar-initial rounded bg-label-primary"><i
+                                    <div class="mb-3 h6 d-flex align-items-center mb-lg-5">
+                                        <div class="flex-shrink-0 avatar me-3">
+                                            <span class="rounded avatar-initial bg-label-primary"><i
                                                     class="icon-base ti tabler-lock-open icon-lg"></i></span>
                                         </div>
                                         <span class="ps-1">Auth Demo</span>
@@ -184,9 +184,9 @@
                                     </ul>
                                 </div>
                                 <div class="col-12 col-lg">
-                                    <div class="h6 d-flex align-items-center mb-3 mb-lg-5">
-                                        <div class="avatar flex-shrink-0 me-3">
-                                            <span class="avatar-initial rounded bg-label-primary"><i
+                                    <div class="mb-3 h6 d-flex align-items-center mb-lg-5">
+                                        <div class="flex-shrink-0 avatar me-3">
+                                            <span class="rounded avatar-initial bg-label-primary"><i
                                                     class="icon-base ti tabler-file-analytics icon-lg"></i></span>
                                         </div>
                                         <span class="ps-1">Other</span>
@@ -259,7 +259,7 @@
                                     </ul>
                                 </div>
                                 <div class="col-lg-4 d-none d-lg-block">
-                                    <div class="bg-body nav-img-col p-2">
+                                    <div class="p-2 bg-body nav-img-col">
                                         <img src="{{ asset('assets/img/front-pages/misc/nav-item-col-img.png') }}"
                                             alt="nav item col image" class="w-100" />
                                     </div>
@@ -276,7 +276,7 @@
             <div class="landing-menu-overlay d-lg-none"></div>
             <!-- Menu wrapper: End -->
             <!-- Toolbar: Start -->
-            <ul class="navbar-nav flex-row align-items-center ms-auto">
+            <ul class="flex-row navbar-nav align-items-center ms-auto">
 
                 <!-- navbar button: Start -->
                 @guest
@@ -288,7 +288,7 @@
                     </li>
                 @else
                     {{-- Optional: Dashboard link for admins only --}}
-                    @if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('super_admin'))
+                    @if (auth()->user()->hasRole('society_admin') || auth()->user()->hasRole('super_admin'))
                         <li class="me-2">
                             <a href="{{ route('dashboard') }}" class="btn btn-success">
                                 <span class="tf-icons icon-base ti tabler-layout-dashboard scaleX-n1-rtl me-md-1"></span>

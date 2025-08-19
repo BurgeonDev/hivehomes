@@ -60,6 +60,7 @@
                             <th>Name</th>
                             <th>Email</th>
                             <th>Phone</th>
+                            <th>Society</th>
                             <th>Roles</th>
                             <th>Status</th>
                             <th>Actions</th>
@@ -80,6 +81,7 @@
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>{{ $user->phone ?? '—' }}</td>
+                                <td>{{ $user->society->name ?? '—' }}</td>
                                 <td>
                                     @foreach ($user->roles as $role)
                                         <span class="badge bg-label-secondary">{{ $role->name }}</span>
@@ -152,15 +154,34 @@
                             style="width:60px;height:60px;object-fit:cover;">
                     </div>
                 </div>
+                @role('super_admin')
+                    <div class="mb-3">
+                        <label class="form-label" for="user-society">Society</label>
+                        <select name="society_id" id="user-society" class="form-select" required>
+                            <option value="">— Select Society —</option>
+                            @foreach ($societies as $society)
+                                <option value="{{ $society->id }}">{{ $society->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                @else
+                    {{-- Society Admin / Member: hidden, auto-assigned --}}
+                    <input type="hidden" name="society_id" value="{{ auth()->user()->society_id }}">
+                @endrole
+                @role('super_admin')
+                    <div class="mb-3">
+                        <label class="form-label" for="user-role">Role</label>
+                        <select class="form-select" id="user-role" name="role" required>
+                            <option value="">— Select Role —</option>
+                            @foreach ($roles as $role)
+                                <option value="{{ $role->name }}">{{ ucfirst($role->name) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                @else
+                    <input type="hidden" name="role" value="member">
+                @endrole
 
-                <div class="mb-3">
-                    <label class="form-label" for="user-role">Role</label>
-                    <select class="form-select" id="user-role" name="role">
-                        @foreach ($roles as $role)
-                            <option value="{{ $role->name }}">{{ $role->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
 
                 <div class="mb-3" id="passwordField">
                     <label class="form-label" for="user-password">Password</label>
