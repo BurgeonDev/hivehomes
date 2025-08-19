@@ -67,7 +67,7 @@ class ProfileController extends Controller
 
             $user->update($data);
 
-            return Redirect::route('profile.edit')->with('success', 'Profile updated successfully!');
+            return Redirect::back()->with('success', 'Profile updated successfully!');
         } catch (Exception $e) {
             return Redirect::back()->with('error', 'Failed to update profile. ' . $e->getMessage());
         }

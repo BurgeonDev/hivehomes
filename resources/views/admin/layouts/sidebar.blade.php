@@ -39,7 +39,6 @@
             </a>
         </li>
 
-
         <!-- Location -->
         <li class="menu-item {{ request()->routeIs('countries.*', 'states.*', 'cities.*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
