@@ -24,14 +24,8 @@
     <link rel="stylesheet" href="{{ asset('/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
     <link rel="stylesheet" href="{{ asset('/assets/vendor/libs/@form-validation/form-validation.css') }}" />
     <link rel="stylesheet" href="{{ asset('/assets/vendor/css/pages/page-auth.css') }}" />
-    <script src="{{ asset('/assets/vendor/js/helpers.js') }}"></script>
-    <script src="{{ asset('/assets/vendor/js/template-customizer.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/bs-stepper/bs-stepper.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/mobile-stepper.css') }}" />
-    <script src="{{ asset('/assets/js/config.js') }}"></script>
-
-
 </head>
 
 <body>
@@ -84,6 +78,7 @@
         });
     </script>
     <script src="{{ asset('assets/vendor/libs/bs-stepper/bs-stepper.js') }}"></script>
+    @yield('page-js')
 </body>
 
 </html>

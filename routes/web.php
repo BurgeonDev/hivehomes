@@ -42,6 +42,8 @@ Route::middleware('auth')->group(function () {
 // Dynamic Dropdown Endpoints
 Route::get('/get-cities-by-state/{state_id}', [CityController::class, 'getCitiesByState']);
 Route::get('/get-states-by-country/{country_id}', [StateController::class, 'getStatesByCountry']);
+Route::get('/get-societies-by-city/{city_id}', [SocietyController::class, 'getSocietiesByCity']);
+
 Route::get('roles/users/data', [RoleController::class, 'usersData'])->name('roles.users.data');
 
 // Contact Form (Frontend User)

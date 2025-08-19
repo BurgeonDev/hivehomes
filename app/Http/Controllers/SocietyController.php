@@ -60,4 +60,9 @@ class SocietyController extends Controller
 
         return redirect()->route('societies.index')->with('success', 'Society deleted.');
     }
+    public function getSocietiesByCity($city_id)
+    {
+        $societies = Society::where('city_id', $city_id)->get();
+        return response()->json($societies);
+    }
 }
