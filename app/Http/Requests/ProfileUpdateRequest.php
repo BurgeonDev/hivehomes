@@ -25,6 +25,9 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
+            'profile_pic'  => 'nullable|image|max:2048',
+            'phone'        => 'nullable|string|max:20',
+            'status'       => 'required|in:active,inactive',
         ];
     }
 }
