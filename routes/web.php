@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
@@ -54,3 +55,9 @@ Route::prefix('admin')
         Route::post('posts/{post}/status', [PostController::class, 'changeStatus'])
             ->name('posts.changeStatus');
     });
+
+Route::post('/contact', [HomeController::class, 'contactStore'])->name('contact.store');
+Route::prefix('admin')->middleware(['auth'])->group(function () {
+    Route::get('/contacts', [\App\Http\Controllers\Admin\ContactController::class, 'index'])->name('admin.contacts.index');
+    Route::post('/contacts/{contact}/reply', [\App\Http\Controllers\Admin\ContactController::class, 'reply'])->name('admin.contacts.reply');
+});

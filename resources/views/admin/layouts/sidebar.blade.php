@@ -91,6 +91,12 @@
                 <div data-i18n="Posts">Posts</div>
             </a>
         </li>
+        <li class="menu-item {{ request()->routeIs('admin.contacts.*') ? 'active open' : '' }}">
+            <a href="{{ route('admin.contacts.index') }}" class="menu-link">
+                <i class="menu-icon icon-base ti tabler-message-dots"></i>
+                <div data-i18n="Contact Messages">Contact Messages</div>
+            </a>
+        </li>
 
     </ul>
 </aside>
