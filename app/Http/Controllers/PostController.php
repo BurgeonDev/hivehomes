@@ -2,69 +2,94 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
 use App\Models\Post;
-use App\Models\Society;
-use Illuminate\Support\Facades\Storage; // ← add this
-use App\Http\Requests\StorePostRequest;
-use App\Http\Requests\UpdatePostRequest;
+use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
-
-    public function index()
+    public function index(Request $request)
     {
-        $posts      = Post::with('user', 'society', 'category')->latest()->get();
+        $user = Auth::user();
+
+        // Start the query
+        $query = Post::with(['user', 'category']);
+
+        // Handle 'pending' and 'approved' filters
+        if ($request->filter === 'pending' && ($user->hasRole('super_admin') || $user->hasRole('society_admin'))) {
+            $query->where('status', 'pending');
+            if (! $user->hasRole('super_admin')) {
+                $query->where('society_id', $user->society_id);
+            }
+        } else {
+            $query->where('status', 'approved');
+            if (! $user->hasRole('super_admin')) {
+                $query->where('society_id', $user->society_id);
+            }
+        }
+
+        // Category filtering
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->category);
+        }
+
+        $posts = $query->latest()->paginate(9);
+
+        $approvedCount = Post::where('status', 'approved')
+            ->when(!$user->hasRole('super_admin'), fn($q) => $q->where('society_id', $user->society_id))
+            ->count();
+
+        $pendingCount = Post::where('status', 'pending')
+            ->when(!$user->hasRole('super_admin'), fn($q) => $q->where('society_id', $user->society_id))
+            ->count();
+
+        $categories = Category::orderBy('name')->get();
+
+        return view('frontend.posts.index', compact(
+            'posts',
+            'approvedCount',
+            'pendingCount',
+            'categories'
+        ));
+    }
+
+
+
+    public function create()
+    {
         $categories = Category::all();
-        $societies  = auth()->user()->hasRole('super_admin')
-            ? Society::all()
-            : collect();
-        return view('admin.posts.index', compact('posts', 'categories', 'societies'));
+        return view('frontend.posts.create', compact('categories'));
     }
 
-    public function store(StorePostRequest $request)
+    public function store(Request $request)
     {
-        $data = $request->validated();
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'image' => 'nullable|image',
+            'category_id' => 'required|exists:categories,id',
+        ]);
+
+        $data = $request->only(['title', 'description', 'category_id']);
         $data['user_id'] = auth()->id();
-        // society_id comes from form (select for SA, hidden otherwise)
+        $data['society_id'] = auth()->user()->society_id;
+        $data['status'] = 'pending';
+
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')
-                ->store('posts', 'public');
+            $data['image'] = $request->file('image')->store('posts', 'public');
         }
+
         Post::create($data);
-        return redirect()->route('admin.posts.index')->with('success', 'Post created!');
+        return redirect()->route('posts.index')->with('success', 'Post submitted for review.');
     }
 
-    public function update(UpdatePostRequest $request, Post $post)
-    {
-        $data = $request->validated();
-        if ($request->hasFile('image')) {
-            // delete old
-            Storage::disk('public')->delete($post->image);
-            $data['image'] = $request->file('image')
-                ->store('posts', 'public');
-        }
-        $post->update($data);
-        return redirect()->route('admin.posts.index')->with('success', 'Post updated!');
-    }
-
-    // New: inline status update
-    public function changeStatus(Request $request, Post $post)
-    {
-        $request->validate(['status' => 'required|in:pending,approved,rejected,expired']);
-        $post->update(['status' => $request->status]);
-        return back()->with('success', 'Status updated.');
-    }
     public function show($id)
     {
-        $post = Post::with(['user', 'society'])
+        $post = Post::with(['user', 'category', 'society'])
             ->where('status', 'approved')
             ->findOrFail($id);
 
-        return view('frontend.posts.index', compact('post'));
+        return view('frontend.posts.show', compact('post'));
     }
-
-
-    // destroy(), approve(), reject() can be removed or kept if desired...
 }

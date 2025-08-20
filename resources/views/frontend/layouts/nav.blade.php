@@ -66,11 +66,19 @@
 
 
                     @auth
+                        {{-- Posts --}}
+                        <li class="nav-item">
+                            <a class="nav-link fw-medium {{ request()->routeIs('posts.*') ? 'active' : '' }}"
+                                href="{{ route('posts.index') }}">
+                                Posts
+                            </a>
+                        </li>
+
+                        {{-- Profile --}}
                         <li class="nav-item">
                             <a class="nav-link fw-medium" href="{{ route('profile.show') }}" target="_blank">Profile</a>
                         </li>
                     @endauth
-
 
                     @php
                         $user = auth()->user();
@@ -81,6 +89,7 @@
                             <a class="nav-link fw-medium" href="{{ route('dashboard') }}" target="_blank">Admin</a>
                         </li>
                     @endif
+
 
                 </ul>
             </div>

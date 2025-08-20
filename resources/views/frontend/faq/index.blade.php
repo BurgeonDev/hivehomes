@@ -3,7 +3,8 @@
 
 @section('content')
 
-    <section class="overflow-hidden section-py first-section-pt help-center-header position-relative">
+    <section class="overflow-hidden section-py first-section-pt help-center-header position-relative"
+        style="min-height: 300px;">
         <img class="banner-bg-img z-n1" src="{{ asset('assets/img/pages/header.png') }}" alt="Header Background">
 
         <div class="container bottom-0 pb-4 text-center position-absolute start-50 translate-middle-x">

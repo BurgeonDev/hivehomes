@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     CityController,
+    CommentController,
     CountryController,
     HomeController,
     PostController,
@@ -13,6 +14,7 @@ use App\Http\Controllers\{
     UserController
 };
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\PostController as AdminPostController;
 
 // Frontend Home
 Route::get('/', fn() => view('frontend.home'))->name('home');
@@ -54,13 +56,21 @@ Route::get('/posts/{id}', [HomeController::class, 'show'])->name('posts.show');
 // Admin Routes
 Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () {
     // Posts
-    Route::resource('posts', PostController::class);
-    Route::post('posts/{post}/status', [PostController::class, 'changeStatus'])->name('posts.changeStatus');
+    Route::resource('posts', AdminPostController::class);
+    Route::post('posts/{post}/status', [AdminPostController::class, 'changeStatus'])->name('posts.changeStatus');
 
     // Contact Management
     Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
     Route::post('/contacts/{contact}/reply', [ContactController::class, 'reply'])->name('contacts.reply');
 });
+// FRONTEND POSTS (Users)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+    Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
+    Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+    Route::get('/posts/{id}', [PostController::class, 'show'])->name('posts.show');
+});
+Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->middleware('auth')->name('comments.store');
 
 // Auth Routes
 require __DIR__ . '/auth.php';
