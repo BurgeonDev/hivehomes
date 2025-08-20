@@ -29,16 +29,13 @@
         <!-- Our great team: End -->
 
         <!-- Pricing plans: Start -->
-        @include('frontend.home.pricing')
+        {{-- @include('frontend.home.pricing') --}}
         <!-- Pricing plans: End -->
 
-        <!-- Fun facts: Start -->
-        @include('frontend.home.facts')
-        <!-- Fun facts: End -->
 
 
         <!-- FAQ: Start -->
-        @include('frontend.home.faq')
+        {{-- @include('frontend.home.faq') --}}
         <!-- FAQ: End -->
 
 
@@ -46,8 +43,13 @@
         @include('frontend.home.cta')
         <!-- CTA: End -->
 
+        <!-- Fun facts: Start -->
+        @include('frontend.home.facts')
+        <!-- Fun facts: End -->
+
+
         <!-- Contact Us: Start -->
-        @include('frontend.home.contact')
+        {{-- @include('frontend.home.contact') --}}
         <!-- Contact Us: End -->
     </div>
 @endsection

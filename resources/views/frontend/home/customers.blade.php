@@ -244,7 +244,7 @@
      <!-- What people say slider: End -->
      <hr class="m-0 mt-6 mt-md-12" />
      <!-- Logo slider: Start -->
-     <div class="container">
+     {{-- <div class="container">
          <div class="pt-8 swiper-logo-carousel">
              <div class="swiper" id="swiper-clients-logos">
                  <div class="swiper-wrapper">
@@ -276,6 +276,6 @@
                  </div>
              </div>
          </div>
-     </div>
+     </div> --}}
      <!-- Logo slider: End -->
  </section>
