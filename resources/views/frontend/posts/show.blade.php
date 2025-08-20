@@ -55,10 +55,10 @@
                     <div class="col-lg-4 card-body p-md-8">
                         <div class="mb-4 shadow-sm card">
                             <div class="text-center card-body">
-                                @if (!empty($post->user->profile_photo_url))
-                                    <img src="{{ $post->user->profile_photo_url }}" alt="{{ $post->user->name }}"
-                                        class="mb-3 rounded-circle" width="100" height="100"
-                                        style="object-fit: cover;">
+                                @if (!empty($post->user->profile_pic))
+                                    <img src="{{ asset('storage/' . $post->user->profile_pic) }}"
+                                        alt="{{ $post->user->name }}" class="mb-3 rounded-circle" width="100"
+                                        height="100" style="object-fit: cover;">
                                 @else
                                     <div class="mx-auto mb-3 text-white avatar avatar-lg bg-primary rounded-circle"
                                         style="width: 100px; height: 100px; font-size: 36px; line-height: 100px;">
@@ -143,9 +143,9 @@
             @forelse ($post->comments()->latest()->get() as $comment)
                 <div class="pb-3 mb-4 border-bottom">
                     <div class="mb-2 d-flex align-items-center">
-                        @if (!empty($comment->user->profile_photo_url))
-                            <img src="{{ $comment->user->profile_photo_url }}" class="rounded-circle me-2" width="40"
-                                height="40" style="object-fit: cover;">
+                        @if (!empty($comment->user->profile_pic))
+                            <img src="{{ asset('storage/' . $comment->user->profile_pic) }}" class="rounded-circle me-2"
+                                width="40" height="40" style="object-fit: cover;">
                         @else
                             <div class="text-white avatar bg-primary rounded-circle me-2 d-flex align-items-center justify-content-center"
                                 style="width: 40px; height: 40px;">

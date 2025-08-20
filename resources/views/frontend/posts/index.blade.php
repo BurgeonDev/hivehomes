@@ -32,7 +32,8 @@
                         <p class="mb-0">Total {{ $approvedCount }} approved posts</p>
                     </div>
                     <div
-                        class="row-gap-4 d-flex justify-content-md-end align-items-center column-gap-6 flex-sm-row flex-column">
+                        class="row-gap-4 mb-3 d-flex flex-column flex-sm-row justify-content-md-end align-items-center column-gap-6">
+                        {{-- Category Filter --}}
                         <select class="form-select" name="category" id="categoryFilter">
                             <option value="">All Categories</option>
                             @foreach ($categories as $category)
@@ -43,6 +44,16 @@
                             @endforeach
                         </select>
 
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#createPostModal">
+                            <i class="ti ti-plus"></i> Add Post
+                        </button>
+                        @include('frontend.posts.partials.create-post')
+
+                        {{-- @auth
+                            @if (auth()->user()->hasRole('super_admin') || auth()->user()->hasRole('society_admin'))
+                                <div class="col-lg-6">
+                                    <div class="p-4 border
                         {{-- @auth
                             @if (auth()->user()->hasRole('super_admin') || auth()->user()->hasRole('society_admin'))
                                 <div class="col-lg-6">
@@ -107,9 +118,8 @@
                                                     <form action="{{ route('admin.posts.changeStatus', $post->id) }}"
                                                         method="POST" class="mt-2 w-100">
                                                         @csrf
-                                                        @method('PATCH')
                                                         <input type="hidden" name="status" value="approved">
-                                                        <button class="btn btn-success w-100"
+                                                        <button type="submit" class="btn btn-success w-100"
                                                             onclick="return confirm('Approve this post?')">
                                                             Approve Post
                                                         </button>
@@ -117,7 +127,6 @@
                                                 @endif
                                             @endif
                                         @endauth
-
                                     </div>
                                 </div>
                             </div>

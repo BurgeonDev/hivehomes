@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use App\Models\Category;
+use App\Models\Society;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,7 +13,9 @@ class PostController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-
+        $societies = $user->hasRole('super_admin')
+            ? Society::all()
+            : collect();
         // Start the query
         $query = Post::with(['user', 'category']);
 
@@ -50,30 +53,28 @@ class PostController extends Controller
             'posts',
             'approvedCount',
             'pendingCount',
-            'categories'
+            'categories',
+            'societies'
         ));
-    }
-
-
-
-    public function create()
-    {
-        $categories = Category::all();
-        return view('frontend.posts.create', compact('categories'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'required|string',
+            'body' => 'required|string',
             'image' => 'nullable|image',
             'category_id' => 'required|exists:categories,id',
         ]);
 
-        $data = $request->only(['title', 'description', 'category_id']);
+        $data = $request->only(['title', 'body', 'category_id']);
         $data['user_id'] = auth()->id();
-        $data['society_id'] = auth()->user()->society_id;
+        if (auth()->user()->hasRole('super_admin')) {
+            $data['society_id'] = $request->input('society_id');
+        } else {
+            $data['society_id'] = auth()->user()->society_id;
+        }
+
         $data['status'] = 'pending';
 
         if ($request->hasFile('image')) {
