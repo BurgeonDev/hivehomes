@@ -45,49 +45,9 @@ class ServiceProviderController extends Controller
     /**
      * Store a newly created service provider.
      */
+
+
     public function store(Request $request)
-    {
-        // 1. Base validation (no boolean rule on is_approved)
-        $rules = [
-            'name'            => 'required|string|max:255',
-            'type'            => 'required|string|max:100',
-            'phone'           => 'nullable|string|max:50',
-            'email'           => 'nullable|email|max:255',
-            'cnic'            => 'nullable|string|max:20',
-            'address'         => 'nullable|string',
-            'bio'             => 'nullable|string',
-            'profile_image'   => 'nullable|image|max:2048',
-        ];
-
-        // Only super-admin must supply society_id
-        if ($request->user()->hasRole('super_admin')) {
-            $rules['society_id'] = 'required|exists:societies,id';
-        }
-
-        $data = $request->validate($rules);
-
-        // 2. Force society for non-super-admins
-        if (! $request->user()->hasRole('super_admin')) {
-            $data['society_id'] = $request->user()->society_id;
-        }
-
-        // 3. Normalize the approved checkbox
-        $data['is_approved'] = $request->boolean('is_approved', false);
-
-        // 4. Handle image upload
-        if ($request->hasFile('profile_image')) {
-            $path = $request->file('profile_image')->store('public/service_providers');
-            $data['profile_image'] = Str::replaceFirst('public/', 'storage/', $path);
-        }
-
-        ServiceProvider::create($data);
-
-        return redirect()
-            ->route('admin.service-providers.index')
-            ->with('success', 'Service Provider added successfully.');
-    }
-
-    public function update(Request $request, ServiceProvider $service_provider)
     {
         // 1. Base validation
         $rules = [
@@ -101,38 +61,77 @@ class ServiceProviderController extends Controller
             'profile_image'   => 'nullable|image|max:2048',
         ];
 
-        // **Use the correct role name** for super_admin
         if ($request->user()->hasRole('super_admin')) {
             $rules['society_id'] = 'required|exists:societies,id';
         }
 
         $data = $request->validate($rules);
 
-        // 2. Force society for non–super admins (same role check)
+        // Force society for non–super admins
         if (! $request->user()->hasRole('super_admin')) {
             $data['society_id'] = $request->user()->society_id;
         }
 
-        // 3. Normalize the approved checkbox
+        // Normalize checkbox
         $data['is_approved'] = $request->boolean('is_approved', false);
 
-        // 4. Handle image replacement (unchanged)
+        // Handle profile image
         if ($request->hasFile('profile_image')) {
-            if ($service_provider->profile_image) {
-                $old = Str::replaceFirst('storage/', 'public/', $service_provider->profile_image);
-                Storage::delete($old);
-            }
-            $path = $request->file('profile_image')->store('public/service_providers');
-            $data['profile_image'] = Str::replaceFirst('public/', 'storage/', $path);
+            $path = $request->file('profile_image')->store('service_providers', 'public');
+            $data['profile_image'] = $path;  // store relative path only
         }
 
-        // 5. Perform the update
+        ServiceProvider::create($data);
+
+        return redirect()
+            ->route('admin.service-providers.index')
+            ->with('success', 'Service Provider added successfully.');
+    }
+
+
+    public function update(Request $request, ServiceProvider $service_provider)
+    {
+        $rules = [
+            'name'            => 'required|string|max:255',
+            'type'            => 'required|string|max:100',
+            'phone'           => 'nullable|string|max:50',
+            'email'           => 'nullable|email|max:255',
+            'cnic'            => 'nullable|string|max:20',
+            'address'         => 'nullable|string',
+            'bio'             => 'nullable|string',
+            'profile_image'   => 'nullable|image|max:2048',
+        ];
+
+        if ($request->user()->hasRole('super_admin')) {
+            $rules['society_id'] = 'required|exists:societies,id';
+        }
+
+        $data = $request->validate($rules);
+
+        if (! $request->user()->hasRole('super_admin')) {
+            $data['society_id'] = $request->user()->society_id;
+        }
+
+        $data['is_approved'] = $request->boolean('is_approved', false);
+
+        // Handle new profile image
+        if ($request->hasFile('profile_image')) {
+            if ($service_provider->profile_image) {
+                // Delete old file
+                Storage::disk('public')->delete($service_provider->profile_image);
+            }
+
+            $path = $request->file('profile_image')->store('service_providers', 'public');
+            $data['profile_image'] = $path;
+        }
+
         $service_provider->update($data);
 
         return redirect()
             ->route('admin.service-providers.index')
             ->with('success', 'Service Provider updated successfully.');
     }
+
 
 
     /**
@@ -151,5 +150,16 @@ class ServiceProviderController extends Controller
         return redirect()
             ->route('admin.service-providers.index')
             ->with('success', 'Service Provider deleted.');
+    }
+    public function toggle(Request $request, ServiceProvider $service_provider)
+    {
+        // validate the incoming value:
+        $data = $request->validate([
+            'is_active' => 'required|boolean',
+        ]);
+
+        $service_provider->update($data);
+
+        return back()->with('success', 'Status updated.');
     }
 }

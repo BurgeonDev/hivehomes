@@ -20,6 +20,7 @@ class ServiceProvider extends Model
         'bio',
         'profile_image',
         'is_approved',
+        'is_active',
     ];
 
     /**
@@ -40,5 +41,11 @@ class ServiceProvider extends Model
     public function society()
     {
         return $this->belongsTo(Society::class);
+    }
+    public function getProfileImageUrlAttribute()
+    {
+        return $this->profile_image
+            ? asset('storage/' . $this->profile_image)
+            : asset('images/default-avatar.png');
     }
 }

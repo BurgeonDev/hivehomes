@@ -76,6 +76,10 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
         ->except(['create', 'show', 'edit']);
     Route::post('service-providers/{id}/review', [ServiceProviderController::class, 'addReview'])
         ->name('service-providers.review');
+    Route::post(
+        'service-providers/{service_provider}/toggle',
+        [ServiceProviderController::class, 'toggle']
+    )->name('service-providers.toggle');
 });
 
 require __DIR__ . '/auth.php';

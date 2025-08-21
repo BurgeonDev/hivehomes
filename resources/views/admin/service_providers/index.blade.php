@@ -45,6 +45,7 @@
                                 <th>Society</th>
                             @endrole
                             <th>Approved</th>
+                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -52,15 +53,17 @@
                         @foreach ($providers as $sp)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td class="d-flex align-items-center">
-                                    @if ($sp->profile_image_url)
-                                        <img src="{{ asset('storage/' . $sp->profile_image_url) }}"
-                                            class="rounded-circle me-2" width="32" height="32">
-                                    @else
-                                        <img src="https://ui-avatars.com/api/?name={{ urlencode($sp->name) }}&background=ddd&color=555"
-                                            class="rounded-circle me-2" width="32" height="32">
-                                    @endif
-                                    {{ $sp->name }}
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        @if ($sp->profile_image)
+                                            <img src="{{ $sp->profile_image_url }}" class="rounded-circle me-2"
+                                                width="32" height="32">
+                                        @else
+                                            <img src="https://ui-avatars.com/api/?name={{ urlencode($sp->name) }}&background=ddd&color=555"
+                                                class="rounded-circle me-2" width="32" height="32">
+                                        @endif
+                                        <span>{{ $sp->name }}</span>
+                                    </div>
                                 </td>
                                 <td>{{ ucfirst($sp->type) }}</td>
                                 <td>{{ $sp->phone }}</td>
@@ -69,23 +72,46 @@
                                     <td>{{ $sp->society->name }}</td>
                                 @endrole
                                 <td>
-                                    @if ($sp->is_approved)
-                                        <span class="badge bg-success">Yes</span>
-                                    @else
-                                        <span class="badge bg-warning">No</span>
-                                    @endif
+                                    {!! $sp->is_approved ? '<span class="badge bg-success">Yes</span>' : '<span class="badge bg-warning">No</span>' !!}
                                 </td>
                                 <td>
-                                    <button class="btn btn-sm btn-info" onclick='editSP(@json($sp))'>
-                                        Edit
-                                    </button>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm dropdown-toggle" type="button"
+                                            id="approvedDropdown{{ $sp->id }}" data-bs-toggle="dropdown">
+                                            <span class="badge {{ $sp->is_active ? 'bg-success' : 'bg-warning' }}">
+                                                {{ $sp->is_active ? 'Active' : 'Inactive' }}
+                                            </span>
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="approvedDropdown{{ $sp->id }}">
+                                            <li>
+                                                <form action="{{ route('admin.service-providers.toggle', $sp) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="is_active" value="1">
+                                                    <button class="dropdown-item"><span
+                                                            class="badge bg-success">Active</span></button>
+                                                </form>
+                                            </li>
+                                            <li>
+                                                <form action="{{ route('admin.service-providers.toggle', $sp) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="is_active" value="0">
+                                                    <button class="dropdown-item"><span
+                                                            class="badge bg-warning">Inactive</span></button>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-info"
+                                        onclick='editSP(@json($sp))'>Edit</button>
                                     <form action="{{ route('admin.service-providers.destroy', $sp) }}" method="POST"
                                         class="d-inline">
                                         @csrf @method('DELETE')
                                         <button class="btn btn-sm btn-danger"
-                                            onclick="return confirm('Delete this provider?')">
-                                            Delete
-                                        </button>
+                                            onclick="return confirm('Delete this provider?')">Delete</button>
                                     </form>
                                 </td>
                             </tr>
@@ -106,6 +132,7 @@
                         @csrf
                         <input type="hidden" name="_method" id="spFormMethod" value="POST">
 
+                        {{-- Society Dropdown --}}
                         @if (auth()->user()->hasRole('super_admin'))
                             <div class="mb-3">
                                 <label class="form-label">Society</label>
@@ -180,27 +207,18 @@
                     </form>
                 </div>
             </div>
-
         </div>
     </div>
-@endsection
-
-@section('vendor-js')
-    <script src="{{ asset('assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.js') }}"></script>
 @endsection
 
 @section('page-js')
     <script>
         function editSP(sp) {
-            // form setup
             $('#spForm').attr('action', `/admin/service-providers/${sp.id}`);
             $('#spFormMethod').val('PUT');
             $('#spCanvasTitle').text('Edit Provider');
             $('#spFormSubmit').text('Update');
 
-            // fill values
             @if (auth()->user()->hasRole('super_admin'))
                 $('#sp-society').val(sp.society_id);
             @endif
@@ -213,9 +231,8 @@
             $('#sp-bio').val(sp.bio);
             $('#sp-approved').prop('checked', sp.is_approved);
 
-            // preview image or avatar
-            if (sp.profile_image_url) {
-                $('#sp-preview-img').attr('src', `/storage/${sp.profile_image_url}`);
+            if (sp.profile_image) {
+                $('#sp-preview-img').attr('src', `{{ Storage::url('') }}/${sp.profile_image.replace('public/', '')}`);
             } else {
                 $('#sp-preview-img').attr('src',
                     `https://ui-avatars.com/api/?name=${encodeURIComponent(sp.name)}&background=ddd&color=555`);
@@ -224,7 +241,6 @@
             new bootstrap.Offcanvas($('#offcanvasSPForm')).show();
         }
 
-        // live preview on file select
         $('#sp-profile-image').on('change', function(e) {
             const file = e.target.files[0];
             if (file) {
@@ -234,7 +250,6 @@
             }
         });
 
-        // reset form on close
         document.getElementById('offcanvasSPForm').addEventListener('hidden.bs.offcanvas', function() {
             $('#spForm').attr('action', "{{ route('admin.service-providers.store') }}");
             $('#spFormMethod').val('POST');
