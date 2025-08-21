@@ -56,10 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('users', UserController::class);
     Route::resource('societies', SocietyController::class);
 
-    // Dynamic dropdowns
-    Route::get('/get-states-by-country/{country_id}', [StateController::class, 'getStatesByCountry']);
-    Route::get('/get-cities-by-state/{state_id}', [CityController::class, 'getCitiesByState']);
-    Route::get('/get-societies-by-city/{city_id}', [SocietyController::class, 'getSocietiesByCity']);
+
 
     // Roles users data
     Route::get('roles/users/data', [RoleController::class, 'usersData'])->name('roles.users.data');
@@ -82,4 +79,9 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     )->name('service-providers.toggle');
 });
 
+
+// Dynamic dropdowns
+Route::get('/get-states-by-country/{country_id}', [StateController::class, 'getStatesByCountry']);
+Route::get('/get-cities-by-state/{state_id}', [CityController::class, 'getCitiesByState']);
+Route::get('/get-societies-by-city/{city_id}', [SocietyController::class, 'getSocietiesByCity']);
 require __DIR__ . '/auth.php';
