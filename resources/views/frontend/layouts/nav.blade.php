@@ -73,6 +73,12 @@
                                 Posts
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link fw-medium {{ request()->routeIs('service-providers.*') ? 'active' : '' }}"
+                                href="{{ route('service-providers.index') }}">
+                                Services
+                            </a>
+                        </li>
 
                         {{-- Profile --}}
                         <li class="nav-item">

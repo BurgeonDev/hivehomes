@@ -11,11 +11,12 @@ use App\Http\Controllers\{
     RoleController,
     SocietyController,
     StateController,
-    UserController
+    UserController,
+    ServiceProviderController
 };
 use App\Http\Controllers\Admin\{
     ContactController,
-    ServiceProviderController,
+    ServiceProviderController as AdminServiceProviderController,
     PostController as AdminPostController
 };
 
@@ -55,9 +56,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
     Route::resource('societies', SocietyController::class);
-
-
-
+    Route::resource('service-providers', ServiceProviderController::class);
+    Route::post('service-providers/{service_provider}/reviews', [ServiceProviderController::class, 'storeReview'])
+        ->name('providers.reviews.store');
     // Roles users data
     Route::get('roles/users/data', [RoleController::class, 'usersData'])->name('roles.users.data');
 });
@@ -69,19 +70,19 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('contacts', [ContactController::class, 'index'])->name('contacts.index');
     Route::post('contacts/{contact}/reply', [ContactController::class, 'reply'])->name('contacts.reply');
 
-    Route::resource('service-providers', ServiceProviderController::class)
+    Route::resource('service-providers', AdminServiceProviderController::class)
         ->except(['create', 'show', 'edit']);
-    Route::post('service-providers/{id}/review', [ServiceProviderController::class, 'addReview'])
-        ->name('service-providers.review');
     Route::post(
         'service-providers/{service_provider}/toggle',
-        [ServiceProviderController::class, 'toggle']
+        [AdminServiceProviderController::class, 'toggle']
     )->name('service-providers.toggle');
 });
+
 
 
 // Dynamic dropdowns
 Route::get('/get-states-by-country/{country_id}', [StateController::class, 'getStatesByCountry']);
 Route::get('/get-cities-by-state/{state_id}', [CityController::class, 'getCitiesByState']);
 Route::get('/get-societies-by-city/{city_id}', [SocietyController::class, 'getSocietiesByCity']);
+
 require __DIR__ . '/auth.php';
