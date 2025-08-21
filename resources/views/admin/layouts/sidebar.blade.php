@@ -96,6 +96,12 @@
                 <div data-i18n="Contact Messages">Contact Messages</div>
             </a>
         </li>
+        <li class="menu-item {{ request()->routeIs('admin.service-providers.*') ? 'active open' : '' }}">
+            <a href="{{ route('admin.service-providers.index') }}" class="menu-link">
+                <i class="menu-icon icon-base ti tabler-tool"></i>
+                <div data-i18n="Service Providers">Service Providers</div>
+            </a>
+        </li>
 
     </ul>
 </aside>
