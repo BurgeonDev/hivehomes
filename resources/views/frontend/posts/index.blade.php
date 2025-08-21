@@ -70,10 +70,12 @@
                             <p class="mb-0 text-muted">Browse posts from your society</p>
                         </div>
                         <div class="gap-2 d-flex align-items-center">
-                            <div class="text-center shadow-sm kpi-card">
-                                <div class="small text-muted">Total posts</div>
-                                <div class="mb-0 display-6 fw-bold">{{ number_format($approvedCount ?? 0) }}</div>
-                            </div>
+                            <button type="button" class="btn btn-label-primary waves-effect">
+                                Total posts
+                                <span
+                                    class="text-white badge bg-primary badge-center ms-1">{{ number_format($approvedCount ?? 0) }}</span>
+                            </button>
+
                             <div class="ms-2">
                                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPostModal">
                                     <i class="menu-icon icon-base ti tabler-plus me-1"></i> Add Post
