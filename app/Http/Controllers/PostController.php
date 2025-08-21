@@ -90,7 +90,7 @@ class PostController extends Controller
         $post = Post::with(['user', 'category', 'society'])
             ->where('status', 'approved')
             ->findOrFail($id);
-
+        $post->increment('views');
         return view('frontend.posts.show', compact('post'));
     }
 }
