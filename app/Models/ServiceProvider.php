@@ -37,4 +37,8 @@ class ServiceProvider extends Model
     {
         return $this->reviews()->avg('rating');
     }
+    public function society()
+    {
+        return $this->belongsTo(Society::class);
+    }
 }

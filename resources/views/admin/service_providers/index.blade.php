@@ -41,6 +41,9 @@
                             <th>Type</th>
                             <th>Phone</th>
                             <th>Email</th>
+                            @role('super_admin')
+                                <th>Society</th>
+                            @endrole
                             <th>Approved</th>
                             <th>Actions</th>
                         </tr>
@@ -49,10 +52,22 @@
                         @foreach ($providers as $sp)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $sp->name }}</td>
+                                <td class="d-flex align-items-center">
+                                    @if ($sp->profile_image_url)
+                                        <img src="{{ asset('storage/' . $sp->profile_image_url) }}"
+                                            class="rounded-circle me-2" width="32" height="32">
+                                    @else
+                                        <img src="https://ui-avatars.com/api/?name={{ urlencode($sp->name) }}&background=ddd&color=555"
+                                            class="rounded-circle me-2" width="32" height="32">
+                                    @endif
+                                    {{ $sp->name }}
+                                </td>
                                 <td>{{ ucfirst($sp->type) }}</td>
                                 <td>{{ $sp->phone }}</td>
                                 <td>{{ $sp->email }}</td>
+                                @role('super_admin')
+                                    <td>{{ $sp->society->name }}</td>
+                                @endrole
                                 <td>
                                     @if ($sp->is_approved)
                                         <span class="badge bg-success">Yes</span>
@@ -61,7 +76,7 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <button class="btn btn-sm btn-info" onclick="editSP({{ $sp }})">
+                                    <button class="btn btn-sm btn-info" onclick='editSP(@json($sp))'>
                                         Edit
                                     </button>
                                     <form action="{{ route('admin.service-providers.destroy', $sp) }}" method="POST"
@@ -91,8 +106,19 @@
                         @csrf
                         <input type="hidden" name="_method" id="spFormMethod" value="POST">
 
-                        {{-- Society (hidden or pre-filled) --}}
-                        <input type="hidden" name="society_id" value="{{ auth()->user()->society_id }}">
+                        @if (auth()->user()->hasRole('super_admin'))
+                            <div class="mb-3">
+                                <label class="form-label">Society</label>
+                                <select name="society_id" id="sp-society" class="form-select" required>
+                                    <option value="">Select society…</option>
+                                    @foreach ($allSocieties as $society)
+                                        <option value="{{ $society->id }}">{{ $society->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @else
+                            <input type="hidden" name="society_id" value="{{ auth()->user()->society_id }}">
+                        @endif
 
                         <div class="mb-3">
                             <label class="form-label">Name</label>
@@ -106,7 +132,6 @@
                                 <option value="plumber">Plumber</option>
                                 <option value="electrician">Electrician</option>
                                 <option value="carpenter">Carpenter</option>
-                                {{-- add more as needed --}}
                             </select>
                         </div>
 
@@ -130,21 +155,6 @@
                             <label class="form-label">Address</label>
                             <textarea name="address" id="sp-address" class="form-control" rows="2"></textarea>
                         </div>
-                        {{-- Inside your form, instead of the hidden field: --}}
-                        @if (auth()->user()->hasRole('super_admin'))
-                            <div class="mb-3">
-                                <label class="form-label">Society</label>
-                                <select name="society_id" id="sp-society" class="form-select" required>
-                                    <option value="">Select society…</option>
-                                    @foreach ($allSocieties as $society)
-                                        <option value="{{ $society->id }}">{{ $society->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        @else
-                            {{-- Non–super admins cannot change society --}}
-                            <input type="hidden" name="society_id" value="{{ auth()->user()->society_id }}">
-                        @endif
 
                         <div class="mb-3">
                             <label class="form-label">Bio / Services</label>
@@ -153,7 +163,11 @@
 
                         <div class="mb-3">
                             <label class="form-label">Profile Image</label>
-                            <input type="file" name="profile_image" class="form-control">
+                            <div class="mb-2">
+                                <img src="https://ui-avatars.com/api/?name=&background=ddd&color=555" id="sp-preview-img"
+                                    class="rounded-circle" width="60" height="60">
+                            </div>
+                            <input type="file" name="profile_image" id="sp-profile-image" class="form-control">
                         </div>
 
                         <div class="mb-4 form-check">
@@ -180,13 +194,16 @@
 @section('page-js')
     <script>
         function editSP(sp) {
-            // set form action & method
+            // form setup
             $('#spForm').attr('action', `/admin/service-providers/${sp.id}`);
             $('#spFormMethod').val('PUT');
             $('#spCanvasTitle').text('Edit Provider');
             $('#spFormSubmit').text('Update');
 
-            // populate fields
+            // fill values
+            @if (auth()->user()->hasRole('super_admin'))
+                $('#sp-society').val(sp.society_id);
+            @endif
             $('#sp-name').val(sp.name);
             $('#sp-type').val(sp.type);
             $('#sp-phone').val(sp.phone);
@@ -196,17 +213,35 @@
             $('#sp-bio').val(sp.bio);
             $('#sp-approved').prop('checked', sp.is_approved);
 
-            // show offcanvas
+            // preview image or avatar
+            if (sp.profile_image_url) {
+                $('#sp-preview-img').attr('src', `/storage/${sp.profile_image_url}`);
+            } else {
+                $('#sp-preview-img').attr('src',
+                    `https://ui-avatars.com/api/?name=${encodeURIComponent(sp.name)}&background=ddd&color=555`);
+            }
+
             new bootstrap.Offcanvas($('#offcanvasSPForm')).show();
         }
 
-        // Reset form on close
+        // live preview on file select
+        $('#sp-profile-image').on('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => $('#sp-preview-img').attr('src', e.target.result);
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // reset form on close
         document.getElementById('offcanvasSPForm').addEventListener('hidden.bs.offcanvas', function() {
             $('#spForm').attr('action', "{{ route('admin.service-providers.store') }}");
             $('#spFormMethod').val('POST');
             $('#spCanvasTitle').text('Add Provider');
             $('#spFormSubmit').text('Submit');
             $('#spForm')[0].reset();
+            $('#sp-preview-img').attr('src', 'https://ui-avatars.com/api/?name=&background=ddd&color=555');
         });
     </script>
 @endsection

@@ -101,21 +101,22 @@ class ServiceProviderController extends Controller
             'profile_image'   => 'nullable|image|max:2048',
         ];
 
-        if ($request->user()->hasRole('super-admin')) {
+        // **Use the correct role name** for super_admin
+        if ($request->user()->hasRole('super_admin')) {
             $rules['society_id'] = 'required|exists:societies,id';
         }
 
         $data = $request->validate($rules);
 
-        // 2. Force society for non-super-admins
-        if (! $request->user()->hasRole('super-admin')) {
+        // 2. Force society for non–super admins (same role check)
+        if (! $request->user()->hasRole('super_admin')) {
             $data['society_id'] = $request->user()->society_id;
         }
 
         // 3. Normalize the approved checkbox
         $data['is_approved'] = $request->boolean('is_approved', false);
 
-        // 4. Image replacement
+        // 4. Handle image replacement (unchanged)
         if ($request->hasFile('profile_image')) {
             if ($service_provider->profile_image) {
                 $old = Str::replaceFirst('storage/', 'public/', $service_provider->profile_image);
@@ -125,12 +126,14 @@ class ServiceProviderController extends Controller
             $data['profile_image'] = Str::replaceFirst('public/', 'storage/', $path);
         }
 
+        // 5. Perform the update
         $service_provider->update($data);
 
         return redirect()
             ->route('admin.service-providers.index')
             ->with('success', 'Service Provider updated successfully.');
     }
+
 
     /**
      * Remove the specified service provider.
