@@ -69,11 +69,11 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $state->name }}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-info"
+                                    <button class="btn btn-sm badge bg-label-info"
                                         onclick="editState({{ $state }})">Edit</button>
                                     <form method="POST" action="{{ route('states.destroy', $state) }}" class="d-inline">
                                         @csrf @method('DELETE')
-                                        <button class="btn btn-sm btn-danger"
+                                        <button class="btn btn-sm badge bg-label-danger"
                                             onclick="return confirm('Delete this state?')">Delete</button>
                                     </form>
                                 </td>

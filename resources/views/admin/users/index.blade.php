@@ -88,18 +88,19 @@
                                     @endforeach
                                 </td>
                                 <td>
-                                    <span class="badge {{ $user->status === 'active' ? 'bg-success' : 'bg-danger' }}">
+                                    <span
+                                        class="badge {{ $user->status === 'active' ? 'badge bg-label-success' : 'badge bg-label-danger' }}">
                                         {{ ucfirst($user->status) }}
                                     </span>
                                 </td>
                                 <td>
-                                    <button class="btn btn-sm btn-info"
+                                    <button class="btn btn-sm badge bg-label-info"
                                         onclick="editUser({{ $user }}, '{{ $user->roles->first()->name ?? '' }}')">
                                         Edit
                                     </button>
                                     <form method="POST" action="{{ route('users.destroy', $user) }}" class="d-inline">
                                         @csrf @method('DELETE')
-                                        <button class="btn btn-sm btn-danger"
+                                        <button class="btn btn-sm badge bg-label-danger"
                                             onclick="return confirm('Delete?')">Delete</button>
                                     </form>
                                 </td>

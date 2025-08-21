@@ -197,7 +197,7 @@
                             </div>
 
                             <div class="text-end">
-                                <button class="btn btn-danger" onclick="return confirm('Are you sure?')">
+                                <button class="btn badge bg-label-danger" onclick="return confirm('Are you sure?')">
                                     Delete Account
                                 </button>
                             </div>

@@ -75,12 +75,12 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $country->name }}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-info"
+                                    <button class="btn btn-sm badge bg-label-info"
                                         onclick="editCountry({{ $country }})">Edit</button>
                                     <form method="POST" action="{{ route('countries.destroy', $country) }}"
                                         class="d-inline">
                                         @csrf @method('DELETE')
-                                        <button class="btn btn-sm btn-danger"
+                                        <button class="btn btn-sm badge bg-label-danger"
                                             onclick="return confirm('Delete this country?')">Delete</button>
                                     </form>
                                 </td>

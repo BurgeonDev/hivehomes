@@ -86,7 +86,8 @@
                                         required>
                                         <option value="active" {{ auth()->user()->status === 'active' ? 'selected' : '' }}>
                                             Active</option>
-                                        <option value="inactive" {{ auth()->user()->status === 'inactive' ? 'selected' : '' }}>
+                                        <option value="inactive"
+                                            {{ auth()->user()->status === 'inactive' ? 'selected' : '' }}>
                                             Inactive</option>
                                     </select>
                                     @error('status')
@@ -189,7 +190,7 @@
                             </div>
 
                             <div class="text-end">
-                                <button class="btn btn-danger" onclick="return confirm('Are you sure?')">
+                                <button class="btn badge bg-label-danger" onclick="return confirm('Are you sure?')">
                                     Delete Account
                                 </button>
                             </div>

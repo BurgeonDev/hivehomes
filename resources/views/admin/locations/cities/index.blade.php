@@ -44,8 +44,9 @@
                                 <td>{{ $city->state->name }}</td>
                                 <td>{{ $city->state->country->name }}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-info edit-city-btn" data-id="{{ $city->id }}"
-                                        data-name="{{ $city->name }}" data-state-id="{{ $city->state->id }}"
+                                    <button class="btn btn-sm badge bg-label-info edit-city-btn"
+                                        data-id="{{ $city->id }}" data-name="{{ $city->name }}"
+                                        data-state-id="{{ $city->state->id }}"
                                         data-country-id="{{ $city->state->country->id }}" data-bs-toggle="offcanvas"
                                         data-bs-target="#offcanvasAddCity">
                                         Edit
@@ -55,7 +56,7 @@
                                         onsubmit="return confirm('Are you sure you want to delete this city?');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                        <button type="submit" class="btn btn-sm badge bg-label-danger">Delete</button>
                                     </form>
                                 </td>
 

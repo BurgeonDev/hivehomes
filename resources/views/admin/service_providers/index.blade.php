@@ -72,13 +72,16 @@
                                     <td>{{ $sp->society->name }}</td>
                                 @endrole
                                 <td>
-                                    {!! $sp->is_approved ? '<span class="badge bg-success">Yes</span>' : '<span class="badge bg-warning">No</span>' !!}
+                                    {!! $sp->is_approved
+                                        ? '<span class="badge bg-label-success">Yes</span>'
+                                        : '<span class="badge bg-label-warning">No</span>' !!}
                                 </td>
                                 <td>
                                     <div class="dropdown">
                                         <button class="btn btn-sm dropdown-toggle" type="button"
                                             id="approvedDropdown{{ $sp->id }}" data-bs-toggle="dropdown">
-                                            <span class="badge {{ $sp->is_active ? 'bg-success' : 'bg-warning' }}">
+                                            <span
+                                                class="badge {{ $sp->is_active ? 'bg-label-success' : 'bg-label-warning' }}">
                                                 {{ $sp->is_active ? 'Active' : 'Inactive' }}
                                             </span>
                                         </button>
@@ -89,7 +92,7 @@
                                                     @csrf
                                                     <input type="hidden" name="is_active" value="1">
                                                     <button class="dropdown-item"><span
-                                                            class="badge bg-success">Active</span></button>
+                                                            class="badge bg-label-success">Active</span></button>
                                                 </form>
                                             </li>
                                             <li>
@@ -98,19 +101,19 @@
                                                     @csrf
                                                     <input type="hidden" name="is_active" value="0">
                                                     <button class="dropdown-item"><span
-                                                            class="badge bg-warning">Inactive</span></button>
+                                                            class="badge bg-label-warning">Inactive</span></button>
                                                 </form>
                                             </li>
                                         </ul>
                                     </div>
                                 </td>
                                 <td>
-                                    <button class="btn btn-sm btn-info"
+                                    <button class="btn btn-sm badge bg-label-info"
                                         onclick='editSP(@json($sp))'>Edit</button>
                                     <form action="{{ route('admin.service-providers.destroy', $sp) }}" method="POST"
                                         class="d-inline">
                                         @csrf @method('DELETE')
-                                        <button class="btn btn-sm btn-danger"
+                                        <button class="btn btn-sm badge bg-label-danger"
                                             onclick="return confirm('Delete this provider?')">Delete</button>
                                     </form>
                                 </td>

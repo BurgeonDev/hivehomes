@@ -17,12 +17,12 @@
         </nav>
 
         <div class="card">
-            <div class="row card-header flex-column flex-md-row border-bottom mx-0 px-3">
+            <div class="px-3 mx-0 row card-header flex-column flex-md-row border-bottom">
                 <div class="col-md-auto me-auto">
-                    <h5 class="card-title mb-0">Societies</h5>
+                    <h5 class="mb-0 card-title">Societies</h5>
                 </div>
                 <div class="col-md-auto ms-auto">
-                    <div class="dt-buttons btn-group flex-wrap mb-0">
+                    <div class="flex-wrap mb-0 dt-buttons btn-group">
                         <button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddSociety">
                             <i class="icon-base ti tabler-plus icon-sm"></i>
                             <span class="d-none d-sm-inline-block">Add Society</span>
@@ -31,7 +31,7 @@
                 </div>
             </div>
 
-            <div class="card-datatable table-responsive p-3">
+            <div class="p-3 card-datatable table-responsive">
                 <table class="table datatables-basic">
                     <thead>
                         <tr>
@@ -56,12 +56,12 @@
                                 <td>{{ $society->country->name ?? '-' }}</td>
                                 <td>{{ $society->admin->name ?? '-' }}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-info"
+                                    <button class="btn btn-sm badge bg-label-info"
                                         onclick='editSociety(@json($society))'>Edit</button>
                                     <form method="POST" action="{{ route('societies.destroy', $society->id) }}"
                                         class="d-inline">
                                         @csrf @method('DELETE')
-                                        <button class="btn btn-sm btn-danger"
+                                        <button class="btn btn-sm badge bg-label-danger"
                                             onclick="return confirm('Delete this society?')">Delete</button>
                                     </form>
                                 </td>
@@ -79,7 +79,7 @@
             <h5 class="offcanvas-title" id="offcanvasAddSocietyLabel">Add Society</h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
         </div>
-        <div class="offcanvas-body mx-0 flex-grow-0 p-4 h-100">
+        <div class="flex-grow-0 p-4 mx-0 offcanvas-body h-100">
             <form method="POST" action="{{ route('societies.store') }}" id="societyForm">
                 @csrf
                 <input type="hidden" name="_method" id="societyFormMethod" value="POST">

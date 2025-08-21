@@ -63,7 +63,7 @@
                                             <h5 class="mb-1 text-danger">Pending Posts</h5>
                                             <p class="mb-2 text-body-secondary">{{ $pendingCount ?? 0 }} awaiting review</p>
                                             <a href="{{ route('posts.index', ['filter' => 'pending']) }}"
-                                                class="btn btn-sm btn-danger">
+                                                class="btn btn-sm badge bg-label-danger">
                                                 See Pending
                                             </a>
                                         </div>
@@ -161,7 +161,8 @@
                         <div class="flex-grow-1">
                             <h5 class="mb-1 text-danger">Your Pending</h5>
                             <p class="mb-2 text-body-secondary">{{ $pendingCount ?? 0 }} awaiting review</p>
-                            <a href="{{ route('posts.index', ['filter' => 'pending']) }}" class="btn btn-sm btn-danger">
+                            <a href="{{ route('posts.index', ['filter' => 'pending']) }}"
+                                class="btn btn-sm badge bg-label-danger">
                                 See My Pending
                             </a>
                         </div>
