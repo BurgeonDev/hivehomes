@@ -30,8 +30,7 @@
     <div class="menu-inner-shadow"></div>
 
     <ul class="py-1 menu-inner">
-        <!-- Dashboards -->
-
+        <!-- Dashboard -->
         <li class="menu-item {{ request()->routeIs('dashboard') ? 'active open' : '' }}">
             <a href="{{ route('dashboard') }}" class="menu-link">
                 <i class="menu-icon icon-base ti tabler-smart-home"></i>
@@ -39,13 +38,35 @@
             </a>
         </li>
 
-        <!-- Location -->
+        <!-- ===== Management Section ===== -->
+        <li class="menu-header small">
+            <span class="menu-header-text" data-i18n="Management">Management</span>
+        </li>
+
+        <li class="menu-item {{ request()->routeIs('roles.*') ? 'active open' : '' }}">
+            <a href="{{ route('roles.index') }}" class="menu-link">
+                <i class="menu-icon icon-base ti tabler-settings"></i>
+                <div data-i18n="Roles &amp; Permissions">Roles &amp; Permissions</div>
+            </a>
+        </li>
+
+        <li class="menu-item {{ request()->routeIs('users.*') ? 'active open' : '' }}">
+            <a href="{{ route('users.index') }}" class="menu-link">
+                <i class="menu-icon icon-base ti tabler-users"></i>
+                <div data-i18n="Users">Users</div>
+            </a>
+        </li>
+
+        <!-- ===== Location Section ===== -->
+        <li class="menu-header small">
+            <span class="menu-header-text" data-i18n="Location">Location</span>
+        </li>
+
         <li class="menu-item {{ request()->routeIs('countries.*', 'states.*', 'cities.*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon icon-base ti tabler-map"></i>
                 <div data-i18n="Location">Location</div>
             </a>
-
             <ul class="menu-sub">
                 <li class="menu-item {{ request()->routeIs('countries.*') ? 'active' : '' }}">
                     <a href="{{ route('countries.index') }}" class="menu-link">
@@ -65,19 +86,11 @@
             </ul>
         </li>
 
-        <li class="menu-item {{ request()->routeIs('roles.*') ? 'active open' : '' }}">
-            <a href="{{ route('roles.index') }}" class="menu-link">
-                <i class="menu-icon icon-base ti tabler-settings"></i>
-                <div data-i18n="Roles &amp; Permissions">Roles &amp; Permissions</div>
-            </a>
+        <!-- ===== Content Section ===== -->
+        <li class="menu-header small">
+            <span class="menu-header-text" data-i18n="Content">Content</span>
         </li>
 
-        <li class="menu-item {{ request()->routeIs('users.*') ? 'active open' : '' }}">
-            <a href="{{ route('users.index') }}" class="menu-link">
-                <i class="menu-icon icon-base ti tabler-users"></i>
-                <div data-i18n="Users">Users</div>
-            </a>
-        </li>
         <li class="menu-item {{ request()->routeIs('societies.*') ? 'active open' : '' }}">
             <a href="{{ route('societies.index') }}" class="menu-link">
                 <i class="menu-icon icon-base ti tabler-building-skyscraper"></i>
@@ -102,8 +115,8 @@
                 <div data-i18n="Service Providers">Service Providers</div>
             </a>
         </li>
-
     </ul>
+
 </aside>
 
 <div class="menu-mobile-toggler d-xl-none rounded-1">
