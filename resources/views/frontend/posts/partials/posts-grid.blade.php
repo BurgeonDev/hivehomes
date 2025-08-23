@@ -56,6 +56,19 @@
                                     <i
                                         class="menu-icon icon-base ti tabler-message-circle me-1"></i>{{ $comments }}
                                 </small>
+                                <div class="ms-2 d-flex align-items-center like-button-wrapper">
+                                    @php $liked = in_array($post->id, $likedPostIds); @endphp
+                                    <button
+                                        class="btn btn-icon border-0 bg-transparent like-button {{ $liked ? 'liked text-danger' : 'text-muted' }}"
+                                        data-post-id="{{ $post->id }}"
+                                        aria-pressed="{{ $liked ? 'true' : 'false' }}">
+                                        <i class="ti tabler-heart fs-5"></i>
+                                    </button>
+                                    <span
+                                        class="ms-1 text-muted like-count">{{ number_format($post->likes_count) }}</span>
+                                </div>
+
+
                             </div>
                         </div>
                     </div>

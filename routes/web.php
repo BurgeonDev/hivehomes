@@ -36,6 +36,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
     Route::get('/posts/{id}', [PostController::class, 'show'])->name('posts.show');
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::post('posts/{post}/like', [PostController::class, 'toggle'])
+        ->middleware('auth')
+        ->name('posts.like');
 });
 
 // Authenticated Dashboard

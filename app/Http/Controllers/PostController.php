@@ -16,7 +16,7 @@ class PostController extends Controller
 
         // Base query: only approved posts
         $query = Post::with(['user', 'category', 'society'])
-            ->withCount('comments')
+            ->withCount('comments', 'likedBy')
             ->where('status', 'approved');
 
         if (! $user->hasRole('super_admin')) {
@@ -49,7 +49,7 @@ class PostController extends Controller
 
         // Paginate and preserve query string
         $posts = $query->paginate(9)->withQueryString();
-
+        $likedPostIds = $user->likedPosts()->pluck('post_id')->toArray();
         // Total approved count (scoped)
         $approvedCountQuery = Post::where('status', 'approved');
         if (! $user->hasRole('super_admin')) {
@@ -80,7 +80,8 @@ class PostController extends Controller
             'approvedCount',
             'categories',
             'societies',
-            'recentPosts'
+            'recentPosts',
+            'likedPostIds'
         ));
     }
 
@@ -139,5 +140,24 @@ class PostController extends Controller
         $post->increment('views');
 
         return view('frontend.posts.show', compact('post'));
+    }
+    public function toggle(Post $post)
+    {
+        $user = Auth::user();
+
+        // If the pivot exists, detach (unlike); otherwise attach (like)
+        if ($user->likedPosts()->where('post_id', $post->id)->exists()) {
+            $user->likedPosts()->detach($post->id);
+            $liked = false;
+        } else {
+            $user->likedPosts()->attach($post->id);
+            $liked = true;
+        }
+
+        // Return new total count and liked state
+        return response()->json([
+            'liked'        => $liked,
+            'likes_count'  => $post->likedBy()->count(),
+        ]);
     }
 }

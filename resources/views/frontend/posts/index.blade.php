@@ -5,6 +5,8 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/app-academy.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/select2/select2.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/plyr/plyr.css') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
+
     <style>
         /* small visual tweaks (unchanged) */
         .post-card {
@@ -223,7 +225,7 @@
                     error() {
                         $container.html(
                             '<div class="card"><div class="card-body text-danger">Failed to load posts. Try again.</div></div>'
-                            );
+                        );
                     },
                     complete() {
                         $container.fadeTo(150, 1);
@@ -271,4 +273,59 @@
             // fetchPosts(initialParams);
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Grab CSRF token from the head
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+            // Delegate clicks on .like-button within the posts container
+            document
+                .getElementById('postsContainer')
+                .addEventListener('click', async (e) => {
+                    const btn = e.target.closest('.like-button');
+                    if (!btn) return; // not a like-button click
+                    e.preventDefault();
+
+                    // Read post ID & build URL
+                    const postId = btn.dataset.postId;
+                    const url = "{{ route('posts.like', ':id') }}".replace(':id', postId);
+
+                    // Disable to prevent spamming
+                    btn.disabled = true;
+
+                    try {
+                        const response = await fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': csrfToken,
+                            },
+                        });
+
+                        if (!response.ok) throw new Error('Network response was not ok');
+
+                        const {
+                            liked,
+                            likes_count
+                        } = await response.json();
+
+                        // Toggle heart color
+                        btn.classList.toggle('liked', liked);
+                        btn.classList.toggle('text-danger', liked);
+                        btn.classList.toggle('text-muted', !liked);
+
+                        // Update count
+                        const countEl = btn.parentElement.querySelector('.like-count');
+                        countEl.textContent = new Intl.NumberFormat().format(likes_count);
+
+                    } catch (err) {
+                        console.error(err);
+                        alert('Failed to update like. Please try again.');
+                    } finally {
+                        btn.disabled = false;
+                    }
+                });
+        });
+    </script>
+
 @endsection
