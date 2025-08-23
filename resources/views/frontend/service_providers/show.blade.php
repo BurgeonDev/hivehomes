@@ -44,7 +44,7 @@
                                 @endif
                                 <div>
                                     <h2 class="mb-1">{{ $provider->name }}</h2>
-                                    <span class="badge bg-label-primary text-capitalize">{{ $provider->type }}</span>
+                                    <span class="badge bg-label-primary text-capitalize">{{ $provider->type->name }}</span>
                                 </div>
                             </div>
 
@@ -160,7 +160,8 @@
                                 <ul class="mb-0 list-unstyled small">
                                     <li class="mb-2 d-flex justify-content-between align-items-center">
                                         <strong>Type:</strong>
-                                        <span class="badge bg-label-info text-capitalize">{{ $provider->type }}</span>
+                                        <span
+                                            class="badge bg-label-info text-capitalize">{{ $provider->type->name }}</span>
                                     </li>
                                     <li class="mb-2 d-flex justify-content-between align-items-center">
                                         <strong>Joined:</strong>

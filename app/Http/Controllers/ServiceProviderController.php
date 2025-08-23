@@ -17,7 +17,7 @@ class ServiceProviderController extends Controller
 
         // Base query: only approved providers
         $query = ServiceProvider::where('is_approved', true)
-            ->with('society')
+            ->with('society', 'type')
             ->withCount('reviews')
             ->withAvg('reviews as average_rating', 'rating');
 
@@ -38,7 +38,7 @@ class ServiceProviderController extends Controller
 
         // Filter by type
         if ($request->filled('type')) {
-            $query->where('type', $request->input('type'));
+            $query->where('type_id', $request->input('type'));
         }
 
         // Sorting
