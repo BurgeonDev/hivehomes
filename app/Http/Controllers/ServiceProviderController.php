@@ -14,56 +14,58 @@ class ServiceProviderController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-
-        // Base query: only approved providers
         $query = ServiceProvider::where('is_approved', true)
             ->with('society', 'type')
             ->withCount('reviews')
             ->withAvg('reviews as average_rating', 'rating');
-
-        // If not super-admin, scope to their society
         if (! $user->hasRole('super_admin')) {
             $query->where('society_id', $user->society_id);
         }
 
-        // Search by name or bio
         if ($request->filled('q')) {
             $q = $request->input('q');
             $query->where(
-                fn($q2) =>
-                $q2->where('name', 'like', "%{$q}%")
-                    ->orWhere('bio',  'like', "%{$q}%")
+                fn($qb) =>
+                $qb->where('name', 'like', "%{$q}%")
+                    ->orWhere('bio', 'like', "%{$q}%")
             );
         }
-
-        // Filter by type
+        if ($request->filled('rating')) {
+            $rating = (int) $request->input('rating');
+            $query->whereHas('reviews', function ($qb) use ($rating) {
+                $qb->select('service_provider_id', DB::raw('AVG(rating) as avg_rating'))
+                    ->groupBy('service_provider_id')
+                    ->havingRaw('AVG(rating) >= ?', [$rating]);
+            });
+        }
         if ($request->filled('type')) {
             $query->where('type_id', $request->input('type'));
         }
 
-        // Sorting
         $sort = $request->get('sort', 'newest');
         match ($sort) {
-            'oldest'        => $query->orderBy('created_at', 'asc'),
+            'oldest' => $query->orderBy('created_at', 'asc'),
             'most_reviewed' => $query->orderByDesc('reviews_count'),
-            default         => $query->orderByDesc('created_at'),
+            default => $query->orderByDesc('created_at'),
         };
 
         $providers = $query->paginate(8)->withQueryString();
-
-        // KPI: total approved providers
         $totalProviders = ServiceProvider::where('is_approved', true)
             ->when(
                 ! $user->hasRole('super_admin'),
-                fn($q) =>
-                $q->where('society_id', $user->society_id)
-            )->count();
+                fn($qb) => $qb->where('society_id', $user->society_id)
+            )
+            ->count();
 
-        // AJAX support
+        $types = ServiceProviderType::withCount(['providers as approved_count' => function ($qb) use ($user) {
+            $qb->where('is_approved', true);
+            if (! $user->hasRole('super_admin')) {
+                $qb->where('society_id', $user->society_id);
+            }
+        }])->orderBy('name')->get();
         if ($request->ajax()) {
             return view('frontend.service_providers.partials.providers-list', compact('providers'))->render();
         }
-        $types = ServiceProviderType::orderBy('name')->get();
         return view('frontend.service_providers.index', compact('providers', 'totalProviders', 'types'));
     }
 

@@ -35,6 +35,21 @@
             color: #f1c40f;
             cursor: pointer;
         }
+
+        /* small visual for active filter items */
+        .filter-card .list-group-item.active {
+            background-color: rgba(13, 110, 253, 0.06);
+            border-color: rgba(13, 110, 253, 0.12);
+        }
+
+        .rating-clickable {
+            cursor: pointer;
+        }
+
+        /* keep progress-bar visible when active */
+        .rating-clickable.active .progress-bar {
+            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.08);
+        }
     </style>
 @endsection
 
@@ -89,10 +104,10 @@
                     <div class="mb-4 card filter-card">
                         <div class="card-body">
                             <h6 class="mb-3">Search</h6>
-                            <form id="providersFilterForm" class="d-flex">
+                            <form id="providersFilterForm" class="d-flex" action="javascript:void(0)" method="GET">
                                 <input type="search" name="q" class="form-control form-control-sm me-2"
-                                    placeholder="Search name or bio…" />
-                                <button class="btn btn-sm btn-primary">🔍</button>
+                                    placeholder="Search name or bio…" value="{{ request('q') }}" />
+                                <button type="submit" class="btn btn-sm btn-primary">🔍</button>
                             </form>
                         </div>
                     </div>
@@ -100,29 +115,44 @@
                     {{-- Type-wise --}}
                     <div class="mb-4 card filter-card">
                         <div class="card-body">
-
-
-                            <h6 class="mb-3">By Type</h6>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item" data-type="">All</li>
-                                @foreach ($types as $type)
-                                    <li class="list-group-item" data-type="{{ $type->id }}">{{ $type->name }}</li>
+                            <h6 class="mb-3 d-flex justify-content-between">
+                                <span>By Type</span>
+                                <button id="resetFilters" type="button"
+                                    class="btn btn-sm btn-outline-secondary">Reset</button>
+                            </h6>
+                            <ul id="typesList" class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between {{ request()->filled('type') ? '' : 'active' }}"
+                                    data-type="">
+                                    <span>All</span>
+                                    <span class="badge bg-label-secondary">{{ number_format($totalProviders) }}</span>
+                                </li>
+                                @foreach ($types as $typeItem)
+                                    <li class="list-group-item d-flex justify-content-between {{ request('type') == $typeItem->id ? 'active' : '' }}"
+                                        data-type="{{ $typeItem->id }}">
+                                        <span>{{ $typeItem->name }}</span>
+                                        <span class="badge bg-label-secondary">{{ $typeItem->approved_count }}</span>
+                                    </li>
                                 @endforeach
                             </ul>
                         </div>
                     </div>
 
+
                     {{-- Rating --}}
                     {{-- Rating Distribution --}}
                     <div class="mb-4 card filter-card">
-                        <div class="card-body">
+                        <div class="card-body" id="ratingList">
                             <h6 class="mb-3">By Rating</h6>
 
-                            <div class="gap-2 mb-2 d-flex align-items-center">
+                            @php
+                                $selectedRating = request('rating') ? (int) request('rating') : null;
+                            @endphp
+
+                            <div class="gap-2 mb-2 d-flex align-items-center rating-clickable {{ $selectedRating === 5 ? 'active' : '' }}"
+                                data-rating="5">
                                 <small>5 Star</small>
-                                <div class="progress w-100 bg-label-primary" style="height: 8px; cursor:pointer"
-                                    data-rating="5">
-                                    <div class="progress-bar bg-primary" role="progressbar"
+                                <div class="mx-2 progress w-100 bg-label-primary" style="height: 8px;">
+                                    <div class="progress-bar" role="progressbar"
                                         style="width: {{ $ratingStats['5']['percent'] ?? 0 }}%"
                                         aria-valuenow="{{ $ratingStats['5']['count'] ?? 0 }}" aria-valuemin="0"
                                         aria-valuemax="100"></div>
@@ -130,11 +160,11 @@
                                 <small class="w-px-20 text-end">{{ $ratingStats['5']['count'] ?? 0 }}</small>
                             </div>
 
-                            <div class="gap-2 mb-2 d-flex align-items-center">
+                            <div class="gap-2 mb-2 d-flex align-items-center rating-clickable {{ $selectedRating === 4 ? 'active' : '' }}"
+                                data-rating="4">
                                 <small>4 Star</small>
-                                <div class="progress w-100 bg-label-primary" style="height: 8px; cursor:pointer"
-                                    data-rating="4">
-                                    <div class="progress-bar bg-primary" role="progressbar"
+                                <div class="mx-2 progress w-100 bg-label-primary" style="height: 8px;">
+                                    <div class="progress-bar" role="progressbar"
                                         style="width: {{ $ratingStats['4']['percent'] ?? 0 }}%"
                                         aria-valuenow="{{ $ratingStats['4']['count'] ?? 0 }}" aria-valuemin="0"
                                         aria-valuemax="100"></div>
@@ -142,11 +172,11 @@
                                 <small class="w-px-20 text-end">{{ $ratingStats['4']['count'] ?? 0 }}</small>
                             </div>
 
-                            <div class="gap-2 mb-2 d-flex align-items-center">
+                            <div class="gap-2 mb-2 d-flex align-items-center rating-clickable {{ $selectedRating === 3 ? 'active' : '' }}"
+                                data-rating="3">
                                 <small>3 Star</small>
-                                <div class="progress w-100 bg-label-primary" style="height: 8px; cursor:pointer"
-                                    data-rating="3">
-                                    <div class="progress-bar bg-primary" role="progressbar"
+                                <div class="mx-2 progress w-100 bg-label-primary" style="height: 8px;">
+                                    <div class="progress-bar" role="progressbar"
                                         style="width: {{ $ratingStats['3']['percent'] ?? 0 }}%"
                                         aria-valuenow="{{ $ratingStats['3']['count'] ?? 0 }}" aria-valuemin="0"
                                         aria-valuemax="100"></div>
@@ -154,11 +184,11 @@
                                 <small class="w-px-20 text-end">{{ $ratingStats['3']['count'] ?? 0 }}</small>
                             </div>
 
-                            <div class="gap-2 mb-2 d-flex align-items-center">
+                            <div class="gap-2 mb-2 d-flex align-items-center rating-clickable {{ $selectedRating === 2 ? 'active' : '' }}"
+                                data-rating="2">
                                 <small>2 Star</small>
-                                <div class="progress w-100 bg-label-primary" style="height: 8px; cursor:pointer"
-                                    data-rating="2">
-                                    <div class="progress-bar bg-primary" role="progressbar"
+                                <div class="mx-2 progress w-100 bg-label-primary" style="height: 8px;">
+                                    <div class="progress-bar" role="progressbar"
                                         style="width: {{ $ratingStats['2']['percent'] ?? 0 }}%"
                                         aria-valuenow="{{ $ratingStats['2']['count'] ?? 0 }}" aria-valuemin="0"
                                         aria-valuemax="100"></div>
@@ -166,11 +196,11 @@
                                 <small class="w-px-20 text-end">{{ $ratingStats['2']['count'] ?? 0 }}</small>
                             </div>
 
-                            <div class="gap-2 d-flex align-items-center">
+                            <div class="gap-2 d-flex align-items-center rating-clickable {{ $selectedRating === 1 ? 'active' : '' }}"
+                                data-rating="1">
                                 <small>1 Star</small>
-                                <div class="progress w-100 bg-label-primary" style="height: 8px; cursor:pointer"
-                                    data-rating="1">
-                                    <div class="progress-bar bg-primary" role="progressbar"
+                                <div class="mx-2 progress w-100 bg-label-primary" style="height: 8px;">
+                                    <div class="progress-bar" role="progressbar"
                                         style="width: {{ $ratingStats['1']['percent'] ?? 0 }}%"
                                         aria-valuenow="{{ $ratingStats['1']['count'] ?? 0 }}" aria-valuemin="0"
                                         aria-valuemax="100"></div>
@@ -186,9 +216,12 @@
                         <div class="card-body">
                             <h6 class="mb-3">Sort By</h6>
                             <select name="sort" class="form-select form-select-sm" id="sortFilter">
-                                <option value="newest">Newest</option>
-                                <option value="oldest">Oldest</option>
-                                <option value="most_reviewed">Most Reviewed</option>
+                                <option value="newest" {{ request('sort', 'newest') === 'newest' ? 'selected' : '' }}>
+                                    Newest</option>
+                                <option value="oldest" {{ request('sort') === 'oldest' ? 'selected' : '' }}>Oldest
+                                </option>
+                                <option value="most_reviewed" {{ request('sort') === 'most_reviewed' ? 'selected' : '' }}>
+                                    Most Reviewed</option>
                             </select>
                         </div>
                     </div>
@@ -200,72 +233,179 @@
 @endsection
 
 @section('page-js')
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const form = $('#providersFilterForm');
-            const container = $('#providersContainer');
-            const sortSel = $('#sortFilter');
-            let currentType = '';
-            let currentRating = '';
+            const container = document.getElementById('providersContainer');
+            const form = document.getElementById('providersFilterForm');
+            const sortSel = document.getElementById('sortFilter');
+            const typesList = document.getElementById('typesList');
+            const ratingList = document.getElementById('ratingList');
+            const resetBtn = document.getElementById('resetFilters');
+            const routeUrl = '{{ route('service-providers.index') }}';
 
-            // on form submit (search)
-            form.on('submit', e => {
-                e.preventDefault();
-                fetchProviders(form.serialize());
-            });
+            // initial values from server (blade)
+            let type = '{{ request('type', '') }}' || '';
+            let rating = '{{ request('rating', '') }}' || '';
 
-            // type list click
-            $('.filter-card [data-type]').on('click', function() {
-                currentType = $(this).data('type');
-                fetchProviders(
-                    `type=${currentType}&q=${form.find('[name=q]').val()}&sort=${sortSel.val()}&rating=${currentRating}`
-                );
-            });
+            // debounce helper
+            function debounce(fn, wait) {
+                let t;
+                return (...args) => {
+                    clearTimeout(t);
+                    t = setTimeout(() => fn(...args), wait);
+                };
+            }
 
-            // rating click
-            $('.rating-stars [data-rating]').on('click', function() {
-                currentRating = $(this).data('rating');
-                fetchProviders(
-                    `rating=${currentRating}&q=${form.find('[name=q]').val()}&sort=${sortSel.val()}&type=${currentType}`
-                );
-            });
+            // build query string params
+            function buildParams(page = null) {
+                const q = (form.querySelector('[name=q]') || {
+                    value: ''
+                }).value || '';
+                const sort = (sortSel && sortSel.value) || 'newest';
+                const params = new URLSearchParams();
+                if (q) params.set('q', q);
+                if (sort) params.set('sort', sort);
+                if (type !== '' && type !== null) params.set('type', type);
+                if (rating !== '' && rating !== null) params.set('rating', rating);
+                if (page) params.set('page', page);
+                return params;
+            }
+
+            // fetch partial HTML and replace container
+            async function fetchProviders(page = null) {
+                try {
+                    const params = buildParams(page);
+                    const url = routeUrl + (params.toString() ? `?${params.toString()}` : '');
+                    // show loading state
+                    container.style.opacity = 0.5;
+
+                    const resp = await fetch(url, {
+                        method: 'GET',
+                        credentials: 'same-origin',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'text/html'
+                        }
+                    });
+
+                    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+
+                    const html = await resp.text();
+                    container.innerHTML = html;
+
+                    // update browser URL without reload
+                    const newUrl = new URL(window.location.href);
+                    newUrl.search = params.toString();
+                    window.history.replaceState({}, '', newUrl.toString());
+                } catch (err) {
+                    console.error('Failed to load providers:', err);
+                    container.innerHTML =
+                        `<div class="card"><div class="card-body text-danger">Failed to load providers. Try again.</div></div>`;
+                } finally {
+                    container.style.opacity = 1;
+                }
+            }
+
+            // Debounced version for search input
+            const debouncedFetch = debounce(() => fetchProviders(), 300);
+
+            // Prevent native form submit (Enter)
+            if (form) {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    fetchProviders();
+                });
+
+                const qInput = form.querySelector('[name=q]');
+                if (qInput) qInput.addEventListener('input', debouncedFetch);
+            }
 
             // sort change
-            sortSel.on('change', () => {
-                fetchProviders(
-                    `sort=${sortSel.val()}&q=${form.find('[name=q]').val()}&type=${currentType}&rating=${currentRating}`
-                );
-            });
+            if (sortSel) {
+                sortSel.addEventListener('change', () => fetchProviders());
+            }
 
-            // pagination links
-            container.on('click', '.pagination a', function(e) {
-                e.preventDefault();
-                const url = new URL($(this).attr('href'), window.location.origin);
-                fetchProviders(url.searchParams.toString());
-            });
-
-            function fetchProviders(params) {
-                $.ajax({
-                    url: '{{ route('service-providers.index') }}',
-                    data: params,
-                    beforeSend() {
-                        container.fadeTo(200, .5);
-                    },
-                    success(html) {
-                        container.html(html);
-                    },
-                    complete() {
-                        container.fadeTo(200, 1);
-                    }
+            // types click (delegated)
+            if (typesList) {
+                typesList.addEventListener('click', (e) => {
+                    const item = e.target.closest('[data-type]');
+                    if (!item) return;
+                    // grab the data-type attribute (can be empty string)
+                    const newType = item.getAttribute('data-type') ?? '';
+                    type = newType === '' ? '' : String(newType);
+                    // update active classes
+                    typesList.querySelectorAll('[data-type]').forEach(el => el.classList.remove('active'));
+                    item.classList.add('active');
+                    // reset page param by fetching first page
+                    fetchProviders();
                 });
             }
-            // rating filter by clicking progress bar
-            $('.filter-card [data-rating]').on('click', function() {
-                currentRating = $(this).data('rating');
-                fetchProviders(
-                    `rating=${currentRating}&q=${form.find('[name=q]').val()}&sort=${sortSel.val()}&type=${currentType}`
-                );
+
+            // rating click (delegated)
+            if (ratingList) {
+                ratingList.addEventListener('click', (e) => {
+                    const item = e.target.closest('[data-rating]');
+                    if (!item) return;
+                    rating = String(item.getAttribute('data-rating'));
+                    // update active classes
+                    ratingList.querySelectorAll('[data-rating]').forEach(el => el.classList.remove(
+                        'active'));
+                    item.classList.add('active');
+                    fetchProviders();
+                });
+            }
+
+            // reset filters
+            if (resetBtn) {
+                resetBtn.addEventListener('click', (e) => {
+                    if (form) form.reset();
+                    if (sortSel) sortSel.value = 'newest';
+                    type = '';
+                    rating = '';
+                    // clear actives
+                    if (typesList) typesList.querySelectorAll('[data-type]').forEach(el => el.classList
+                        .remove('active'));
+                    const allItem = typesList ? typesList.querySelector('[data-type=""]') : null;
+                    if (allItem) allItem.classList.add('active');
+                    if (ratingList) ratingList.querySelectorAll('[data-rating]').forEach(el => el.classList
+                        .remove('active'));
+                    fetchProviders();
+                });
+            }
+
+            // delegate pagination clicks inside providers container
+            // when the partial loads it should contain links like ?page=2
+            container.addEventListener('click', (e) => {
+                const a = e.target.closest('a');
+                if (!a) return;
+                if (!a.classList.contains('page-link') && !/page=/.test(a.getAttribute('href') || '')) {
+                    // not a pagination link (let it behave normally)
+                    return;
+                }
+                e.preventDefault();
+                const href = a.getAttribute('href') || '';
+                if (!href) return;
+                try {
+                    const url = new URL(href, window.location.origin);
+                    const page = url.searchParams.get('page');
+                    fetchProviders(page);
+                } catch (err) {
+                    // fallback: fetch first page
+                    fetchProviders();
+                }
             });
+
+            // initial load is already rendered by server — but keep UI reactive:
+            // attach 'active' class to matching items based on server request (if needed).
+            // (server blade already sets active for types and rating via request()).
+
+            // (Optional) If you want the page to always fetch via AJAX on load (instead of using server-rendered block),
+            // uncomment the next line:
+            // fetchProviders();
+
         });
     </script>
+
+
 @endsection
