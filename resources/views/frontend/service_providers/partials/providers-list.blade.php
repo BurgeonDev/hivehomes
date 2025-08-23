@@ -7,9 +7,16 @@
                     <div class="mb-2 d-flex justify-content-between align-items-start">
                         <div>
                             <div class="mb-2 d-flex align-items-center">
-                                <img src="{{ $provider->profile_picture ? asset('storage/' . $provider->profile_picture) : 'https://ui-avatars.com/api/?name=' . urlencode($provider->name) . '&background=random' }}"
-                                    alt="Profile Picture" class="rounded-circle me-2" width="40" height="40"
-                                    style="object-fit: cover;">
+                                @php
+                                    $image = $provider->profile_image
+                                        ? asset('storage/' . $provider->profile_image)
+                                        : 'https://ui-avatars.com/api/?name=' .
+                                            urlencode($provider->name) .
+                                            '&background=random';
+                                @endphp
+
+                                <img src="{{ $image }}" alt="{{ $provider->name }}" class="rounded-circle me-3"
+                                    width="80" height="80" style="object-fit:cover;">
 
                                 <div>
                                     <h6 class="mb-0">{{ $provider->name }}</h6>
@@ -21,6 +28,7 @@
                                     </small>
                                 </div>
                             </div>
+
                         </div>
 
                         <div class="text-end">
@@ -68,7 +76,8 @@
 
                 {{-- Footer --}}
                 <div class="card-footer border-top-0">
-                    <a href="{{ route('service-providers.show', $provider->id) }}" class="btn btn-sm btn-primary w-100">
+                    <a href="{{ route('service-providers.show', $provider->id) }}"
+                        class="btn btn-sm btn-primary w-100">
                         <i class="menu-icon icon-base ti tabler-eye me-1"></i> View Profile
                     </a>
                 </div>
