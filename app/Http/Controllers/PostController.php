@@ -19,7 +19,6 @@ class PostController extends Controller
             ->withCount('comments')
             ->where('status', 'approved');
 
-        // Scope to user's society if not super admin
         if (! $user->hasRole('super_admin')) {
             $query->where('society_id', $user->society_id);
         }
@@ -57,7 +56,7 @@ class PostController extends Controller
             $approvedCountQuery->where('society_id', $user->society_id);
         }
         $approvedCount = $approvedCountQuery->count();
-        // add after your $approvedCount, before returning view:
+
         $recentPostsQuery = Post::where('status', 'approved')
             ->withCount('comments')
             ->orderByDesc('created_at');
@@ -65,12 +64,17 @@ class PostController extends Controller
         if (! $user->hasRole('super_admin')) {
             $recentPostsQuery->where('society_id', $user->society_id);
         }
-
         $recentPosts = $recentPostsQuery->take(6)->get();
 
         $categories = Category::orderBy('name')->get();
         $societies  = $user->hasRole('super_admin') ? Society::all() : collect();
 
+        // If request is AJAX, return only the posts-grid partial (HTML)
+        if ($request->ajax()) {
+            return view('frontend.posts.partials.posts-grid', compact('posts'))->render();
+        }
+
+        // Normal full page render
         return view('frontend.posts.index', compact(
             'posts',
             'approvedCount',
@@ -79,6 +83,7 @@ class PostController extends Controller
             'recentPosts'
         ));
     }
+
 
     public function store(Request $request)
     {

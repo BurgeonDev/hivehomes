@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/select2/select2.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/plyr/plyr.css') }}">
     <style>
-        /* small visual tweaks */
+        /* small visual tweaks (unchanged) */
         .post-card {
             border-radius: .5rem;
             transition: box-shadow .3s ease;
@@ -41,7 +41,7 @@
 @endsection
 
 @section('content')
-    {{-- Banner / Breadcrumb --}}
+    {{-- Banner / Breadcrumb (unchanged) --}}
     <section class="overflow-hidden section-py first-section-pt help-center-header position-relative"
         style="min-height: 300px;">
         <img class="banner-bg-img z-n1" src="{{ asset('assets/img/pages/header.png') }}" alt="Header Background">
@@ -62,7 +62,7 @@
             {{-- Main content --}}
             <div class="col-lg-10">
 
-                {{-- KPI + Add --}}
+                {{-- KPI + Add (unchanged) --}}
                 <div class="mb-4 card">
                     <div class="gap-3 card-body d-flex flex-column flex-md-row align-items-start">
                         <div class="flex-grow-1">
@@ -88,24 +88,31 @@
 
                 {{-- Filters --}}
                 <div class="p-3 mb-4 card">
+                    {{-- NOTE: inputs are prefilled from request() so state persists after filters/pagination --}}
                     <form id="postsFilterForm" class="row g-2 align-items-center">
                         <div class="col-md-6">
                             <input type="search" name="q" id="q"
-                                placeholder="Search posts, titles, content..." class="form-control form-control-sm" />
+                                placeholder="Search posts, titles, content..." class="form-control form-control-sm"
+                                value="{{ request('q') }}" autocomplete="off" />
                         </div>
                         <div class="col-md-3">
                             <select name="category" id="categoryFilter" class="form-select form-select-sm">
                                 <option value="">All categories</option>
                                 @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    <option value="{{ $category->id }}"
+                                        {{ (string) request('category') === (string) $category->id ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="gap-2 col-md-3 d-flex">
                             <select name="sort" id="sortFilter" class="form-select form-select-sm">
-                                <option value="latest">Latest</option>
-                                <option value="oldest">Oldest</option>
-                                <option value="most_viewed">Most viewed</option>
+                                <option value="latest" {{ request('sort', 'latest') === 'latest' ? 'selected' : '' }}>
+                                    Latest</option>
+                                <option value="oldest" {{ request('sort') === 'oldest' ? 'selected' : '' }}>Oldest</option>
+                                <option value="most_viewed" {{ request('sort') === 'most_viewed' ? 'selected' : '' }}>Most
+                                    viewed</option>
                             </select>
                             <button type="submit" class="btn btn-sm btn-outline-primary">Filter</button>
                         </div>
@@ -118,10 +125,9 @@
                 </div>
             </div>
 
-            {{-- Sidebar --}}
+            {{-- Sidebar (unchanged) --}}
             <div class="col-lg-2">
                 <div class="position-sticky" style="top: 95px;">
-
                     {{-- Recent posts --}}
                     <div class="mb-3 card">
                         <div class="card-body">
@@ -154,43 +160,115 @@
             </div>
         </div>
     </div>
+
 @endsection
 
 @section('page-js')
     <script src="{{ asset('assets/js/app-academy-course.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/select2/select2.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/plyr/plyr.js') }}"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const form = $('#postsFilterForm');
-            const container = $('#postsContainer');
+            const $form = $('#postsFilterForm');
+            const $container = $('#postsContainer');
+            const routeUrl = '{{ route('posts.index') }}';
 
-            form.on('submit', e => {
-                e.preventDefault();
-                fetchPosts(form.serialize());
-            });
+            // debounce helper
+            function debounce(fn, wait) {
+                let t;
+                return function(...args) {
+                    clearTimeout(t);
+                    t = setTimeout(() => fn.apply(this, args), wait);
+                };
+            }
 
-            container.on('click', '.pagination a', function(e) {
-                e.preventDefault();
-                const url = new URL($(this).attr('href'), window.location.origin);
-                fetchPosts(url.searchParams.toString());
-            });
+            // Build a query string from form elements (returns string)
+            function buildParamsFromForm() {
+                const formData = $form.serializeArray();
+                const params = new URLSearchParams();
+                formData.forEach(({
+                    name,
+                    value
+                }) => {
+                    if (value !== null && value !== '') {
+                        params.append(name, value);
+                    }
+                });
+                return params.toString();
+            }
 
-            function fetchPosts(params) {
+            // Fetch partial HTML and update container; also update browser URL
+            function fetchPosts(paramsString = '') {
+                const url = routeUrl + (paramsString ? `?${paramsString}` : '');
+                // visual loading
+                $container.fadeTo(150, 0.5);
                 $.ajax({
-                    url: '{{ route('posts.index') }}',
-                    data: params,
-                    beforeSend() {
-                        container.fadeTo(200, .5);
-                    },
+                    url: routeUrl,
+                    data: paramsString,
+                    method: 'GET',
                     success(html) {
-                        container.html(html);
+                        // server returns the partial HTML for #postsContainer when AJAX request
+                        $container.html(html);
+                        // update browser URL (preserve other history state)
+                        const newUrl = new URL(window.location.href);
+                        newUrl.search = paramsString;
+                        window.history.replaceState({}, '', newUrl.toString());
+                        // scroll to top of list (optional)
+                        window.scrollTo({
+                            top: $container.offset().top - 90,
+                            behavior: 'smooth'
+                        });
+                    },
+                    error() {
+                        $container.html(
+                            '<div class="card"><div class="card-body text-danger">Failed to load posts. Try again.</div></div>'
+                            );
                     },
                     complete() {
-                        container.fadeTo(200, 1);
+                        $container.fadeTo(150, 1);
                     }
                 });
             }
+
+            // Handle form submit (Filter button)
+            $form.on('submit', function(e) {
+                e.preventDefault();
+                const params = buildParamsFromForm();
+                fetchPosts(params);
+            });
+
+            // Debounced live search on input
+            $('#q').on('input', debounce(function() {
+                const params = buildParamsFromForm();
+                fetchPosts(params);
+            }, 300));
+
+            // Handle sort/category change instantly
+            $('#categoryFilter, #sortFilter').on('change', function() {
+                const params = buildParamsFromForm();
+                fetchPosts(params);
+            });
+
+            // Delegate pagination clicks inside container (works with partial containing links)
+            $container.on('click', '.pagination a', function(e) {
+                e.preventDefault();
+                const href = $(this).attr('href') || '';
+                if (!href) return;
+                try {
+                    const u = new URL(href, window.location.origin);
+                    // Use the search part from pagination links (they already include query string thanks to withQueryString())
+                    const params = u.searchParams.toString();
+                    fetchPosts(params);
+                } catch (err) {
+                    // fallback: rebuild from form
+                    fetchPosts(buildParamsFromForm());
+                }
+            });
+
+            // (optional) trigger initial AJAX load if you want to always load via AJAX
+            // const initialParams = buildParamsFromForm();
+            // fetchPosts(initialParams);
         });
     </script>
 @endsection
