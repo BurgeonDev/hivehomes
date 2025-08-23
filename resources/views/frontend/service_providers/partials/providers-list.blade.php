@@ -13,25 +13,41 @@
 
                                 <div>
                                     <h6 class="mb-0">{{ $provider->name }}</h6>
+                                    @php
+                                        $count = $provider->reviews_count ?? 0;
+                                    @endphp
                                     <small class="text-muted">
-                                        {{ $provider->total_reviews }}
-                                        review{{ $provider->total_reviews !== 1 ? 's' : '' }}
+                                        {{ $count }} review{{ $count !== 1 ? 's' : '' }}
                                     </small>
                                 </div>
                             </div>
-
-                            <h6 class="mb-0">{{ $provider->name }}</h6>
-                            <small class="text-muted">
-                                {{ $provider->total_reviews }} review{{ $provider->total_reviews !== 1 ? 's' : '' }}
-                            </small>
                         </div>
+
                         <div class="text-end">
-                            <span class="mb-1 badge bg-label-primary text-capitalize">{{ $provider->type->name }}</span>
-                            <div class="d-flex align-items-center justify-content-end">
-                                <span class="me-1 text-warning fw-bold">
-                                    {{ number_format($provider->average_rating, 1) }}
-                                </span>
-                                <i class="ti tabler-star-filled text-warning"></i>
+                            <span
+                                class="mb-1 badge bg-label-primary text-capitalize">{{ $provider->type->name ?? '-' }}</span>
+
+                            {{-- average numeric + star icons --}}
+                            @php
+                                // reviews_avg_rating comes from withAvg('reviews','rating')
+                                $avg =
+                                    $provider->reviews_avg_rating !== null
+                                        ? (float) $provider->reviews_avg_rating
+                                        : 0.0;
+                                $rounded = (int) round($avg); // approximate stars
+                            @endphp
+
+                            <div class="mt-1 d-flex align-items-center justify-content-end">
+                                <span class="me-2 text-warning fw-bold">{{ number_format($avg, 1) }}</span>
+                                <div class="rating-stars">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        @if ($i <= $rounded)
+                                            <i class="ti tabler-star-filled text-warning" aria-hidden="true"></i>
+                                        @else
+                                            <i class="ti tabler-star text-muted" aria-hidden="true"></i>
+                                        @endif
+                                    @endfor
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -52,8 +68,7 @@
 
                 {{-- Footer --}}
                 <div class="card-footer border-top-0">
-                    <a href="{{ route('service-providers.show', $provider->id) }}"
-                        class="btn btn-sm btn-primary w-100">
+                    <a href="{{ route('service-providers.show', $provider->id) }}" class="btn btn-sm btn-primary w-100">
                         <i class="menu-icon icon-base ti tabler-eye me-1"></i> View Profile
                     </a>
                 </div>

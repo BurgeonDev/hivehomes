@@ -8,16 +8,19 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\ServiceProvider;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class ServiceProviderController extends Controller
 {
     public function index(Request $request)
     {
         $user = $request->user();
+
         $query = ServiceProvider::where('is_approved', true)
             ->with('society', 'type')
             ->withCount('reviews')
-            ->withAvg('reviews as average_rating', 'rating');
+            ->withAvg('reviews', 'rating'); // adds reviews_avg_rating
+
         if (! $user->hasRole('super_admin')) {
             $query->where('society_id', $user->society_id);
         }
@@ -30,14 +33,21 @@ class ServiceProviderController extends Controller
                     ->orWhere('bio', 'like', "%{$q}%")
             );
         }
+
+        // safe rating filter using actual reviews table
         if ($request->filled('rating')) {
             $rating = (int) $request->input('rating');
-            $query->whereHas('reviews', function ($qb) use ($rating) {
-                $qb->select('service_provider_id', DB::raw('AVG(rating) as avg_rating'))
-                    ->groupBy('service_provider_id')
-                    ->havingRaw('AVG(rating) >= ?', [$rating]);
+            $rating = max(1, min(5, $rating));
+
+            $query->whereExists(function ($sub) use ($rating) {
+                $sub->select(DB::raw(1))
+                    ->from('service_provider_reviews')
+                    ->whereColumn('service_provider_reviews.service_provider_id', 'service_providers.id')
+                    ->groupBy('service_provider_reviews.service_provider_id')
+                    ->havingRaw('AVG(service_provider_reviews.rating) >= ?', [$rating]);
             });
         }
+
         if ($request->filled('type')) {
             $query->where('type_id', $request->input('type'));
         }
@@ -50,11 +60,9 @@ class ServiceProviderController extends Controller
         };
 
         $providers = $query->paginate(8)->withQueryString();
+
         $totalProviders = ServiceProvider::where('is_approved', true)
-            ->when(
-                ! $user->hasRole('super_admin'),
-                fn($qb) => $qb->where('society_id', $user->society_id)
-            )
+            ->when(! $user->hasRole('super_admin'), fn($qb) => $qb->where('society_id', $user->society_id))
             ->count();
 
         $types = ServiceProviderType::withCount(['providers as approved_count' => function ($qb) use ($user) {
@@ -63,12 +71,63 @@ class ServiceProviderController extends Controller
                 $qb->where('society_id', $user->society_id);
             }
         }])->orderBy('name')->get();
+
+        // -------------------------
+        // ratingStats (robust approach)
+        // -------------------------
+        // initialize
+        $ratingStats = [
+            5 => ['count' => 0, 'percent' => 0],
+            4 => ['count' => 0, 'percent' => 0],
+            3 => ['count' => 0, 'percent' => 0],
+            2 => ['count' => 0, 'percent' => 0],
+            1 => ['count' => 0, 'percent' => 0],
+        ];
+
+        // get provider ids in the current scope (approved + society filter)
+        $providerIdsQuery = ServiceProvider::where('is_approved', true);
+        if (! $user->hasRole('super_admin')) {
+            $providerIdsQuery->where('society_id', $user->society_id);
+        }
+        $providerIds = $providerIdsQuery->pluck('id')->toArray();
+
+        if (! empty($providerIds)) {
+            // compute average rating per provider
+            $avgRows = DB::table('service_provider_reviews')
+                ->select('service_provider_id', DB::raw('AVG(rating) as avg_rating'))
+                ->whereIn('service_provider_id', $providerIds)
+                ->groupBy('service_provider_id')
+                ->get();
+
+            // tally rounded star per provider (1..5)
+            $counts = [
+                1 => 0,
+                2 => 0,
+                3 => 0,
+                4 => 0,
+                5 => 0
+            ];
+            foreach ($avgRows as $r) {
+                $star = (int) round($r->avg_rating);
+                $star = max(1, min(5, $star));
+                $counts[$star] = ($counts[$star] ?? 0) + 1;
+            }
+
+            $totalProvidersWithReviews = array_sum($counts);
+            if ($totalProvidersWithReviews > 0) {
+                foreach ($counts as $star => $cnt) {
+                    $ratingStats[$star]['count'] = (int) $cnt;
+                    $ratingStats[$star]['percent'] = (int) round(($cnt / $totalProvidersWithReviews) * 100);
+                }
+            }
+        }
+
         if ($request->ajax()) {
             return view('frontend.service_providers.partials.providers-list', compact('providers'))->render();
         }
-        return view('frontend.service_providers.index', compact('providers', 'totalProviders', 'types'));
-    }
 
+        return view('frontend.service_providers.index', compact('providers', 'totalProviders', 'types', 'ratingStats'));
+    }
 
     public function show(ServiceProvider $service_provider)
     {
