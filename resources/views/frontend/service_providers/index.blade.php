@@ -100,13 +100,14 @@
                     {{-- Type-wise --}}
                     <div class="mb-4 card filter-card">
                         <div class="card-body">
+
+
                             <h6 class="mb-3">By Type</h6>
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item" data-type="">All</li>
-                                <li class="list-group-item" data-type="Plumber">Plumber</li>
-                                <li class="list-group-item" data-type="Electrician">Electrician</li>
-                                <li class="list-group-item" data-type="Carpenter">Carpenter</li>
-                                <!-- add more types as needed -->
+                                @foreach ($types as $type)
+                                    <li class="list-group-item" data-type="{{ $type->id }}">{{ $type->name }}</li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>

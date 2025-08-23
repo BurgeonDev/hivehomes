@@ -26,7 +26,7 @@
                             </small>
                         </div>
                         <div class="text-end">
-                            <span class="mb-1 badge bg-label-primary text-capitalize">{{ $provider->type }}</span>
+                            <span class="mb-1 badge bg-label-primary text-capitalize">{{ $provider->type->name }}</span>
                             <div class="d-flex align-items-center justify-content-end">
                                 <span class="me-1 text-warning fw-bold">
                                     {{ number_format($provider->average_rating, 1) }}

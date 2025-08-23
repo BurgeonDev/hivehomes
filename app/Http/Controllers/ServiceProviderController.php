@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Admin\ServiceProviderTypeController;
+use App\Models\ServiceProviderType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\ServiceProvider;
@@ -61,13 +63,14 @@ class ServiceProviderController extends Controller
         if ($request->ajax()) {
             return view('frontend.service_providers.partials.providers-list', compact('providers'))->render();
         }
-
-        return view('frontend.service_providers.index', compact('providers', 'totalProviders'));
+        $types = ServiceProviderType::orderBy('name')->get();
+        return view('frontend.service_providers.index', compact('providers', 'totalProviders', 'types'));
     }
 
 
     public function show(ServiceProvider $service_provider)
     {
+
         $reviews = $service_provider->reviews()->with('user')->latest()->get();
         $totalReviews = $reviews->count();
         $averageRating = $totalReviews > 0 ? round($reviews->avg('rating'), 2) : 0;

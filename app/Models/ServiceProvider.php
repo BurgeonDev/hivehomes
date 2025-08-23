@@ -12,7 +12,7 @@ class ServiceProvider extends Model
     protected $fillable = [
         'society_id',
         'name',
-        'type',
+        'type_id',
         'phone',
         'email',
         'cnic',
