@@ -6,18 +6,25 @@
 @endsection
 
 @section('content')
+    <!-- Breadcrumb -->
+
+    <section class="overflow-hidden section-py first-section-pt help-center-header position-relative"
+        style="min-height: 300px;">
+        <img class="banner-bg-img z-n1" src="{{ asset('assets/img/pages/header.png') }}" alt="Header Background">
+
+        <div class="container bottom-0 pb-4 text-center position-absolute start-50 translate-middle-x">
+            <nav aria-label="breadcrumb">
+                <ol class="mb-0 breadcrumb justify-content-center fs-4">
+                    <li class="breadcrumb-item">
+                        <a href="{{ route('home') }}" class="text-decoration-none text-primary">Home</a>
+                    </li>
+                    <li class="breadcrumb-item active text-dark" aria-current="page">My Profile</li>
+                </ol>
+            </nav>
+        </div>
+    </section>
     <div class="container-xxl flex-grow-1 container-p-y">
-
-        <!-- Breadcrumb -->
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                <li class="breadcrumb-item active">My Profile</li>
-            </ol>
-        </nav>
-
-        <div class="row gy-4">
-
+        <div class="row g-4">
             {{-- 1) Edit Profile Details --}}
             <div class="col-12">
                 <div class="card">
@@ -29,10 +36,22 @@
 
                             {{-- Avatar --}}
                             <div class="mb-4 text-center">
-                                <img src="{{ auth()->user()->profile_pic
-                                    ? asset('storage/' . auth()->user()->profile_pic)
-                                    : asset('assets/img/avatars/default.png') }}"
-                                    class="mb-3 rounded-circle" style="width:100px;height:100px;object-fit:cover;">
+                                @if (auth()->user()->profile_pic)
+                                    <img src="{{ asset('storage/' . auth()->user()->profile_pic) }}"
+                                        class="mb-3 rounded-circle" style="width:100px;height:100px;object-fit:cover;">
+                                @else
+                                    @php
+                                        // Split the full name into words and grab the first letter of each
+                                        $initials = collect(explode(' ', auth()->user()->name))
+                                            ->map(fn($word) => strtoupper(substr($word, 0, 1)))
+                                            ->join('');
+                                    @endphp
+                                    <div class="mb-3 text-white rounded-circle bg-secondary d-flex align-items-center justify-content-center"
+                                        style="width:100px;height:100px;font-size:36px;">
+                                        {{ $initials }}
+                                    </div>
+                                @endif
+
                                 <div>
                                     <label class="btn btn-sm btn-outline-secondary">
                                         Change Photo
@@ -43,6 +62,7 @@
                                     <div class="mt-1 text-danger small">{{ $message }}</div>
                                 @enderror
                             </div>
+
 
                             <div class="row gx-3">
 
