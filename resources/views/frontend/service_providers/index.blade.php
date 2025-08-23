@@ -4,51 +4,147 @@
 @section('page-css')
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/app-academy.css') }}">
     <style>
+        /* --- Card / Filter visuals --- */
+        .filter-card {
+            border-radius: .6rem;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(3, 10, 18, 0.03);
+        }
+
+        .filter-card .card-body {
+            padding: .8rem;
+        }
+
+        .list-group-item {
+            padding: .45rem .75rem;
+            font-size: .92rem;
+        }
+
+        .list-group-item .badge {
+            font-size: .78rem;
+            padding: .25rem .45rem;
+            border-radius: .45rem;
+        }
+
+        /* KPI + provider card small tweaks */
         .provider-card {
             border-radius: .5rem;
-            transition: box-shadow .3s ease;
+            transition: box-shadow .28s ease;
         }
 
         .provider-card:hover {
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-        }
-
-        .provider-card .card-footer {
-            padding: .6rem 1rem;
+            box-shadow: 0 8px 22px rgba(17, 24, 39, 0.06);
         }
 
         .kpi-card {
-            border-radius: .5rem;
-            padding: 1rem;
+            border-radius: .6rem;
+            padding: .85rem;
         }
 
-        .bg-label-success {
-            background-color: #e6f9ed !important;
+        /* Search input smaller and sleeker */
+        #providersFilterForm .form-control {
+            height: 36px;
+            font-size: .92rem;
+            padding: .35rem .6rem;
+            border-radius: .45rem;
         }
 
-        .filter-card .list-group-item {
+        #providersFilterForm .btn {
+            height: 36px;
+            padding: .25rem .7rem;
+            font-size: .88rem;
+            border-radius: .45rem;
+        }
+
+        /* --- Reset toolbar at top --- */
+        .filters-top-toolbar {
+            display: flex;
+            gap: .5rem;
+            align-items: center;
+            justify-content: space-between;
+            padding: .6rem .75rem;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(250, 250, 250, 0.98));
+            border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        .filters-top-toolbar .reset-wrap {
+            margin-left: auto;
+        }
+
+        #resetFilters {
+            min-width: 88px;
+            padding: .35rem .6rem;
+            font-size: .85rem;
+        }
+
+        /* --- Ratings compact styles --- */
+        .rating-clickable {
             cursor: pointer;
+            gap: .5rem;
+            padding: .25rem 0;
+            align-items: center;
+            font-size: .86rem;
         }
 
-        .rating-stars i {
-            font-size: 1rem;
-            color: #f1c40f;
-            cursor: pointer;
+        .rating-clickable small {
+            width: 52px;
+            flex: 0 0 52px;
+            font-size: .82rem;
+            display: inline-block;
         }
 
-        /* small visual for active filter items */
+        .rating-clickable .progress {
+            height: 6px;
+            /* smaller bars */
+            margin: 0 .6rem;
+            border-radius: 999px;
+            background: rgba(13, 110, 253, 0.06);
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .rating-clickable .progress-bar {
+            box-shadow: none;
+            transition: width .35s ease;
+        }
+
+        .rating-clickable .w-px-20 {
+            width: 40px;
+            text-align: right;
+            font-size: .82rem;
+        }
+
+        /* visual for active filter items */
         .filter-card .list-group-item.active {
             background-color: rgba(13, 110, 253, 0.06);
             border-color: rgba(13, 110, 253, 0.12);
         }
 
-        .rating-clickable {
-            cursor: pointer;
+        .rating-clickable.active {
+            filter: saturate(1.03);
         }
 
-        /* keep progress-bar visible when active */
-        .rating-clickable.active .progress-bar {
-            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.08);
+        /* make sidebar visually compact & sticky adjustments */
+        .position-sticky {
+            top: 95px;
+        }
+
+        @media (max-width: 991px) {
+            .position-sticky {
+                position: static;
+                top: auto;
+            }
+        }
+
+        /* subtle hover */
+        .list-group-item:hover {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        /* small icon star (if present) */
+        .rating-stars i {
+            font-size: .85rem;
+            color: #f1c40f;
         }
     </style>
 @endsection
@@ -100,6 +196,18 @@
             <div class="col-lg-4">
                 <div class="position-sticky" style="top: 95px;">
 
+                    {{-- Top toolbar with Reset (visible at top of searches) --}}
+                    <div class="mb-3 card filter-card">
+                        <div class="filters-top-toolbar">
+                            <div class="small text-muted">Filters</div>
+                            <div class="reset-wrap">
+                                {{-- Moved reset here so it's visible at top of sidebar --}}
+                                <button id="resetFilters" type="button"
+                                    class="btn btn-sm btn-outline-secondary">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+
                     {{-- Search --}}
                     <div class="mb-4 card filter-card">
                         <div class="card-body">
@@ -107,7 +215,6 @@
                             <form id="providersFilterForm" class="d-flex" action="javascript:void(0)" method="GET">
                                 <input type="search" name="q" class="form-control form-control-sm me-2"
                                     placeholder="Search name or bio…" value="{{ request('q') }}" />
-                                <button type="submit" class="btn btn-sm btn-primary">🔍</button>
                             </form>
                         </div>
                     </div>
@@ -115,11 +222,7 @@
                     {{-- Type-wise --}}
                     <div class="mb-4 card filter-card">
                         <div class="card-body">
-                            <h6 class="mb-3 d-flex justify-content-between">
-                                <span>By Type</span>
-                                <button id="resetFilters" type="button"
-                                    class="btn btn-sm btn-outline-secondary">Reset</button>
-                            </h6>
+                            <h6 class="mb-3">By Type</h6>
                             <ul id="typesList" class="list-group list-group-flush">
                                 <li class="list-group-item d-flex justify-content-between {{ request()->filled('type') ? '' : 'active' }}"
                                     data-type="">
@@ -148,10 +251,10 @@
                                 $selectedRating = request('rating') ? (int) request('rating') : null;
                             @endphp
 
-                            <div class="gap-2 mb-2 d-flex align-items-center rating-clickable {{ $selectedRating === 5 ? 'active' : '' }}"
+                            <div class="gap-2 mb-1 d-flex align-items-center rating-clickable {{ $selectedRating === 5 ? 'active' : '' }}"
                                 data-rating="5">
                                 <small>5 Star</small>
-                                <div class="mx-2 progress w-100 bg-label-primary" style="height: 8px;">
+                                <div class="mx-2 progress w-100 bg-label-primary">
                                     <div class="progress-bar" role="progressbar"
                                         style="width: {{ $ratingStats['5']['percent'] ?? 0 }}%"
                                         aria-valuenow="{{ $ratingStats['5']['count'] ?? 0 }}" aria-valuemin="0"
@@ -160,10 +263,10 @@
                                 <small class="w-px-20 text-end">{{ $ratingStats['5']['count'] ?? 0 }}</small>
                             </div>
 
-                            <div class="gap-2 mb-2 d-flex align-items-center rating-clickable {{ $selectedRating === 4 ? 'active' : '' }}"
+                            <div class="gap-2 mb-1 d-flex align-items-center rating-clickable {{ $selectedRating === 4 ? 'active' : '' }}"
                                 data-rating="4">
                                 <small>4 Star</small>
-                                <div class="mx-2 progress w-100 bg-label-primary" style="height: 8px;">
+                                <div class="mx-2 progress w-100 bg-label-primary">
                                     <div class="progress-bar" role="progressbar"
                                         style="width: {{ $ratingStats['4']['percent'] ?? 0 }}%"
                                         aria-valuenow="{{ $ratingStats['4']['count'] ?? 0 }}" aria-valuemin="0"
@@ -172,10 +275,10 @@
                                 <small class="w-px-20 text-end">{{ $ratingStats['4']['count'] ?? 0 }}</small>
                             </div>
 
-                            <div class="gap-2 mb-2 d-flex align-items-center rating-clickable {{ $selectedRating === 3 ? 'active' : '' }}"
+                            <div class="gap-2 mb-1 d-flex align-items-center rating-clickable {{ $selectedRating === 3 ? 'active' : '' }}"
                                 data-rating="3">
                                 <small>3 Star</small>
-                                <div class="mx-2 progress w-100 bg-label-primary" style="height: 8px;">
+                                <div class="mx-2 progress w-100 bg-label-primary">
                                     <div class="progress-bar" role="progressbar"
                                         style="width: {{ $ratingStats['3']['percent'] ?? 0 }}%"
                                         aria-valuenow="{{ $ratingStats['3']['count'] ?? 0 }}" aria-valuemin="0"
@@ -184,10 +287,10 @@
                                 <small class="w-px-20 text-end">{{ $ratingStats['3']['count'] ?? 0 }}</small>
                             </div>
 
-                            <div class="gap-2 mb-2 d-flex align-items-center rating-clickable {{ $selectedRating === 2 ? 'active' : '' }}"
+                            <div class="gap-2 mb-1 d-flex align-items-center rating-clickable {{ $selectedRating === 2 ? 'active' : '' }}"
                                 data-rating="2">
                                 <small>2 Star</small>
-                                <div class="mx-2 progress w-100 bg-label-primary" style="height: 8px;">
+                                <div class="mx-2 progress w-100 bg-label-primary">
                                     <div class="progress-bar" role="progressbar"
                                         style="width: {{ $ratingStats['2']['percent'] ?? 0 }}%"
                                         aria-valuenow="{{ $ratingStats['2']['count'] ?? 0 }}" aria-valuemin="0"
@@ -199,7 +302,7 @@
                             <div class="gap-2 d-flex align-items-center rating-clickable {{ $selectedRating === 1 ? 'active' : '' }}"
                                 data-rating="1">
                                 <small>1 Star</small>
-                                <div class="mx-2 progress w-100 bg-label-primary" style="height: 8px;">
+                                <div class="mx-2 progress w-100 bg-label-primary">
                                     <div class="progress-bar" role="progressbar"
                                         style="width: {{ $ratingStats['1']['percent'] ?? 0 }}%"
                                         aria-valuenow="{{ $ratingStats['1']['count'] ?? 0 }}" aria-valuemin="0"
@@ -220,8 +323,7 @@
                                     Newest</option>
                                 <option value="oldest" {{ request('sort') === 'oldest' ? 'selected' : '' }}>Oldest
                                 </option>
-                                <option value="most_reviewed" {{ request('sort') === 'most_reviewed' ? 'selected' : '' }}>
-                                    Most Reviewed</option>
+
                             </select>
                         </div>
                     </div>
@@ -395,14 +497,6 @@
                     fetchProviders();
                 }
             });
-
-            // initial load is already rendered by server — but keep UI reactive:
-            // attach 'active' class to matching items based on server request (if needed).
-            // (server blade already sets active for types and rating via request()).
-
-            // (Optional) If you want the page to always fetch via AJAX on load (instead of using server-rendered block),
-            // uncomment the next line:
-            // fetchProviders();
 
         });
     </script>
