@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ServiceProvider;
+use App\Models\ServiceProviderType;
 use App\Models\Society;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -37,8 +38,8 @@ class ServiceProviderController extends Controller
         }
 
         $providers = $query->orderBy('created_at', 'desc')->get();
-
-        return view('admin.service_providers.index', compact('providers', 'allSocieties'));
+        $types = ServiceProviderType::all();
+        return view('admin.service_providers.index', compact('providers', 'allSocieties', 'types'));
     }
 
 
@@ -52,7 +53,7 @@ class ServiceProviderController extends Controller
         // 1. Base validation
         $rules = [
             'name'            => 'required|string|max:255',
-            'type'            => 'required|string|max:100',
+            'type_id' => 'required|exists:service_provider_types,id',
             'phone'           => 'nullable|string|max:50',
             'email'           => 'nullable|email|max:255',
             'cnic'            => 'nullable|string|max:20',
@@ -93,7 +94,8 @@ class ServiceProviderController extends Controller
     {
         $rules = [
             'name'            => 'required|string|max:255',
-            'type'            => 'required|string|max:100',
+            'type_id' => 'required|exists:service_provider_types,id',
+
             'phone'           => 'nullable|string|max:50',
             'email'           => 'nullable|email|max:255',
             'cnic'            => 'nullable|string|max:20',

@@ -48,4 +48,8 @@ class ServiceProvider extends Model
             ? asset('storage/' . $this->profile_image)
             : asset('images/default-avatar.png');
     }
+    public function type()
+    {
+        return $this->belongsTo(ServiceProviderType::class, 'type_id');
+    }
 }

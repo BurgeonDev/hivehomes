@@ -17,7 +17,8 @@ use App\Http\Controllers\{
 use App\Http\Controllers\Admin\{
     ContactController,
     ServiceProviderController as AdminServiceProviderController,
-    PostController as AdminPostController
+    PostController as AdminPostController,
+    ServiceProviderTypeController
 };
 
 // Frontend Public
@@ -76,6 +77,8 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
         'service-providers/{service_provider}/toggle',
         [AdminServiceProviderController::class, 'toggle']
     )->name('service-providers.toggle');
+
+    Route::resource('types', ServiceProviderTypeController::class);
 });
 
 

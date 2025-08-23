@@ -65,7 +65,8 @@
                                         <span>{{ $sp->name }}</span>
                                     </div>
                                 </td>
-                                <td>{{ ucfirst($sp->type) }}</td>
+                                <td>{{ $sp->type->name ?? 'N/A' }}</td>
+
                                 <td>{{ $sp->phone }}</td>
                                 <td>{{ $sp->email }}</td>
                                 @role('super_admin')
@@ -157,13 +158,14 @@
 
                         <div class="mb-3">
                             <label class="form-label">Type</label>
-                            <select name="type" id="sp-type" class="form-select" required>
+                            <select name="type_id" id="sp-type_id" class="form-select" required>
                                 <option value="">Select type…</option>
-                                <option value="plumber">Plumber</option>
-                                <option value="electrician">Electrician</option>
-                                <option value="carpenter">Carpenter</option>
+                                @foreach ($types as $type)
+                                    <option value="{{ $type->id }}">{{ $type->name }}</option>
+                                @endforeach
                             </select>
                         </div>
+
 
                         <div class="mb-3 row">
                             <div class="col">
@@ -226,7 +228,8 @@
                 $('#sp-society').val(sp.society_id);
             @endif
             $('#sp-name').val(sp.name);
-            $('#sp-type').val(sp.type);
+            $('#sp-type_id').val(sp.type_id);
+
             $('#sp-phone').val(sp.phone);
             $('#sp-email').val(sp.email);
             $('#sp-cnic').val(sp.cnic);

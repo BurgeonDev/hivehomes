@@ -30,6 +30,7 @@
     <div class="menu-inner-shadow"></div>
 
     <ul class="py-1 menu-inner">
+
         <!-- Dashboard -->
         <li class="menu-item {{ request()->routeIs('dashboard') ? 'active open' : '' }}">
             <a href="{{ route('dashboard') }}" class="menu-link">
@@ -97,16 +98,29 @@
                 <div data-i18n="Societies">Societies</div>
             </a>
         </li>
+
         <li class="menu-item {{ request()->routeIs('admin.posts.*') ? 'active open' : '' }}">
             <a href="{{ route('admin.posts.index') }}" class="menu-link">
                 <i class="menu-icon icon-base ti tabler-article"></i>
                 <div data-i18n="Posts">Posts</div>
             </a>
         </li>
+
         <li class="menu-item {{ request()->routeIs('admin.contacts.*') ? 'active open' : '' }}">
             <a href="{{ route('admin.contacts.index') }}" class="menu-link">
                 <i class="menu-icon icon-base ti tabler-message-dots"></i>
                 <div data-i18n="Contact Messages">Contact Messages</div>
+            </a>
+        </li>
+
+        <!-- ===== Service Provider Section ===== -->
+        <li class="menu-header small">
+            <span class="menu-header-text" data-i18n="Service Providers">Service Providers</span>
+        </li>
+        <li class="menu-item {{ request()->routeIs('admin.types.*') ? 'active open' : '' }}">
+            <a href="{{ route('admin.types.index') }}" class="menu-link">
+                <i class="menu-icon icon-base ti tabler-list-check"></i>
+                <div data-i18n=" Provider Types">Provider Types</div>
             </a>
         </li>
         <li class="menu-item {{ request()->routeIs('admin.service-providers.*') ? 'active open' : '' }}">
@@ -115,7 +129,11 @@
                 <div data-i18n="Service Providers">Service Providers</div>
             </a>
         </li>
+
+
+
     </ul>
+
 
 </aside>
 
