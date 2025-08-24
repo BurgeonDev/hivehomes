@@ -218,6 +218,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const storeRoute = @json(route('admin.products.store'));
 
+            // FilePond setup
             FilePond.registerPlugin(FilePondPluginImagePreview, FilePondPluginFileValidateType);
 
             const pondElement = document.querySelector('#product-images');
@@ -231,31 +232,56 @@
                 });
             }
 
-            // helper to render existing images thumbnails
+            // helper elements
             const existingImagesContainer = $('#existing-images');
             const removedInput = $('#removedImages');
             let removedIds = []; // track image ids to be removed
+
+            // placeholder when image fails
+            const PLACEHOLDER = 'https://via.placeholder.com/120x80?text=No+Image';
+
+            function buildImageUrl(img) {
+                if (!img) return '';
+                if (img.url && /^https?:\/\//i.test(img.url)) return img.url;
+                if (img.url) {
+                    try {
+                        return new URL(img.url, window.location.origin).href;
+                    } catch (e) {
+                        return window.location.origin + (img.url.startsWith('/') ? img.url : '/' + img.url);
+                    }
+                }
+                if (img.path) {
+                    const cleaned = img.path.replace(/^\//, '');
+                    return window.location.origin + '/storage/' + cleaned;
+                }
+                return '';
+            }
+
 
             function renderExistingImages(images = []) {
                 existingImagesContainer.empty();
                 removedIds = [];
                 removedInput.val(JSON.stringify(removedIds));
 
-                if (!images.length) {
+                if (!images || !images.length) {
                     existingImagesContainer.append('<div class="text-muted">No existing images</div>');
                     return;
                 }
 
+                // debug: show what we received
+                console.debug('renderExistingImages: raw images data:', images);
+
                 images.forEach(img => {
-                    // img should include: id and url (ensure controller/model provides url)
                     const id = img.id ?? null;
-                    const url = img.url ?? img.path ?? '';
+                    const url = buildImageUrl(img);
+                    console.debug('image id', id, 'built url:', url, 'raw:', img);
 
                     if (!id || !url) return;
 
+                    // add onerror fallback so broken images show placeholder and we can see them
                     const wrapper = $(`
-                <div class="existing-image-item position-relative" style="width:120px">
-                    <img src="${url}" class="rounded img-fluid" style="width:120px; height:80px; object-fit:cover;">
+                <div class="mb-2 existing-image-item position-relative me-2" style="width:120px">
+                    <img src="${url}" onerror="this.onerror=null;this.src='${PLACEHOLDER}';" class="rounded img-fluid" style="width:120px; height:80px; object-fit:cover;">
                     <button type="button" class="btn btn-sm btn-danger btn-remove-existing position-absolute" data-image-id="${id}" style="top:6px; right:6px;">&times;</button>
                 </div>
             `);
@@ -275,6 +301,7 @@
                 if (id && !removedIds.includes(id)) {
                     removedIds.push(id);
                     removedInput.val(JSON.stringify(removedIds));
+                    console.debug('marked removed image id:', id, 'removedIds now:', removedIds);
                 }
             });
 
@@ -301,6 +328,10 @@
                     id: productId,
                     images: []
                 };
+
+                // debug: log raw p and p.images
+                console.debug('Edit product payload (p):', p);
+                console.debug('Edit product images array:', p.images);
 
                 // form action for update
                 $('#productForm').attr('action', '/admin/products/' + p.id);
@@ -345,7 +376,30 @@
                 renderExistingImages([]);
             });
 
-            // Note: form is allowed to submit normally; on server side handle removed_images and new uploads
+            // BEFORE submit: convert removed_images JSON into delete_images[] inputs
+            $('#productForm').on('submit', function() {
+                // remove previously appended hidden inputs (if any)
+                $(this).find('input[name="delete_images[]"]').remove();
+
+                // parse removedImages hidden JSON
+                let removed = [];
+                try {
+                    removed = JSON.parse($('#removedImages').val() || '[]');
+                } catch (e) {
+                    removed = [];
+                }
+
+                // append inputs for each id
+                removed.forEach(id => {
+                    if (id) {
+                        $(this).append(
+                            `<input type="hidden" name="delete_images[]" value="${id}">`);
+                    }
+                });
+
+                // allow normal submission to proceed
+                return true;
+            });
         });
     </script>
 
