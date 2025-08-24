@@ -14,7 +14,6 @@ class DatabaseSeeder extends Seeder
             LocationSeeder::class,
             AdminsTableSeeder::class,
             SocietiesTableSeeder::class,
-            MembersTableSeeder::class,
             CategorySeeder::class,
         ]);
     }
