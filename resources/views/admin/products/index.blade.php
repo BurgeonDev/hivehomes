@@ -49,13 +49,18 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
-                                    @if ($p->primaryImage)
-                                        <img src="{{ $p->primaryImage->url ?? asset('storage/' . $p->primaryImage->path) }}"
-                                            width="60" class="rounded">
+                                    @php
+                                        $image = $p->primaryImage ?? $p->images->first();
+                                    @endphp
+
+                                    @if ($image)
+                                        <img src="{{ $image->url ?? asset('storage/' . $image->path) }}" width="60"
+                                            class="rounded">
                                     @else
                                         <span class="text-muted">No image</span>
                                     @endif
                                 </td>
+
                                 <td>{{ $p->title }}</td>
                                 <td>{{ $p->category->name ?? '-' }}</td>
                                 <td>${{ number_format($p->price, 2) }}</td>
