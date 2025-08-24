@@ -16,7 +16,7 @@ class PostController extends Controller
 
         // Base query: only approved posts
         $query = Post::with(['user', 'category', 'society'])
-            ->withCount('comments', 'likedBy')
+            ->withCount('comments', 'likedByUsers')
             ->where('status', 'approved');
 
         if (! $user->hasRole('super_admin')) {
@@ -143,21 +143,22 @@ class PostController extends Controller
     }
     public function toggle(Post $post)
     {
-        $user = Auth::user();
+        $user = auth()->user();
 
-        // If the pivot exists, detach (unlike); otherwise attach (like)
-        if ($user->likedPosts()->where('post_id', $post->id)->exists()) {
-            $user->likedPosts()->detach($post->id);
+        if ($post->likedByUsers()->where('user_id', $user->id)->exists()) {
+            // Unlike
+            $post->likedByUsers()->detach($user->id);
             $liked = false;
         } else {
-            $user->likedPosts()->attach($post->id);
+            // Like
+            $post->likedByUsers()->attach($user->id);
             $liked = true;
         }
 
-        // Return new total count and liked state
         return response()->json([
-            'liked'        => $liked,
-            'likes_count'  => $post->likedBy()->count(),
+            'success' => true,
+            'liked'   => $liked,
+            'count'   => $post->likedByUsers()->count(),
         ]);
     }
 }

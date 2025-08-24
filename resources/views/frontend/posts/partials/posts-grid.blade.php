@@ -56,29 +56,34 @@
                                     <i
                                         class="menu-icon icon-base ti tabler-message-circle me-1"></i>{{ $comments }}
                                 </small>
-                                <div class="ms-2 d-flex align-items-center like-button-wrapper">
-                                    @php $liked = in_array($post->id, $likedPostIds); @endphp
-                                    <button
-                                        class="btn btn-icon border-0 bg-transparent like-button {{ $liked ? 'liked text-danger' : 'text-muted' }}"
-                                        data-post-id="{{ $post->id }}"
-                                        aria-pressed="{{ $liked ? 'true' : 'false' }}">
-                                        <i class="ti tabler-heart fs-5"></i>
-                                    </button>
-                                    <span
-                                        class="ms-1 text-muted like-count">{{ number_format($post->likes_count) }}</span>
-                                </div>
-
+                                <small class="text-muted ms-2">
+                                    <i class="menu-icon icon-base ti tabler-heart me-1"></i>
+                                    <span class="like-count">{{ number_format($post->likes_count) }}</span>
+                                </small>
 
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="card-footer">
+                    <div class="row w-100 align-items-center">
+                        <div class="col-10">
+                            <a href="{{ route('posts.show', $post->id) }}" class="btn btn-label-primary w-100">
+                                <i class="menu-icon icon-base ti tabler-eye me-1"></i> View Post
+                            </a>
+                        </div>
+                        <div class="col-2 d-flex justify-content-end align-items-center like-button-wrapper">
+                            @php $liked = in_array($post->id, $likedPostIds); @endphp
+                            <button
+                                class="btn btn-label-danger bg-transparent like-button {{ $liked ? 'liked text-danger' : 'text-muted' }}"
+                                data-post-id="{{ $post->id }}" aria-pressed="{{ $liked ? 'true' : 'false' }}">
+                                <i class="ti tabler-heart fs-5"></i>
+                            </button>
 
-                <div class="card-footer border-top-0">
-                    <a href="{{ route('posts.show', $post->id) }}" class="btn btn-label-primary w-100">
-                        <i class="menu-icon icon-base ti tabler-eye me-1"></i> View Post
-                    </a>
+                        </div>
+                    </div>
                 </div>
+
             </article>
         </div>
     @empty

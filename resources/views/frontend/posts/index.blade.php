@@ -273,24 +273,20 @@
             // fetchPosts(initialParams);
         });
     </script>
-    <script>
+    <Script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Grab CSRF token from the head
             const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
-            // Delegate clicks on .like-button within the posts container
             document
                 .getElementById('postsContainer')
                 .addEventListener('click', async (e) => {
                     const btn = e.target.closest('.like-button');
-                    if (!btn) return; // not a like-button click
+                    if (!btn) return;
                     e.preventDefault();
 
-                    // Read post ID & build URL
                     const postId = btn.dataset.postId;
-                    const url = "{{ route('posts.like', ':id') }}".replace(':id', postId);
+                    const url = "{{ route('posts.like', ':post') }}".replace(':post', postId);
 
-                    // Disable to prevent spamming
                     btn.disabled = true;
 
                     try {
@@ -309,14 +305,17 @@
                             likes_count
                         } = await response.json();
 
-                        // Toggle heart color
+                        // toggle heart color
                         btn.classList.toggle('liked', liked);
                         btn.classList.toggle('text-danger', liked);
                         btn.classList.toggle('text-muted', !liked);
 
-                        // Update count
-                        const countEl = btn.parentElement.querySelector('.like-count');
-                        countEl.textContent = new Intl.NumberFormat().format(likes_count);
+                        // update the count in the same card
+                        const card = btn.closest('.post-card');
+                        const countEl = card.querySelector('.like-count');
+                        if (countEl) {
+                            countEl.textContent = new Intl.NumberFormat().format(likes_count);
+                        }
 
                     } catch (err) {
                         console.error(err);
@@ -326,6 +325,6 @@
                     }
                 });
         });
-    </script>
+    </Script>
 
 @endsection
