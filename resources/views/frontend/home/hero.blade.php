@@ -12,7 +12,7 @@
                      A modern platform for connected communities — enabling smooth communication,
                      local commerce, and effortless access to trusted services.
                  </p>
-                 <a href="#registerSociety" class="px-5 btn btn-primary btn-lg">
+                 <a href="{{ route('login') }}" class="px-5 btn btn-primary btn-lg">
                      Join Your Society Now
                  </a>
              </div>
@@ -20,7 +20,7 @@
              <!-- Features: Start -->
              <div class="mt-5 text-center row g-4">
                  <div class="col-md-4">
-                     <div class="bg-transparent border-0 shadow-sm card h-100">
+                     <div class="bg-transparent border-0 rounded-4 card h-100">
                          <div class="card-body">
                              <div class="mb-3 text-primary">
                                  <i class="mb-2 icon-base ti tabler-brand-slack icon-xl"></i>
@@ -34,7 +34,7 @@
                      </div>
                  </div>
                  <div class="col-md-4">
-                     <div class="bg-transparent border-0 shadow-sm card h-100">
+                     <div class="bg-transparent border-0 rounded-4 card h-100">
                          <div class="card-body">
                              <div class="mb-3 text-success">
                                  <i class="icon-base ti tabler-shopping-cart fs-1 icon-xl"></i>
@@ -48,7 +48,7 @@
                      </div>
                  </div>
                  <div class="col-md-4">
-                     <div class="bg-transparent border-0 shadow-sm card h-100">
+                     <div class="bg-transparent border-0 rounded-4 card h-100">
                          <div class="card-body">
                              <div class="mb-3 text-warning">
                                  <i class="icon-base ti tabler-users fs-1 icon-xl"></i>
