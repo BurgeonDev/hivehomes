@@ -12,13 +12,16 @@ use App\Http\Controllers\{
     SocietyController,
     StateController,
     UserController,
-    ServiceProviderController
+    ServiceProviderController,
+    ProductController
 };
 use App\Http\Controllers\Admin\{
     ContactController,
     ServiceProviderController as AdminServiceProviderController,
     PostController as AdminPostController,
-    ServiceProviderTypeController
+    ServiceProviderTypeController,
+    ProductCategoryController,
+    ProductController as AdminProductController
 };
 
 // Frontend Public
@@ -73,14 +76,12 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::post('posts/{post}/status', [AdminPostController::class, 'changeStatus'])->name('posts.changeStatus');
     Route::get('contacts', [ContactController::class, 'index'])->name('contacts.index');
     Route::post('contacts/{contact}/reply', [ContactController::class, 'reply'])->name('contacts.reply');
-
     Route::resource('service-providers', AdminServiceProviderController::class)
         ->except(['create', 'show', 'edit']);
     Route::post(
         'service-providers/{service_provider}/toggle',
         [AdminServiceProviderController::class, 'toggle']
     )->name('service-providers.toggle');
-
     Route::resource('types', ServiceProviderTypeController::class);
 });
 
@@ -92,3 +93,42 @@ Route::get('/get-cities-by-state/{state_id}', [CityController::class, 'getCities
 Route::get('/get-societies-by-city/{city_id}', [SocietyController::class, 'getSocietiesByCity']);
 
 require __DIR__ . '/auth.php';
+
+
+
+
+
+
+// Marketplace - Frontend (members)
+Route::middleware('auth')->prefix('marketplace')->name('marketplace.')->group(function () {
+    // listing + filters
+    Route::get('/', [ProductController::class, 'index'])->name('index');
+
+    // create / store
+    Route::get('create', [ProductController::class, 'create'])->name('create');
+    Route::post('/', [ProductController::class, 'store'])->name('store');
+
+    // single product
+    Route::get('{product}', [ProductController::class, 'show'])->name('show');
+
+    // edit / update / delete (owner or admin)
+    Route::get('{product}/edit', [ProductController::class, 'edit'])->name('edit');
+    Route::put('{product}', [ProductController::class, 'update'])->name('update');
+    Route::delete('{product}', [ProductController::class, 'destroy'])->name('destroy');
+
+    // remove image (POST form or AJAX)
+    Route::post('images/{image}/remove', [ProductController::class, 'removeImage'])
+        ->name('image.remove');
+});
+
+
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminProductController::class, 'index'])->name('index');
+    Route::get('pending', [AdminProductController::class, 'pending'])->name('pending');
+    Route::post('{product}/approve', [AdminProductController::class, 'approve'])->name('approve');
+    Route::post('{product}/reject', [AdminProductController::class, 'reject'])->name('reject');
+    Route::delete('{product}', [AdminProductController::class, 'destroy'])->name('destroy');
+
+    Route::resource('product-categories', ProductCategoryController::class)
+        ->except(['show']);
+});

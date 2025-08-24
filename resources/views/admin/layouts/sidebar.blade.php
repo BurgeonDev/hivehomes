@@ -130,6 +130,24 @@
             </a>
         </li>
 
+        <!-- ===== Products Section ===== -->
+        <li class="menu-header small">
+            <span class="menu-header-text" data-i18n="Products">Products</span>
+        </li>
+
+        <li class="menu-item {{ request()->routeIs('admin.product-categories.*') ? 'active open' : '' }}">
+            <a href="{{ route('admin.product-categories.index') }}" class="menu-link">
+                <i class="menu-icon icon-base ti tabler-category"></i>
+                <div data-i18n="Product Categories">Product Categories</div>
+            </a>
+        </li>
+
+        {{-- <li class="menu-item {{ request()->routeIs('admin.products.*') ? 'active open' : '' }}">
+            <a href="{{ route('admin.products.index') }}" class="menu-link">
+                <i class="menu-icon icon-base ti tabler-box"></i>
+                <div data-i18n="Products">Products</div>
+            </a>
+        </li> --}}
 
 
     </ul>
