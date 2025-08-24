@@ -5,6 +5,10 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css') }}" />
+    {{-- FilePond CSS --}}
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
+
 @endsection
 
 @section('content')
@@ -153,10 +157,12 @@
                     <textarea name="description" id="prod-description" rows="3" class="form-control"></textarea>
                 </div>
 
+
                 <div class="mb-3">
                     <label class="form-label">Images</label>
-                    <input type="file" name="images[]" multiple class="form-control">
+                    <input type="file" name="images[]" id="product-images" multiple />
                 </div>
+
                 {{-- only super_admin can choose society --}}
                 @role('super_admin')
                     <div class="mb-4">
@@ -193,43 +199,89 @@
     <script src="{{ asset('assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.js') }}"></script>
+    {{-- FilePond JS --}}
+    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+
 @endsection
 
 @section('page-js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Edit product button
+
+            // 🔹 Register FilePond plugins
+            FilePond.registerPlugin(FilePondPluginImagePreview, FilePondPluginFileValidateType);
+
+            // 🔹 Create FilePond instance once
+            const pond = FilePond.create(document.querySelector('#product-images'), {
+                allowMultiple: true,
+                acceptedFileTypes: ['image/*'],
+                credits: false,
+                storeAsFile: true
+            });
+
+            // 🔹 Edit product button
             $(document).on('click', '.btn-edit-product', function() {
                 let p = $(this).data('product');
 
-                // form action + method
+                // Update form action + method
                 $('#productForm').attr('action', `/admin/products/${p.id}`);
                 $('#productFormMethod').val('PUT');
 
-                // populate fields
+                // Fill form fields
                 $('#prod-title').val(p.title);
                 $('#prod-category').val(p.category_id);
                 $('#prod-price').val(p.price);
                 $('#prod-quantity').val(p.quantity);
                 $('#prod-condition').val(p.condition);
-                $('#prod-negotiable').prop('checked', p.is_negotiable);
-                $('#prod-featured').prop('checked', p.is_featured);
+                $('#prod-negotiable').prop('checked', !!p.is_negotiable);
+                $('#prod-featured').prop('checked', !!p.is_featured);
                 $('#prod-featured-until').val(
                     p.featured_until ? new Date(p.featured_until).toISOString().slice(0, 16) : ''
                 );
                 $('#prod-description').val(p.description);
                 $('#prod-status').val(p.status);
-                // society select
+
                 @role('super_admin')
-                    $('#post-society').val(post.society_id);
+                    $('#post-society').val(p.society_id);
                 @endrole
+
+                // Reset pond and load existing images
+                pond.removeFiles();
+                if (p.images && p.images.length > 0) {
+                    pond.addFiles(
+                        ...p.images.map(img => ({
+                            source: `/storage/${img.path}`,
+                            options: {
+                                type: 'local',
+                                metadata: {
+                                    id: img.id
+                                }
+                            }
+                        }))
+                    );
+                }
+
+                // Rebind removefile event to track deletions
+                pond.off('removefile').on('removefile', (error, file) => {
+                    if (!error && file.getMetadata('id')) {
+                        $('<input>').attr({
+                            type: 'hidden',
+                            name: 'delete_images[]',
+                            value: file.getMetadata('id')
+                        }).appendTo('#productForm');
+                    }
+                });
+
+                // Update UI text
                 $('#offcanvasProductTitle').text('Edit Product');
                 $('#productFormSubmit').text('Save');
 
-                bootstrap.Offcanvas.getOrCreateInstance($('#offcanvasProduct')).show();
+                bootstrap.Offcanvas.getOrCreateInstance(document.getElementById('offcanvasProduct')).show();
             });
 
-            // Reset on close
+            // 🔹 Reset form when closing
             $('#offcanvasProduct').on('hidden.bs.offcanvas', function() {
                 $('#productForm')
                     .attr('action', "{{ route('admin.products.store') }}")
@@ -237,7 +289,13 @@
                 $('#productFormMethod').val('POST');
                 $('#offcanvasProductTitle').text('Add Product');
                 $('#productFormSubmit').text('Submit');
+
+                // reset pond
+                pond.removeFiles();
+                $('#productForm input[name="delete_images[]"]').remove();
             });
+
         });
     </script>
+
 @endsection

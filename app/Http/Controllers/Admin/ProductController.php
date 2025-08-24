@@ -72,7 +72,6 @@ class ProductController extends Controller
         return back()->with('success', 'Product added.');
     }
 
-    // Update an existing product
     public function update(Request $request, Product $product)
     {
         $data = $request->validate([
@@ -87,9 +86,40 @@ class ProductController extends Controller
             'featured_until' => 'nullable|date',
             'status'         => 'required|in:pending,approved,rejected',
             'images.*'       => 'nullable|image|max:2048',
+            'delete_images.*' => 'nullable|integer|exists:product_images,id',
         ]);
 
         $product->update($data);
+
+        // delete selected images
+        if ($request->filled('delete_images')) {
+            foreach ($product->images()->whereIn('id', $request->delete_images)->get() as $img) {
+                Storage::disk('public')->delete($img->path);
+                $img->delete();
+            }
+        }
+
+        // add new images
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $idx => $file) {
+                $path = $file->store('products', 'public');
+                $product->images()->create([
+                    'path'       => $path,
+                    'order'      => $idx,
+                    'is_primary' => $idx === 0 && !$product->images()->where('is_primary', 1)->exists(),
+                ]);
+            }
+        }
+        if ($request->filled('delete_images')) {
+            foreach ($request->delete_images as $imgId) {
+                $img = $product->images()->find($imgId);
+                if ($img) {
+                    Storage::disk('public')->delete($img->path);
+                    $img->delete();
+                }
+            }
+        }
+
 
         return back()->with('success', 'Product updated.');
     }
