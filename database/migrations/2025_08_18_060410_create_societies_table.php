@@ -11,14 +11,10 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->text('address')->nullable();
-
             $table->unsignedBigInteger('city_id');
             $table->unsignedBigInteger('state_id');
             $table->unsignedBigInteger('country_id');
             $table->unsignedBigInteger('admin_user_id');
-
-
-
             $table->timestamps();
         });
     }
