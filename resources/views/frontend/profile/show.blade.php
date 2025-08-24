@@ -36,20 +36,30 @@
 
                             {{-- Avatar --}}
                             <div class="mb-4 text-center">
-                                <img src="{{ auth()->user()->profile_pic
-                                    ? asset('storage/' . auth()->user()->profile_pic)
-                                    : asset('assets/img/avatars/default.png') }}"
-                                    class="mb-3 rounded-circle" style="width:100px;height:100px;object-fit:cover;">
+                                @php
+                                    $user = auth()->user();
+                                    $avatarUrl = $user->profile_pic
+                                        ? asset('storage/' . $user->profile_pic)
+                                        : 'https://ui-avatars.com/api/?name=' .
+                                            urlencode($user->name) .
+                                            '&background=random&bold=true';
+                                @endphp
+
+                                <img src="{{ $avatarUrl }}" class="mb-3 rounded-circle"
+                                    style="width:100px;height:100px;object-fit:cover;">
+
                                 <div>
                                     <label class="btn btn-sm btn-outline-secondary">
                                         Change Photo
                                         <input type="file" name="profile_pic" hidden>
                                     </label>
                                 </div>
+
                                 @error('profile_pic')
                                     <div class="mt-1 text-danger small">{{ $message }}</div>
                                 @enderror
                             </div>
+
 
                             <div class="row gx-3">
 
@@ -89,18 +99,15 @@
                                 {{-- Status --}}
                                 <div class="mb-3 col-md-6">
                                     <label class="form-label">Status</label>
-                                    <select name="status" class="form-select @error('status') is-invalid @enderror"
-                                        required>
+                                    <select class="form-select" disabled>
                                         <option value="active" {{ auth()->user()->status === 'active' ? 'selected' : '' }}>
                                             Active</option>
                                         <option value="inactive"
-                                            {{ auth()->user()->status === 'inactive' ? 'selected' : '' }}>
-                                            Inactive</option>
+                                            {{ auth()->user()->status === 'inactive' ? 'selected' : '' }}>Inactive</option>
                                     </select>
-                                    @error('status')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                    <input type="hidden" name="status" value="{{ auth()->user()->status }}">
                                 </div>
+
 
                                 {{-- Society (read‐only) --}}
                                 <div class="mb-3 col-md-6">
@@ -197,7 +204,7 @@
                             </div>
 
                             <div class="text-end">
-                                <button class="btn badge bg-label-danger" onclick="return confirm('Are you sure?')">
+                                <button class="btn btn-danger" onclick="return confirm('Are you sure?')">
                                     Delete Account
                                 </button>
                             </div>
