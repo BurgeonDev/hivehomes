@@ -209,6 +209,9 @@
 @section('page-js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // store route - used to reset form action
+            const storeRoute = @json(route('admin.products.store'));
+
             // Register FilePond plugins
             FilePond.registerPlugin(FilePondPluginImagePreview, FilePondPluginFileValidateType);
 
@@ -225,78 +228,103 @@
                 });
             }
 
+            // When user clicks "Add Product" button — ensure form is reset for create
+            $('#btnAddProduct').on('click', function() {
+                // reset form fields and action
+                $('#productForm').trigger('reset');
+                $('#productForm').attr('action', storeRoute);
+                $('#productFormMethod').val('POST');
+                $('#offcanvasProductTitle').text('Add Product');
+                $('#productFormSubmit').text('Submit');
+
+                // clear FilePond previews
+                if (pond) {
+                    pond.removeFiles();
+                }
+            });
+
             // Edit product button handler
             $(document).on('click', '.btn-edit-product', function() {
-                const productId = $(this).data('product-id');
+                // Prefer the full product JSON (you are already outputting @json($p))
+                const product = $(this).data('product');
 
-                // In a real application, you would fetch product data from the server
-                // For demonstration, we're using mock data
-                const mockProduct = {
+                // If product JSON is missing (unexpected), try product-id fallback
+                const productId = (product && product.id) ? product.id : $(this).data('product-id');
+
+                // If still missing, abort early
+                if (!productId) {
+                    console.error('No product data found for edit button.');
+                    return;
+                }
+
+                // If product JSON missing, create a very small fallback to avoid runtime errors
+                const p = product || {
                     id: productId,
-                    title: 'Sample Product ' + productId,
-                    category_id: productId,
-                    price: (productId * 25).toFixed(2),
-                    quantity: productId * 5,
-                    condition: productId % 2 === 0 ? 'new' : 'used',
-                    is_negotiable: productId % 2 === 0,
-                    is_featured: productId % 2 !== 0,
-                    featured_until: productId % 2 !== 0 ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-                        .toISOString().slice(0, 16) : '',
-                    description: 'This is a sample product description for product ' + productId,
-                    status: productId % 2 === 0 ? 'approved' : 'pending',
-                    society_id: productId % 2 === 0 ? 1 : 2,
-                    images: [{
-                            id: 1,
-                            path: 'images/sample1.jpg'
-                        },
-                        {
-                            id: 2,
-                            path: 'images/sample2.jpg'
-                        }
-                    ]
+                    title: '',
+                    category_id: '',
+                    price: '',
+                    quantity: 1,
+                    condition: 'new',
+                    is_negotiable: false,
+                    is_featured: false,
+                    featured_until: '',
+                    description: '',
+                    status: 'pending',
+                    society_id: '',
+                    images: []
                 };
 
-                // Update form action + method
-                $('#productForm').attr('action', '/admin/products/' + mockProduct.id);
+                // Update form action + method (PUT override)
+                $('#productForm').attr('action', '/admin/products/' + p.id);
                 $('#productFormMethod').val('PUT');
 
                 // Fill form fields
-                $('#prod-title').val(mockProduct.title);
-                $('#prod-category').val(mockProduct.category_id);
-                $('#prod-price').val(mockProduct.price);
-                $('#prod-quantity').val(mockProduct.quantity);
-                $('#prod-condition').val(mockProduct.condition);
-                $('#prod-negotiable').prop('checked', mockProduct.is_negotiable);
-                $('#prod-featured').prop('checked', mockProduct.is_featured);
-                $('#prod-featured-until').val(mockProduct.featured_until);
-                $('#prod-description').val(mockProduct.description);
-                $('#prod-status').val(mockProduct.status);
-                $('#post-society').val(mockProduct.society_id);
+                $('#prod-title').val(p.title || '');
+                $('#prod-category').val(p.category_id || '');
+                $('#prod-price').val(p.price || '');
+                $('#prod-quantity').val(p.quantity || 1);
+                $('#prod-condition').val(p.condition || 'new');
+                $('#prod-negotiable').prop('checked', !!p.is_negotiable);
+                $('#prod-featured').prop('checked', !!p.is_featured);
+                $('#prod-featured-until').val(p.featured_until ? p.featured_until.slice(0, 16) : '');
+                $('#prod-description').val(p.description || '');
+                $('#prod-status').val(p.status || 'pending');
+                if ($('#post-society').length) $('#post-society').val(p.society_id || '');
 
-                // Reset pond and load existing images if pond is initialized
+                // Reset pond then load existing images if any
                 if (pond) {
+                    // clear existing previews
                     pond.removeFiles();
 
-                    // Add mock images (in a real app, these would be real image URLs)
-                    if (mockProduct.images && mockProduct.images.length > 0) {
-                        // Since we can't access actual server images in this example,
-                        // we'll use placeholder images
-                        pond.addFiles([
-                            'https://via.placeholder.com/600x400/007bff/ffffff?text=Product+Image+1',
-                            'https://via.placeholder.com/600x400/28a745/ffffff?text=Product+Image+2'
-                        ]);
+                    // If product.images present, add each as a remote file
+                    if (p.images && Array.isArray(p.images) && p.images.length) {
+                        p.images.forEach(img => {
+                            // try to find a usable URL in several common fields
+                            let url = img.url || img.file_url || img.path || img.file || null;
+                            if (!url) return;
+
+                            // make absolute if relative
+                            if (!/^https?:\/\//i.test(url)) {
+                                // avoid double slashes
+                                url = window.location.origin + '/' + url.replace(/^\//, '');
+                            }
+
+                            // Add file to FilePond. addFile returns a promise.
+                            pond.addFile(url).catch(err => console.warn('FilePond addFile error:',
+                                err));
+                        });
                     }
 
-                    // Remove any existing removefile listeners
-                    if (pond.off) {
+                    // Remove existing removefile handlers if any, then add one
+                    try {
                         pond.off('removefile');
+                    } catch (e) {
+                        // ignore if API differs
                     }
-
-                    // Add new removefile listener
                     pond.on('removefile', (error, file) => {
                         if (!error && file) {
-                            console.log('File removed:', file);
-                            // In a real application, you would track deleted images here
+                            console.log('File removed from UI:', file);
+                            // TODO: track removed image IDs to send to server on save (if you want)
                         }
                     });
                 }
@@ -311,26 +339,24 @@
                 offcanvas.show();
             });
 
-            // Reset form when closing offcanvas
+            // Reset form when closing offcanvas - restore store action and clear pond
             $('#offcanvasProduct').on('hidden.bs.offcanvas', function() {
-                $('#productForm').attr('action', '#').trigger('reset');
+                $('#productForm').attr('action', storeRoute).trigger('reset');
                 $('#productFormMethod').val('POST');
                 $('#offcanvasProductTitle').text('Add Product');
                 $('#productFormSubmit').text('Submit');
 
-                // Reset pond if it exists
                 if (pond) {
                     pond.removeFiles();
                 }
             });
 
-            // Form submission handler
-            $('#productForm').on('submit', function(e) {
-                e.preventDefault();
-                alert('Form would be submitted in a real application');
-                // In a real application, you would submit the form via AJAX or standard form submission
-            });
+            // <-- IMPORTANT: allow normal form submission so the server handles create/edit.
+            // Remove or change any demo-only preventDefault handlers. If you previously
+            // had a handler to prevent submission, remove it. Here we do not intercept submit.
+            // If you want AJAX submit later, implement it here.
         });
     </script>
+
 
 @endsection
