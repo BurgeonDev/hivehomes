@@ -1,0 +1,54 @@
+name: 🚀 Auto Deploy to CPanel
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: 📦 Install Laravel Dependencies
+        run: |
+          composer install --no-dev --optimize-autoloader
+          npm install && npm run build
+
+      - name: 🗜️ Create Deployment ZIP
+        run: |
+          zip -r deploy.zip . -x ".git*" "tests*" "node_modules*" "vendor/bin/*"
+
+      - name: 🔐 Setup SSH Agent
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: 📂 Upload & Deploy to CPanel
+        run: |
+          scp -P 21098 -o StrictHostKeyChecking=no deploy.zip ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USER }}/
+
+          ssh -p 21098 -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            cd /home/${{ secrets.SSH_USER }}/public_html
+
+            echo "🧹 Cleaning up all files except .env..."
+            find . -mindepth 1 ! -name '.env' -exec rm -rf {} +
+
+            echo "📦 Extracting deploy.zip..."
+            unzip -o /home/${{ secrets.SSH_USER }}/deploy.zip -d /home/${{ secrets.SSH_USER }}/public_html
+
+            echo "🛠️ Running Laravel Commands..."
+            php artisan storage:link || true
+            php artisan config:clear
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+            php artisan optimize:clear
+            php artisan migrate --force || true
+            php artisan db:seed --force || true
+
+            echo "✅ Deployment Complete!"
+          EOF
