@@ -11,15 +11,15 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    // Show all products (for super-admin or filtered to society_admin)
     public function index(Request $request)
     {
         $user = $request->user();
-        $query = Product::with(['seller', 'society', 'primaryImage'])->latest();
+        $query = Product::with(['seller', 'society', 'primaryImage', 'images'])->latest();
 
         if ($user->hasRole('society_admin')) {
             $query->where('society_id', $user->society_id);
         }
+
         $societies  = auth()->user()->hasRole('super_admin')
             ? Society::all()
             : collect();
@@ -28,6 +28,7 @@ class ProductController extends Controller
 
         return view('admin.products.index', compact('products', 'categories', 'societies'));
     }
+
 
     // Store a new product
     public function store(Request $request)
@@ -43,23 +44,25 @@ class ProductController extends Controller
             'is_featured'    => 'sometimes|boolean',
             'featured_until' => 'nullable|date',
             'status'         => 'required|in:pending,approved,rejected',
-            'images.*'       => 'nullable|image|max:2048',
+            'images'         => 'nullable|array',
+            'images.*'       => 'file|image|max:2048', // 2MB
         ]);
 
-        if ($request->user()->hasRole('super_admin')) {
-            // take from the form
-            $data['society_id'] = $request->input('society_id');
-        } else {
-            // force from logged in user's society
-            $data['society_id'] = $request->user()->society_id;
-        }
-        $data['user_id']    = $request->user()->id;
+        $data['society_id'] = $request->user()->hasRole('super_admin')
+            ? $request->input('society_id')
+            : $request->user()->society_id;
+        $data['user_id'] = $request->user()->id;
 
         $product = Product::create($data);
 
-        // Handle images upload
+        // handle files safely and report errors if any
+        $errors = [];
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $idx => $file) {
+                if (!$file || !$file->isValid()) {
+                    $errors[] = "Image at index {$idx} failed to upload. Error code: " . ($file ? $file->getError() : 'none');
+                    continue;
+                }
                 $path = $file->store('products', 'public');
                 $product->images()->create([
                     'path'       => $path,
@@ -67,6 +70,17 @@ class ProductController extends Controller
                     'is_primary' => $idx === 0,
                 ]);
             }
+        }
+
+        if (!empty($errors)) {
+            // rollback created product and uploaded files to avoid partial state
+            foreach ($product->images as $img) {
+                Storage::disk('public')->delete($img->path);
+                $img->delete();
+            }
+            $product->delete();
+
+            return back()->withErrors(['images' => $errors])->withInput();
         }
 
         return back()->with('success', 'Product added.');
@@ -85,45 +99,50 @@ class ProductController extends Controller
             'is_featured'    => 'sometimes|boolean',
             'featured_until' => 'nullable|date',
             'status'         => 'required|in:pending,approved,rejected',
-            'images.*'       => 'nullable|image|max:2048',
-            'delete_images.*' => 'nullable|integer|exists:product_images,id',
+            'images'         => 'nullable|array',
+            'images.*'       => 'file|image|max:2048',
+            'delete_images'  => 'nullable|array',
+            'delete_images.*' => 'integer|exists:product_images,id',
         ]);
 
         $product->update($data);
 
-        // delete selected images
+        // delete selected images (single pass)
         if ($request->filled('delete_images')) {
-            foreach ($product->images()->whereIn('id', $request->delete_images)->get() as $img) {
+            $toDelete = $product->images()->whereIn('id', $request->delete_images)->get();
+            foreach ($toDelete as $img) {
                 Storage::disk('public')->delete($img->path);
                 $img->delete();
             }
         }
 
-        // add new images
+        // add new images safely
+        $errors = [];
         if ($request->hasFile('images')) {
+            // determine current last order index so we append new images
+            $lastOrder = $product->images()->max('order');
+            $lastOrder = is_null($lastOrder) ? -1 : (int)$lastOrder;
+
             foreach ($request->file('images') as $idx => $file) {
+                if (!$file || !$file->isValid()) {
+                    $errors[] = "Image at index {$idx} failed to upload. Error code: " . ($file ? $file->getError() : 'none');
+                    continue;
+                }
                 $path = $file->store('products', 'public');
                 $product->images()->create([
                     'path'       => $path,
-                    'order'      => $idx,
-                    'is_primary' => $idx === 0 && !$product->images()->where('is_primary', 1)->exists(),
+                    'order'      => ++$lastOrder,
+                    'is_primary' => !$product->images()->where('is_primary', 1)->exists() && $lastOrder === 0,
                 ]);
             }
         }
-        if ($request->filled('delete_images')) {
-            foreach ($request->delete_images as $imgId) {
-                $img = $product->images()->find($imgId);
-                if ($img) {
-                    Storage::disk('public')->delete($img->path);
-                    $img->delete();
-                }
-            }
-        }
 
+        if (!empty($errors)) {
+            return back()->withErrors(['images' => $errors])->withInput();
+        }
 
         return back()->with('success', 'Product updated.');
     }
-
     // Delete a product (and its images)
     public function destroy(Request $request, Product $product)
     {

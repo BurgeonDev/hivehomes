@@ -50,7 +50,8 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
                                     @if ($p->primaryImage)
-                                        <img src="{{ $p->primaryImage->url() }}" width="60" class="rounded">
+                                        <img src="{{ $p->primaryImage->url ?? asset('storage/' . $p->primaryImage->path) }}"
+                                            width="60" class="rounded">
                                     @else
                                         <span class="text-muted">No image</span>
                                     @endif
@@ -157,6 +158,12 @@
                     <textarea name="description" id="prod-description" rows="3" class="form-control"></textarea>
                 </div>
 
+                <div class="mb-3">
+                    <label class="form-label">Existing Images</label>
+                    <div id="existing-images" class="flex-wrap gap-2 d-flex"></div>
+                    <!-- removed images will be stored as JSON array string -->
+                    <input type="hidden" name="removed_images" id="removedImages" value="[]">
+                </div>
 
                 <div class="mb-3">
                     <label class="form-label">Images</label>
@@ -209,16 +216,12 @@
 @section('page-js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // store route - used to reset form action
             const storeRoute = @json(route('admin.products.store'));
 
-            // Register FilePond plugins
             FilePond.registerPlugin(FilePondPluginImagePreview, FilePondPluginFileValidateType);
 
-            // Create FilePond instance
             const pondElement = document.querySelector('#product-images');
             let pond = null;
-
             if (pondElement) {
                 pond = FilePond.create(pondElement, {
                     allowMultiple: true,
@@ -228,135 +231,124 @@
                 });
             }
 
-            // When user clicks "Add Product" button — ensure form is reset for create
+            // helper to render existing images thumbnails
+            const existingImagesContainer = $('#existing-images');
+            const removedInput = $('#removedImages');
+            let removedIds = []; // track image ids to be removed
+
+            function renderExistingImages(images = []) {
+                existingImagesContainer.empty();
+                removedIds = [];
+                removedInput.val(JSON.stringify(removedIds));
+
+                if (!images.length) {
+                    existingImagesContainer.append('<div class="text-muted">No existing images</div>');
+                    return;
+                }
+
+                images.forEach(img => {
+                    // img should include: id and url (ensure controller/model provides url)
+                    const id = img.id ?? null;
+                    const url = img.url ?? img.path ?? '';
+
+                    if (!id || !url) return;
+
+                    const wrapper = $(`
+                <div class="existing-image-item position-relative" style="width:120px">
+                    <img src="${url}" class="rounded img-fluid" style="width:120px; height:80px; object-fit:cover;">
+                    <button type="button" class="btn btn-sm btn-danger btn-remove-existing position-absolute" data-image-id="${id}" style="top:6px; right:6px;">&times;</button>
+                </div>
+            `);
+                    existingImagesContainer.append(wrapper);
+                });
+            }
+
+            // handle click to remove existing image (just from UI, mark removed)
+            $(document).on('click', '.btn-remove-existing', function() {
+                const btn = $(this);
+                const id = btn.data('image-id');
+
+                // mark visually removed
+                btn.closest('.existing-image-item').fadeOut(150);
+
+                // track id
+                if (id && !removedIds.includes(id)) {
+                    removedIds.push(id);
+                    removedInput.val(JSON.stringify(removedIds));
+                }
+            });
+
+            // Add Product click resets form & thumbnails
             $('#btnAddProduct').on('click', function() {
-                // reset form fields and action
-                $('#productForm').trigger('reset');
-                $('#productForm').attr('action', storeRoute);
+                $('#productForm').trigger('reset').attr('action', storeRoute);
                 $('#productFormMethod').val('POST');
                 $('#offcanvasProductTitle').text('Add Product');
                 $('#productFormSubmit').text('Submit');
 
-                // clear FilePond previews
-                if (pond) {
-                    pond.removeFiles();
-                }
+                if (pond) pond.removeFiles();
+                renderExistingImages([]); // clear thumbnails
             });
 
-            // Edit product button handler
+            // Edit handler
             $(document).on('click', '.btn-edit-product', function() {
-                // Prefer the full product JSON (you are already outputting @json($p))
                 const product = $(this).data('product');
-
-                // If product JSON is missing (unexpected), try product-id fallback
                 const productId = (product && product.id) ? product.id : $(this).data('product-id');
-
-                // If still missing, abort early
                 if (!productId) {
-                    console.error('No product data found for edit button.');
+                    console.error('No product data for edit');
                     return;
                 }
-
-                // If product JSON missing, create a very small fallback to avoid runtime errors
                 const p = product || {
                     id: productId,
-                    title: '',
-                    category_id: '',
-                    price: '',
-                    quantity: 1,
-                    condition: 'new',
-                    is_negotiable: false,
-                    is_featured: false,
-                    featured_until: '',
-                    description: '',
-                    status: 'pending',
-                    society_id: '',
                     images: []
                 };
 
-                // Update form action + method (PUT override)
+                // form action for update
                 $('#productForm').attr('action', '/admin/products/' + p.id);
                 $('#productFormMethod').val('PUT');
 
-                // Fill form fields
-                $('#prod-title').val(p.title || '');
-                $('#prod-category').val(p.category_id || '');
-                $('#prod-price').val(p.price || '');
-                $('#prod-quantity').val(p.quantity || 1);
-                $('#prod-condition').val(p.condition || 'new');
+                // fill fields
+                $('#prod-title').val(p.title ?? '');
+                $('#prod-category').val(p.category_id ?? '');
+                $('#prod-price').val(p.price ?? '');
+                $('#prod-quantity').val(p.quantity ?? 1);
+                $('#prod-condition').val(p.condition ?? 'new');
                 $('#prod-negotiable').prop('checked', !!p.is_negotiable);
                 $('#prod-featured').prop('checked', !!p.is_featured);
                 $('#prod-featured-until').val(p.featured_until ? p.featured_until.slice(0, 16) : '');
-                $('#prod-description').val(p.description || '');
-                $('#prod-status').val(p.status || 'pending');
-                if ($('#post-society').length) $('#post-society').val(p.society_id || '');
+                $('#prod-description').val(p.description ?? '');
+                $('#prod-status').val(p.status ?? 'pending');
+                if ($('#post-society').length) $('#post-society').val(p.society_id ?? '');
 
-                // Reset pond then load existing images if any
-                if (pond) {
-                    // clear existing previews
-                    pond.removeFiles();
+                // show existing images (THUMBNAILS + remove buttons)
+                renderExistingImages(p.images ?? []);
 
-                    // If product.images present, add each as a remote file
-                    if (p.images && Array.isArray(p.images) && p.images.length) {
-                        p.images.forEach(img => {
-                            // try to find a usable URL in several common fields
-                            let url = img.url || img.file_url || img.path || img.file || null;
-                            if (!url) return;
+                // Reset FilePond (we'll use it only for new uploads)
+                if (pond) pond.removeFiles();
 
-                            // make absolute if relative
-                            if (!/^https?:\/\//i.test(url)) {
-                                // avoid double slashes
-                                url = window.location.origin + '/' + url.replace(/^\//, '');
-                            }
-
-                            // Add file to FilePond. addFile returns a promise.
-                            pond.addFile(url).catch(err => console.warn('FilePond addFile error:',
-                                err));
-                        });
-                    }
-
-                    // Remove existing removefile handlers if any, then add one
-                    try {
-                        pond.off('removefile');
-                    } catch (e) {
-                        // ignore if API differs
-                    }
-                    pond.on('removefile', (error, file) => {
-                        if (!error && file) {
-                            console.log('File removed from UI:', file);
-                            // TODO: track removed image IDs to send to server on save (if you want)
-                        }
-                    });
-                }
-
-                // Update UI text
+                // UI text
                 $('#offcanvasProductTitle').text('Edit Product');
                 $('#productFormSubmit').text('Save');
 
-                // Show the offcanvas
+                // show offcanvas
                 const offcanvasElement = document.getElementById('offcanvasProduct');
                 const offcanvas = new bootstrap.Offcanvas(offcanvasElement);
                 offcanvas.show();
             });
 
-            // Reset form when closing offcanvas - restore store action and clear pond
+            // on offcanvas close — reset
             $('#offcanvasProduct').on('hidden.bs.offcanvas', function() {
                 $('#productForm').attr('action', storeRoute).trigger('reset');
                 $('#productFormMethod').val('POST');
                 $('#offcanvasProductTitle').text('Add Product');
                 $('#productFormSubmit').text('Submit');
-
-                if (pond) {
-                    pond.removeFiles();
-                }
+                if (pond) pond.removeFiles();
+                renderExistingImages([]);
             });
 
-            // <-- IMPORTANT: allow normal form submission so the server handles create/edit.
-            // Remove or change any demo-only preventDefault handlers. If you previously
-            // had a handler to prevent submission, remove it. Here we do not intercept submit.
-            // If you want AJAX submit later, implement it here.
+            // Note: form is allowed to submit normally; on server side handle removed_images and new uploads
         });
     </script>
+
 
 
 @endsection
