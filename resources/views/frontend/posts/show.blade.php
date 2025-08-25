@@ -152,42 +152,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            {{-- Comments form --}}
-                            <div class="mb-4">
-                                <h5 class="mb-3">Leave a Comment</h5>
-
-                                @auth
-                                    <form action="{{ route('comments.store', $post->id) }}" method="POST"
-                                        class="p-3 shadow-sm card">
-                                        @csrf
-                                        <div class="mb-3">
-                                            <label for="body" class="form-label">Your Comment</label>
-                                            <textarea name="body" id="body" class="form-control" rows="4" required></textarea>
-                                        </div>
-
-                                        <div class="mb-2 row g-2">
-                                            <div class="col-md-6">
-                                                <label for="rating" class="form-label">Rating</label>
-                                                <select name="rating" class="form-select" id="rating">
-                                                    <option value="">No rating</option>
-                                                    @for ($i = 5; $i >= 1; $i--)
-                                                        <option value="{{ $i }}">{{ $i }} Star</option>
-                                                    @endfor
-                                                </select>
-                                            </div>
-                                            <div class="col-md-6 d-flex align-items-end justify-content-end">
-                                                <button class="btn btn-primary">Post Comment</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                @else
-                                    <div class="alert alert-info">
-                                        Please <a href="{{ route('login') }}">login</a> to comment.
-                                    </div>
-                                @endauth
-                            </div>
-
                             {{-- Comments list --}}
                             <div class="mb-5">
                                 <h5 class="mb-3">Comments ({{ $commentsCount }})</h5>
@@ -263,6 +227,42 @@
                                     </div>
                                 @endforelse
                             </div>
+                            {{-- Comments form --}}
+                            <div class="mb-4">
+                                <h5 class="mb-3">Leave a Comment</h5>
+
+                                @auth
+                                    <form action="{{ route('comments.store', $post->id) }}" method="POST"
+                                        class="p-3 shadow-sm card">
+                                        @csrf
+                                        <div class="mb-3">
+                                            <label for="body" class="form-label">Your Comment</label>
+                                            <textarea name="body" id="body" class="form-control" rows="4" required></textarea>
+                                        </div>
+
+                                        <div class="mb-2 row g-2">
+                                            <div class="col-md-6">
+                                                <label for="rating" class="form-label">Rating</label>
+                                                <select name="rating" class="form-select" id="rating">
+                                                    <option value="">No rating</option>
+                                                    @for ($i = 5; $i >= 1; $i--)
+                                                        <option value="{{ $i }}">{{ $i }} Star</option>
+                                                    @endfor
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6 d-flex align-items-end justify-content-end">
+                                                <button class="btn btn-primary">Post Comment</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                @else
+                                    <div class="alert alert-info">
+                                        Please <a href="{{ route('login') }}">login</a> to comment.
+                                    </div>
+                                @endauth
+                            </div>
+
+
                         </div><!-- card-body -->
                     </div><!-- card -->
                 </div><!-- col -->
@@ -285,7 +285,8 @@
                                 @endif
 
                                 <h6 class="mb-0">{{ $post->user->name }}</h6>
-                                <small class="text-muted">{{ $post->user->getRoleNames()->first() ?? 'User' }}</small>
+                                <small
+                                    class="badge bg-label-primary">{{ $post->user->getRoleNames()->first() ?? 'User' }}</small>
 
                                 <div class="mt-3">
                                     <a href="{{ route('posts.index', ['author' => $post->user->id]) }}"
