@@ -17,7 +17,7 @@ class SocietyController extends Controller
         $cities = City::all();
         $states = State::all();
         $countries = Country::all();
-        $admins = User::role('society_admin')->get(); // Only users with admin role
+        $admins = User::role('society_admin')->get();
 
         return view('admin.societies.index', compact('societies', 'cities', 'states', 'countries', 'admins'));
     }
@@ -30,7 +30,7 @@ class SocietyController extends Controller
             'city_id' => 'required|exists:cities,id',
             'state_id' => 'required|exists:states,id',
             'country_id' => 'required|exists:countries,id',
-            'admin_user_id' => 'required|exists:users,id',
+            'admin_user_id' => 'nullable|exists:users,id',
         ]);
 
         Society::create($validated);
@@ -46,7 +46,7 @@ class SocietyController extends Controller
             'city_id' => 'required|exists:cities,id',
             'state_id' => 'required|exists:states,id',
             'country_id' => 'required|exists:countries,id',
-            'admin_user_id' => 'required|exists:users,id',
+            'admin_user_id' => 'nullable|exists:users,id',
         ]);
 
         $society->update($validated);

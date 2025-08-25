@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('city_id');
             $table->unsignedBigInteger('state_id');
             $table->unsignedBigInteger('country_id');
-            $table->unsignedBigInteger('admin_user_id');
+            $table->unsignedBigInteger('admin_user_id')->nullable();
             $table->timestamps();
         });
     }

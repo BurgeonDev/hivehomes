@@ -146,13 +146,15 @@
 
 
                 <div class="mb-3">
-                    <label class="form-label">Admin</label>
+                    <label class="form-label">Admin (optional)</label>
                     <select class="form-select" name="admin_user_id" id="society-admin">
+                        <option value="">-- No Admin --</option>
                         @foreach ($admins as $admin)
                             <option value="{{ $admin->id }}">{{ $admin->name }}</option>
                         @endforeach
                     </select>
                 </div>
+
 
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <button type="reset" class="btn btn-label-danger" data-bs-dismiss="offcanvas">Cancel</button>
@@ -239,7 +241,7 @@
             $('#society-country').val(society.country_id);
             loadStates(society.country_id, society.state_id);
             loadCities(society.state_id, society.city_id);
-            $('#society-admin').val(society.admin_user_id);
+            $('#society-admin').val(society.admin_user_id ? society.admin_user_id : '');
             $('#offcanvasAddSocietyLabel').text('Edit Society');
             new bootstrap.Offcanvas(document.getElementById('offcanvasAddSociety')).show();
         }
