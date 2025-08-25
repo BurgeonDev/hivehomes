@@ -21,7 +21,8 @@ use App\Http\Controllers\Admin\{
     PostController as AdminPostController,
     ServiceProviderTypeController,
     ProductCategoryController,
-    ProductController as AdminProductController
+    ProductController as AdminProductController,
+    PostCategoryController
 };
 
 // Frontend Public
@@ -73,6 +74,7 @@ Route::middleware('auth')->group(function () {
 // Admin Backend
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('posts', AdminPostController::class);
+    Route::resource('post-categories', PostCategoryController::class);
     Route::post('posts/{post}/status', [AdminPostController::class, 'changeStatus'])->name('posts.changeStatus');
     Route::get('contacts', [ContactController::class, 'index'])->name('contacts.index');
     Route::post('contacts/{contact}/reply', [ContactController::class, 'reply'])->name('contacts.reply');

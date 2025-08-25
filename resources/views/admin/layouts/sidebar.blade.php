@@ -106,6 +106,14 @@
             </a>
         </li>
 
+        <li class="menu-item {{ request()->routeIs('admin.post-categories.*') ? 'active open' : '' }}">
+            <a href="{{ route('admin.post-categories.index') }}" class="menu-link">
+                <i class="menu-icon icon-base ti tabler-category"></i>
+                <div data-i18n="Post Categories">Post Categories</div>
+            </a>
+        </li>
+
+
         <li class="menu-item {{ request()->routeIs('admin.contacts.*') ? 'active open' : '' }}">
             <a href="{{ route('admin.contacts.index') }}" class="menu-link">
                 <i class="menu-icon icon-base ti tabler-message-dots"></i>
