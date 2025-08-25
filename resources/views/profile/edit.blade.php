@@ -6,23 +6,6 @@
 @endsection
 
 @section('content')
-    <!-- Breadcrumb -->
-
-    <section class="overflow-hidden section-py first-section-pt help-center-header position-relative"
-        style="min-height: 300px;">
-        <img class="banner-bg-img z-n1" src="{{ asset('assets/img/pages/header.png') }}" alt="Header Background">
-
-        <div class="container bottom-0 pb-4 text-center position-absolute start-50 translate-middle-x">
-            <nav aria-label="breadcrumb">
-                <ol class="mb-0 breadcrumb justify-content-center fs-4">
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('home') }}" class="text-decoration-none text-primary">Home</a>
-                    </li>
-                    <li class="breadcrumb-item active text-dark" aria-current="page">My Profile</li>
-                </ol>
-            </nav>
-        </div>
-    </section>
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="row g-4">
             {{-- 1) Edit Profile Details --}}
@@ -99,21 +82,7 @@
                                     @enderror
                                 </div>
 
-                                {{-- Status --}}
-                                <div class="mb-3 col-md-6">
-                                    <label class="form-label">Status</label>
-                                    <select name="status" class="form-select @error('status') is-invalid @enderror"
-                                        required>
-                                        <option value="active" {{ auth()->user()->status === 'active' ? 'selected' : '' }}>
-                                            Active</option>
-                                        <option value="inactive"
-                                            {{ auth()->user()->status === 'inactive' ? 'selected' : '' }}>
-                                            Inactive</option>
-                                    </select>
-                                    @error('status')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+
 
                                 {{-- Society (read‐only) --}}
                                 <div class="mb-3 col-md-6">
