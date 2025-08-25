@@ -6,7 +6,6 @@
     // Simple reading time estimate (200 wpm)
     $plainBody = strip_tags($post->body ?? '');
     $words = str_word_count($plainBody);
-    $readingMinutes = max(1, (int) ceil($words / 200));
     $commentsCount = $post->comments()->count();
 @endphp
 
@@ -39,7 +38,6 @@
 
                             <div class="mb-3 d-flex align-items-center">
                                 <small class="text-muted me-3">By <strong>{{ $post->user->name }}</strong></small>
-                                <small class="text-muted me-3">· {{ $readingMinutes }} min read</small>
                                 <small class="text-muted me-3">· {{ optional($post->created_at)->format('F j, Y') }}</small>
                                 <span class="badge bg-label-primary text-capitalize ms-auto">
                                     {{ $post->category->name ?? 'Uncategorized' }}
@@ -305,7 +303,6 @@
                                 <ul class="mb-0 list-unstyled small">
                                     <li><strong>Published:</strong> {{ optional($post->created_at)->format('F j, Y') }}
                                     </li>
-                                    <li><strong>Reading:</strong> {{ $readingMinutes }} min</li>
                                     <li><strong>Category:</strong> {{ $post->category->name ?? '—' }}</li>
                                 </ul>
                             </div>

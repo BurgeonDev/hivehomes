@@ -3,7 +3,6 @@
         @php
             $plain = strip_tags($post->body ?? '');
             $words = str_word_count($plain);
-            $readMinutes = max(1, (int) ceil($words / 200));
             $comments = $post->comments_count ?? $post->comments()->count();
         @endphp
 
@@ -47,7 +46,6 @@
                                     @endif
                                     <small class="text-muted">{{ $post->user->name }}</small>
                                 </div>
-                                <small class="text-muted ms-2">{{ $readMinutes }} min read</small>
                                 <small class="text-muted ms-2">
                                     <i
                                         class="menu-icon icon-base ti tabler-eye me-1"></i>{{ number_format($post->views ?? 0) }}
