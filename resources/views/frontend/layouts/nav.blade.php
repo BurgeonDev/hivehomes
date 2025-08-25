@@ -82,7 +82,7 @@
 
                         {{-- Profile --}}
                         <li class="nav-item">
-                            <a class="nav-link fw-medium" href="{{ route('profile.show') }}" target="_blank">Profile</a>
+                            <a class="nav-link fw-medium" href="{{ route('profile.show') }}">Profile</a>
                         </li>
                     @endauth
 
@@ -92,7 +92,7 @@
 
                     @if ($user && ($user->hasRole('society_admin') || $user->hasRole('super_admin')))
                         <li class="nav-item">
-                            <a class="nav-link fw-medium" href="{{ route('dashboard') }}" target="_blank">Admin</a>
+                            <a class="nav-link fw-medium" href="{{ route('dashboard') }}">Admin</a>
                         </li>
                     @endif
 
