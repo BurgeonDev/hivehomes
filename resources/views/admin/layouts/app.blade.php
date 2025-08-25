@@ -135,12 +135,39 @@
             @endif
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.show-confirm').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
 
+                    const form = this.closest('.delete-form');
+
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
     <script>
         $(document).ready(function() {
             const table = $('.datatables-basic').DataTable({
                 responsive: true,
                 lengthChange: true,
+                order: [
+                    [1, 'asc']
+                ], // Sort by 2nd column alphabetically (index 1)
                 layout: {
                     topStart: {
                         rowClass: 'row mx-3 my-0 justify-content-between',
@@ -228,31 +255,8 @@
             });
         });
     </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.show-confirm').forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
 
-                    const form = this.closest('.delete-form');
 
-                    Swal.fire({
-                        title: 'Are you sure?',
-                        text: "You won't be able to revert this!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Yes, delete it!'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            form.submit();
-                        }
-                    });
-                });
-            });
-        });
-    </script>
 
 
 </body>
