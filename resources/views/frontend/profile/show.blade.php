@@ -17,28 +17,10 @@
             object-fit: cover !important;
         }
 
-        /* FilePond root sizing (centered & responsive) */
-        .filepond--root {
-            max-width: 700px;
-            margin: 0 auto;
-        }
 
-        /* let panel be wide (5:2) */
-        .filepond--panel-root {
-            min-height: 80px;
-            max-height: 300px;
-        }
 
         /* ensure preview fills the panel and keeps cover */
-        .filepond--image-preview {
-            height: 100%;
-        }
 
-        .filepond--image-preview img {
-            object-fit: cover;
-            width: 100%;
-            height: 100%;
-        }
 
         .fp-debug {
             margin-top: 6px;
@@ -94,20 +76,20 @@
                                     <ul
                                         class="flex-wrap gap-3 my-2 mb-0 list-inline d-flex align-items-center justify-content-sm-start justify-content-center">
                                         <li class="gap-2 list-inline-item d-flex align-items-center">
-                                            <i class="ti ti-mail me-1"></i>
+                                            <i class="icon-base ti tabler-mail me-1"></i>
                                             <span class="fw-medium">{{ $user->email }}</span>
                                         </li>
                                         <li class="gap-2 list-inline-item d-flex align-items-center">
-                                            <i class="ti ti-users me-1"></i>
+                                            <i class="icon-base ti tabler-users me-1"></i>
                                             <span
                                                 class="badge bg-label-primary">{{ $user->roles->pluck('name')->implode(', ') }}</span>
                                         </li>
                                         <li class="gap-2 list-inline-item d-flex align-items-center">
-                                            <i class="ti ti-calendar me-1"></i>
+                                            <i class="icon-base ti tabler-calendar me-1"></i>
                                             <span class="fw-medium">Joined {{ $user->created_at->format('F Y') }}</span>
                                         </li>
                                         <li class="gap-2 list-inline-item d-flex align-items-center">
-                                            <i class="ti ti-circle-dot me-1"></i>
+                                            <i class="icon-base ti tabler-circle-dot me-1"></i>
                                             <span
                                                 class="badge {{ $user->status === 'active' ? 'bg-label-success' : 'bg-label-danger' }}">
                                                 {{ ucfirst($user->status) }}
@@ -128,17 +110,17 @@
                 <ul class="gap-2 nav nav-pills flex-column flex-sm-row gap-sm-0 justify-content-center">
                     <li class="nav-item">
                         <a class="nav-link active" data-bs-toggle="tab" href="#profile">
-                            <i class="ti ti-user-check me-1"></i> Profile
+                            <i class="icon-base ti tabler-user-check me-1"></i> Profile
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#password">
-                            <i class="ti ti-lock me-1"></i> Password
+                            <i class="icon-base ti tabler-lock me-1"></i> Password
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-danger" data-bs-toggle="tab" href="#delete">
-                            <i class="ti ti-trash me-1"></i> Delete
+                            <i class="icon-base ti tabler-trash me-1"></i> Delete
                         </a>
                     </li>
                 </ul>
@@ -151,7 +133,7 @@
             <div class="tab-pane fade show active" id="profile">
                 <div class="border-0 shadow-sm card">
                     <div class="card-body">
-                        <h5 class="mb-4 card-title"><i class="ti ti-edit me-1"></i> Edit Profile</h5>
+                        <h5 class="mb-4 card-title"><i class="icon-base ti tabler-edit me-1"></i> Edit Profile</h5>
 
                         <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
                             @csrf @method('patch')
@@ -209,8 +191,10 @@
                             </div>
 
                             <div class="text-end">
-                                <button type="submit" class="btn btn-primary"><i class="ti ti-device-floppy me-1"></i>
-                                    Save Changes</button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="icon-base ti tabler-device-floppy me-1"></i>
+                                    Save Changes
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -221,7 +205,7 @@
             <div class="tab-pane fade" id="password">
                 <div class="border-0 shadow-sm card">
                     <div class="card-body">
-                        <h5 class="mb-4 card-title"><i class="ti ti-lock me-1"></i> Change Password</h5>
+                        <h5 class="mb-4 card-title"><i class="icon-base ti tabler-lock me-1"></i> Change Password</h5>
                         <form method="POST" action="{{ route('password.update') }}">
                             @csrf @method('put')
                             <div class="mb-3">
@@ -245,8 +229,10 @@
                                 <input type="password" name="password_confirmation" class="form-control" required>
                             </div>
                             <div class="text-end">
-                                <button type="submit" class="btn btn-warning"><i class="ti ti-refresh me-1"></i> Update
-                                    Password</button>
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="icon-base ti tabler-refresh me-1"></i>
+                                    Update Password
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -257,7 +243,10 @@
             <div class="tab-pane fade" id="delete">
                 <div class="border shadow-sm card border-danger">
                     <div class="card-body">
-                        <h5 class="mb-4 card-title text-danger"><i class="ti ti-trash me-1"></i> Delete Account</h5>
+                        <h5 class="mb-4 card-title text-danger">
+                            <i class="icon-base ti tabler-trash me-1"></i>
+                            Delete Account
+                        </h5>
                         <form method="POST" action="{{ route('profile.destroy') }}">
                             @csrf @method('delete')
                             <p class="mb-3 text-muted">Permanently delete your account and all associated data.</p>
@@ -270,8 +259,10 @@
                                 @enderror
                             </div>
                             <div class="text-end">
-                                <button class="btn btn-danger" onclick="return confirm('Are you sure?')"><i
-                                        class="ti ti-alert-triangle me-1"></i> Delete Account</button>
+                                <button class="btn btn-danger" onclick="return confirm('Are you sure?')">
+                                    <i class="icon-base ti tabler-alert-triangle me-1"></i>
+                                    Delete Account
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -309,8 +300,6 @@
             // create instance; storeAsFile:true makes the file available on normal form submit
             const pond = FilePond.create(inputElement, {
                 allowImagePreview: true,
-                imagePreviewHeight: 140,
-                stylePanelAspectRatio: 2.5, // 5:2 wide rectangle
                 labelIdle: `<span class="filepond--label-action">Drag & Drop or <u>Browse</u></span>`,
                 acceptedFileTypes: ['image/*'],
                 storeAsFile: true,
