@@ -7,17 +7,7 @@
        </div>
 
        <div class="navbar-nav-right d-flex align-items-center justify-content-end" id="navbar-collapse">
-           <!-- Search -->
-           <div class="navbar-nav align-items-center">
-               <div class="px-2 mb-0 nav-item navbar-search-wrapper px-md-0">
-                   <a class="px-0 nav-item nav-link search-toggler d-flex align-items-center"
-                       href="javascript:void(0);">
-                       <span class="d-inline-block text-body-secondary fw-normal" id="autocomplete"></span>
-                   </a>
-               </div>
-           </div>
 
-           <!-- /Search -->
 
            <ul class="flex-row navbar-nav align-items-center ms-md-auto">
                <li class="menu-item {{ request()->routeIs('home') ? 'active open' : '' }}">
@@ -28,7 +18,7 @@
                </li>
 
                <!-- Notification -->
-               <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3 me-xl-2">
+               {{-- <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3 me-xl-2">
                    <a class="nav-link dropdown-toggle hide-arrow btn btn-icon btn-text-secondary rounded-pill"
                        href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-auto-close="outside"
                        aria-expanded="false">
@@ -258,15 +248,24 @@
                            </div>
                        </li>
                    </ul>
-               </li>
+               </li> --}}
                <!--/ Notification -->
 
+               <!-- User -->
                <!-- User -->
                <li class="nav-item navbar-dropdown dropdown-user dropdown">
                    <a class="p-0 nav-link dropdown-toggle hide-arrow" href="javascript:void(0);"
                        data-bs-toggle="dropdown">
                        <div class="avatar avatar-online">
-                           <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="rounded-circle" />
+                           @if (Auth::user()->profile_pic)
+                               <img src="{{ asset('storage/' . Auth::user()->profile_pic) }}" alt="User Avatar"
+                                   class="rounded-circle" />
+                           @else
+                               <span class="avatar-initial rounded-circle bg-label-primary">
+                                   {{ collect(explode(' ', Auth::user()->name))->map(fn($word) => strtoupper(substr($word, 0, 1)))->join('') }}
+
+                               </span>
+                           @endif
                        </div>
                    </a>
                    <ul class="dropdown-menu dropdown-menu-end">
@@ -275,8 +274,14 @@
                                <div class="d-flex align-items-center">
                                    <div class="flex-shrink-0 me-2">
                                        <div class="avatar avatar-online">
-                                           <img src="{{ asset('assets/img/avatars/1.png') }}" alt
-                                               class="rounded-circle" />
+                                           @if (Auth::user()->profile_pic)
+                                               <img src="{{ asset('storage/' . Auth::user()->profile_pic) }}"
+                                                   alt="User Avatar" class="rounded-circle" />
+                                           @else
+                                               <span class="avatar-initial rounded-circle bg-label-primary">
+                                                   {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                               </span>
+                                           @endif
                                        </div>
                                    </div>
                                    <div class="flex-grow-1">
@@ -302,6 +307,8 @@
                        </li>
                    </ul>
                </li>
+               <!--/ User -->
+
                <!--/ User -->
 
            </ul>
