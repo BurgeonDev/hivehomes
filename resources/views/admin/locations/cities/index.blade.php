@@ -16,16 +16,16 @@
         </nav>
 
         <div class="card">
-            <div class="row card-header mx-0 px-3">
+            <div class="px-3 mx-0 row card-header">
                 <div class="col d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0">Cities</h5>
+                    <h5 class="mb-0 card-title">Cities</h5>
                     <button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddCity">
                         <i class="icon-base ti tabler-plus icon-sm me-1"></i> Add City
                     </button>
                 </div>
             </div>
 
-            <div class="card-datatable table-responsive p-3">
+            <div class="p-3 card-datatable table-responsive">
                 <table class="table datatables-basic">
                     <thead>
                         <tr>
@@ -52,11 +52,13 @@
                                         Edit
                                     </button>
 
-                                    <form action="{{ route('cities.destroy', $city->id) }}" method="POST" class="d-inline"
+                                    <form action="{{ route('cities.destroy', $city->id) }}" method="POST"
+                                        class="delete-form d-inline"
                                         onsubmit="return confirm('Are you sure you want to delete this city?');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm badge bg-label-danger">Delete</button>
+                                        <button type="submit"
+                                            class="show-confirm btn btn-sm badge bg-label-danger">Delete</button>
                                     </form>
                                 </td>
 

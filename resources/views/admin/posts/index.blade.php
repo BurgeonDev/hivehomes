@@ -96,10 +96,9 @@
                                     <button class="btn btn-sm badge bg-label-info"
                                         onclick="editPost({{ $post }})">Edit</button>
                                     <form method="POST" action="{{ route('admin.posts.destroy', $post) }}"
-                                        class="d-inline">
+                                        class="d-inline delete-form">
                                         @csrf @method('DELETE')
-                                        <button class="btn btn-sm badge bg-label-danger"
-                                            onclick="return confirm('Delete?')">Delete</button>
+                                        <button class="show-confirm btn btn-sm badge bg-label-danger">Delete</button>
                                     </form>
                                 </td>
                             </tr>

@@ -74,11 +74,10 @@
                                         data-cat='@json($cat)'>Edit</button>
 
                                     <form method="POST" action="{{ route('admin.product-categories.destroy', $cat) }}"
-                                        class="d-inline">
+                                        class="d-inline delete-form">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn btn-sm badge bg-label-danger"
-                                            onclick="return confirm('Delete this category?')">Delete</button>
+                                        <button class="show-confirm btn btn-sm badge bg-label-danger">Delete</button>
                                     </form>
                                 </td>
 

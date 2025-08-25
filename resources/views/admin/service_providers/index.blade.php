@@ -112,10 +112,9 @@
                                     <button class="btn btn-sm badge bg-label-info"
                                         onclick='editSP(@json($sp))'>Edit</button>
                                     <form action="{{ route('admin.service-providers.destroy', $sp) }}" method="POST"
-                                        class="d-inline">
+                                        class="d-inline delete-form">
                                         @csrf @method('DELETE')
-                                        <button class="btn btn-sm badge bg-label-danger"
-                                            onclick="return confirm('Delete this provider?')">Delete</button>
+                                        <button class="btn btn-sm badge bg-label-danger show-confirm">Delete</button>
                                     </form>
                                 </td>
                             </tr>

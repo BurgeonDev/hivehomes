@@ -226,10 +226,10 @@
                                                                 class="btn btn-sm btn-outline-secondary me-1">Like</a>
                                                             @can('delete', $comment)
                                                                 <form action="{{ route('comments.destroy', $comment->id) }}"
-                                                                    method="POST" class="d-inline">
+                                                                    method="POST" class="delete-form d-inline">
                                                                     @csrf @method('DELETE')
                                                                     <button
-                                                                        class="btn btn-sm btn-outline-danger">Delete</button>
+                                                                        class="show-confirm btn btn-sm btn-outline-danger">Delete</button>
                                                                 </form>
                                                             @endcan
                                                         </div>

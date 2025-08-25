@@ -98,10 +98,10 @@
                                         onclick="editUser({{ $user }}, '{{ $user->roles->first()->name ?? '' }}')">
                                         Edit
                                     </button>
-                                    <form method="POST" action="{{ route('users.destroy', $user) }}" class="d-inline">
+                                    <form method="POST" action="{{ route('users.destroy', $user) }}"
+                                        class="delete-form d-inline">
                                         @csrf @method('DELETE')
-                                        <button class="btn btn-sm badge bg-label-danger"
-                                            onclick="return confirm('Delete?')">Delete</button>
+                                        <button class="btn btn-sm badge bg-label-danger show-confirm">Delete</button>
                                     </form>
                                 </td>
                             </tr>

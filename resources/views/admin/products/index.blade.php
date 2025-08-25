@@ -76,10 +76,9 @@
                                         Edit
                                     </button>
                                     <form action="{{ route('admin.products.destroy', $p) }}" method="POST"
-                                        class="d-inline">
+                                        class="d-inline delete-form">
                                         @csrf @method('DELETE')
-                                        <button class="btn btn-sm btn-danger"
-                                            onclick="return confirm('Delete this product?')">
+                                        <button class="btn btn-sm btn-danger show-confirm">
                                             Delete
                                         </button>
                                     </form>

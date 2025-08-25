@@ -19,16 +19,16 @@
 
         <div class="card">
             <!-- Card Header -->
-            <div class="row card-header flex-column flex-md-row border-bottom mx-0 px-3">
+            <div class="px-3 mx-0 row card-header flex-column flex-md-row border-bottom">
                 <div class="col-md-auto me-auto">
-                    <h5 class="card-title mb-0">Roles</h5>
+                    <h5 class="mb-0 card-title">Roles</h5>
                 </div>
                 <div class="col-md-auto ms-auto">
-                    <div class="dt-buttons btn-group flex-wrap mb-0">
+                    <div class="flex-wrap mb-0 dt-buttons btn-group">
                         <div class="btn-group">
                             <button class="btn btn-label-primary dropdown-toggle me-4" type="button" id="exportDropdown"
                                 data-bs-toggle="dropdown" aria-expanded="false">
-                                <span class="d-flex align-items-center gap-2">
+                                <span class="gap-2 d-flex align-items-center">
                                     <i class="icon-base ti tabler-upload icon-xs me-sm-1"></i>
                                     <span class="d-none d-sm-inline-block">Export</span>
                                 </span>
@@ -50,7 +50,7 @@
             </div>
 
             <!-- DataTable -->
-            <div class="card-datatable table-responsive p-3">
+            <div class="p-3 card-datatable table-responsive">
                 <table class="table datatables-basic">
                     <thead>
                         <tr>
@@ -76,10 +76,10 @@
                                     <button class="btn btn-sm badge bg-label-info"
                                         onclick="editRole({{ $role }}, {{ $role->permissions->pluck('name') }})">Edit</button>
                                     @if ($role->name !== 'super-admin')
-                                        <form method="POST" action="{{ route('roles.destroy', $role) }}" class="d-inline">
+                                        <form method="POST" action="{{ route('roles.destroy', $role) }}"
+                                            class="delete-form d-inline">
                                             @csrf @method('DELETE')
-                                            <button class="btn btn-sm badge bg-label-danger"
-                                                onclick="return confirm('Delete this role?')">Delete</button>
+                                            <button class="btn btn-sm badge bg-label-danger show-confirm">Delete</button>
                                         </form>
                                     @endif
                                 </td>
@@ -95,7 +95,7 @@
                     <h5 id="offcanvasTitle" class="offcanvas-title">Add Role</h5>
                     <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
                 </div>
-                <div class="offcanvas-body mx-0 flex-grow-0 p-6 h-100">
+                <div class="flex-grow-0 p-6 mx-0 offcanvas-body h-100">
                     <form method="POST" id="roleForm" action="{{ route('roles.store') }}">
                         @csrf
                         <input type="hidden" name="_method" id="roleFormMethod" value="POST">

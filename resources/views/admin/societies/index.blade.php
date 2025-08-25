@@ -59,10 +59,9 @@
                                     <button class="btn btn-sm badge bg-label-info"
                                         onclick='editSociety(@json($society))'>Edit</button>
                                     <form method="POST" action="{{ route('societies.destroy', $society->id) }}"
-                                        class="d-inline">
+                                        class="d-inline delete-form">
                                         @csrf @method('DELETE')
-                                        <button class="btn btn-sm badge bg-label-danger"
-                                            onclick="return confirm('Delete this society?')">Delete</button>
+                                        <button class="btn btn-sm badge bg-label-danger show-confirm">Delete</button>
                                     </form>
                                 </td>
                             </tr>
