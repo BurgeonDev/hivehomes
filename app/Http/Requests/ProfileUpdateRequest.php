@@ -27,7 +27,6 @@ class ProfileUpdateRequest extends FormRequest
             ],
             'profile_pic'  => 'nullable|image|max:2048',
             'phone'        => 'required|string|max:20',
-            'status'       => 'required|in:active,inactive',
         ];
     }
 }

@@ -10,46 +10,49 @@
 
 @section('page-css')
     <style>
-        /* make the avatar a bit larger & keep cover behavior */
+        /* avatar */
         .user-profile-img {
             width: 140px !important;
             height: 140px !important;
             object-fit: cover !important;
         }
 
-        /* FilePond preview panel sizing */
+        /* FilePond root sizing (centered & responsive) */
         .filepond--root {
-            max-width: 360px;
+            max-width: 700px;
             margin: 0 auto;
         }
 
+        /* let panel be wide (5:2) */
         .filepond--panel-root {
-            min-height: 140px;
-            /* ensures the panel is not tiny */
+            min-height: 80px;
+            max-height: 300px;
         }
 
-        /* fine tune image preview inside FilePond */
-        .filepond--image-preview-overlay {
-            height: 140px !important;
-            max-height: 140px !important;
+        /* ensure preview fills the panel and keeps cover */
+        .filepond--image-preview {
+            height: 100%;
         }
 
-        /* Icon utilities you requested */
-        .icon-base {
-            display: inline-block;
-            vertical-align: middle;
+        .filepond--image-preview img {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
         }
 
-        /* removed invalid selector that caused CSS issues */
-        /* . { font-size: 1.5rem; line-height: 1; } */
+        .fp-debug {
+            margin-top: 6px;
+            font-size: 13px;
+            color: #6c757d;
+        }
 
-        /* optional: make brand icons slightly larger */
-        .icon-brand {
-            font-size: 1.8rem;
+        .fp-error {
+            margin-top: 6px;
+            font-size: 0.85rem;
+            color: #d63384;
         }
     </style>
 @endsection
-
 
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
@@ -58,6 +61,14 @@
             $avatarUrl = $user->profile_pic
                 ? asset('storage/' . $user->profile_pic)
                 : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=random&bold=true';
+
+            // existingProfile: full URL or null (used by FilePond preload)
+            $existingProfile = null;
+            if (!empty($user->profile_pic)) {
+                $existingProfile = preg_match('/^https?:\/\//', $user->profile_pic)
+                    ? $user->profile_pic
+                    : asset('storage/' . $user->profile_pic);
+            }
         @endphp
 
         {{-- Profile Header --}}
@@ -72,33 +83,31 @@
                     <div class="mb-5 text-center user-profile-header d-flex flex-column flex-lg-row text-sm-start">
                         <div class="flex-shrink-0 mx-auto mt-n4 mx-sm-0">
                             <img src="{{ $avatarUrl }}" alt="user image"
-                                class="h-auto border border-white shadow-sm rounded-circle border-3 user-profile-img">
+                                class="h-auto border border-white shadow-sm rounded-circle border-3 user-profile-img"
+                                style="width:120px; height:120px; object-fit:cover;">
                         </div>
                         <div class="mt-3 flex-grow-1 mt-lg-5">
                             <div
                                 class="gap-4 mx-5 d-flex align-items-md-end align-items-sm-start align-items-center justify-content-md-between justify-content-start flex-md-row flex-column">
                                 <div class="text-center user-profile-info text-md-start">
-                                    <h4 class="mb-2 mt-lg-6">
-                                        {{-- Example brand icon next to the name (keeps the classes you wanted) --}}
-                                        <i class="mb-2 icon-base ti tabler-brand-slack icon-brand me-2"></i>
-                                        {{ $user->name }}
-                                    </h4>
+                                    <h4 class="mb-2 mt-lg-6">{{ $user->name }}</h4>
                                     <ul
                                         class="flex-wrap gap-3 my-2 mb-0 list-inline d-flex align-items-center justify-content-sm-start justify-content-center">
                                         <li class="gap-2 list-inline-item d-flex align-items-center">
-                                            <i class="mb-2 icon-base ti tabler-mail me-1"></i>
+                                            <i class="ti ti-mail me-1"></i>
                                             <span class="fw-medium">{{ $user->email }}</span>
                                         </li>
                                         <li class="gap-2 list-inline-item d-flex align-items-center">
+                                            <i class="ti ti-users me-1"></i>
                                             <span
                                                 class="badge bg-label-primary">{{ $user->roles->pluck('name')->implode(', ') }}</span>
                                         </li>
                                         <li class="gap-2 list-inline-item d-flex align-items-center">
-                                            <i class="mb-2 icon-base ti tabler-calendar me-1"></i>
+                                            <i class="ti ti-calendar me-1"></i>
                                             <span class="fw-medium">Joined {{ $user->created_at->format('F Y') }}</span>
                                         </li>
                                         <li class="gap-2 list-inline-item d-flex align-items-center">
-                                            <i class="mb-2 icon-base ti tabler-circle-dot me-1"></i>
+                                            <i class="ti ti-circle-dot me-1"></i>
                                             <span
                                                 class="badge {{ $user->status === 'active' ? 'bg-label-success' : 'bg-label-danger' }}">
                                                 {{ ucfirst($user->status) }}
@@ -119,17 +128,17 @@
                 <ul class="gap-2 nav nav-pills flex-column flex-sm-row gap-sm-0 justify-content-center">
                     <li class="nav-item">
                         <a class="nav-link active" data-bs-toggle="tab" href="#profile">
-                            <i class="mb-2 icon-base ti tabler-user-check me-1"></i> Profile
+                            <i class="ti ti-user-check me-1"></i> Profile
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#password">
-                            <i class="mb-2 icon-base ti tabler-lock me-1"></i> Password
+                            <i class="ti ti-lock me-1"></i> Password
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-danger" data-bs-toggle="tab" href="#delete">
-                            <i class="mb-2 icon-base ti tabler-trash me-1"></i> Delete
+                            <i class="ti ti-trash me-1"></i> Delete
                         </a>
                     </li>
                 </ul>
@@ -142,15 +151,16 @@
             <div class="tab-pane fade show active" id="profile">
                 <div class="border-0 shadow-sm card">
                     <div class="card-body">
-                        <h5 class="mb-4 card-title"><i class="mb-2 icon-base ti tabler-edit me-1"></i> Edit Profile
-                        </h5>
+                        <h5 class="mb-4 card-title"><i class="ti ti-edit me-1"></i> Edit Profile</h5>
 
                         <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
                             @csrf @method('patch')
 
                             <div class="mb-4 text-center">
-                                {{-- FilePond input (accept images only) --}}
-                                <input type="file" name="profile_pic" id="profile_pic" accept="image/*" />
+                                <div style="max-width: 420px; margin: 0 auto;">
+                                    <!-- FilePond input -->
+                                    <input type="file" name="profile_pic" id="profile_pic" accept="image/*" />
+                                </div>
                                 @error('profile_pic')
                                     <div class="mt-1 text-danger small">{{ $message }}</div>
                                 @enderror
@@ -199,10 +209,8 @@
                             </div>
 
                             <div class="text-end">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="mb-2 icon-base ti tabler-device-floppy me-1"></i>
-                                    Save Changes
-                                </button>
+                                <button type="submit" class="btn btn-primary"><i class="ti ti-device-floppy me-1"></i>
+                                    Save Changes</button>
                             </div>
                         </form>
                     </div>
@@ -213,8 +221,7 @@
             <div class="tab-pane fade" id="password">
                 <div class="border-0 shadow-sm card">
                     <div class="card-body">
-                        <h5 class="mb-4 card-title"><i class="mb-2 icon-base ti tabler-lock me-1"></i> Change
-                            Password</h5>
+                        <h5 class="mb-4 card-title"><i class="ti ti-lock me-1"></i> Change Password</h5>
                         <form method="POST" action="{{ route('password.update') }}">
                             @csrf @method('put')
                             <div class="mb-3">
@@ -238,10 +245,8 @@
                                 <input type="password" name="password_confirmation" class="form-control" required>
                             </div>
                             <div class="text-end">
-                                <button type="submit" class="btn btn-warning">
-                                    <i class="mb-2 icon-base ti tabler-refresh me-1"></i>
-                                    Update Password
-                                </button>
+                                <button type="submit" class="btn btn-warning"><i class="ti ti-refresh me-1"></i> Update
+                                    Password</button>
                             </div>
                         </form>
                     </div>
@@ -252,8 +257,7 @@
             <div class="tab-pane fade" id="delete">
                 <div class="border shadow-sm card border-danger">
                     <div class="card-body">
-                        <h5 class="mb-4 card-title text-danger"><i class="mb-2 icon-base ti tabler-trash me-1"></i> Delete
-                            Account</h5>
+                        <h5 class="mb-4 card-title text-danger"><i class="ti ti-trash me-1"></i> Delete Account</h5>
                         <form method="POST" action="{{ route('profile.destroy') }}">
                             @csrf @method('delete')
                             <p class="mb-3 text-muted">Permanently delete your account and all associated data.</p>
@@ -266,10 +270,8 @@
                                 @enderror
                             </div>
                             <div class="text-end">
-                                <button class="btn btn-danger" onclick="return confirm('Are you sure?')">
-                                    <i class="mb-2 icon-base ti tabler-alert-triangle me-1"></i>
-                                    Delete Account
-                                </button>
+                                <button class="btn btn-danger" onclick="return confirm('Are you sure?')"><i
+                                        class="ti ti-alert-triangle me-1"></i> Delete Account</button>
                             </div>
                         </form>
                     </div>
@@ -284,99 +286,46 @@
     {{-- FilePond JS --}}
     <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
     <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.min.js">
+    </script>
 @endsection
-
-@php
-    // Make sure $existingProfile is a fully-qualified URL (or null)
-    $existingProfile = null;
-    if (!empty($user->profile_pic)) {
-        $existingProfile = preg_match('/^https?:\/\//', $user->profile_pic)
-            ? $user->profile_pic
-            : asset('storage/' . $user->profile_pic);
-    }
-@endphp
 
 @section('page-js')
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const existingProfile = @json($existingProfile);
-            console.log('existingProfile URL:', existingProfile);
-
-            // small debug link under the file input so you can open image in a new tab
-            (function addDebugLink() {
-                const input = document.querySelector('#profile_pic');
-                if (!input) return;
-                const dbg = document.createElement('div');
-                dbg.style.marginTop = '6px';
-                dbg.style.fontSize = '13px';
-                if (existingProfile) {
-                    dbg.innerHTML =
-                        `Current avatar: <a href="${existingProfile}" target="_blank" rel="noopener noreferrer">Open image</a>`;
-                } else {
-                    dbg.textContent = 'No existing avatar URL detected';
-                }
-                input.parentNode.appendChild(dbg);
-            })();
-
-            // ensure FilePond is loaded, and register plugin(s)
-            function waitForFilePondAndInit(retries = 30) {
-                if (typeof FilePond === 'undefined') {
-                    if (retries <= 0) {
-                        console.error('FilePond not found after retries.');
-                        return;
-                    }
-                    // try again shortly
-                    setTimeout(() => waitForFilePondAndInit(retries - 1), 100);
-                    return;
-                }
-
-                // register preview plugin if available
-                if (typeof FilePondPluginImagePreview !== 'undefined') {
-                    try {
-                        FilePond.registerPlugin(FilePondPluginImagePreview);
-                    } catch (e) {
-                        console.warn('Plugin registration failed (maybe already registered):', e);
-                    }
-                } else {
-                    console.warn('FilePondPluginImagePreview not found — preview plugin not registered.');
-                }
-
-                const inputElement = document.querySelector('#profile_pic');
-                if (!inputElement) {
-                    console.error('FilePond input element (#profile_pic) not found on the page.');
-                    return;
-                }
-
-                // Create FilePond instance first (clean)
-                const pond = FilePond.create(inputElement, {
-                    allowImagePreview: true,
-                    imagePreviewHeight: 140,
-                    stylePanelAspectRatio: 1,
-                    labelIdle: `Drag & Drop or <u>Browse</u>`,
-                    acceptedFileTypes: ['image/*'],
-                    allowReplace: true,
-                });
-
-                // If we have a remote URL for the existing avatar, ask FilePond to load it.
-                // pond.addFile handles remote URLs and returns a promise.
-                if (existingProfile) {
-                    // addFile may fail due to CORS if the image server doesn't allow cross-origin requests.
-                    pond.addFile(existingProfile).then(
-                        (file) => {
-                            console.log('Existing profile loaded into FilePond:', file);
-                        },
-                        (err) => {
-                            console.warn(
-                                'Failed to load existing profile into FilePond. This may be due to CORS or a network error.',
-                                err);
-                            // fallback: set a visible label so user can still open image
-                            // (debug link added earlier will still work)
-                        }
-                    );
-                }
+            // Register plugins
+            try {
+                FilePond.registerPlugin(FilePondPluginImagePreview, FilePondPluginFileValidateType);
+            } catch (e) {
+                console.warn('FilePond plugin registration:', e);
             }
 
-            waitForFilePondAndInit();
+            const inputElement = document.querySelector('#profile_pic');
+            if (!inputElement) {
+                console.error('#profile_pic not found');
+                return;
+            }
+
+            // create instance; storeAsFile:true makes the file available on normal form submit
+            const pond = FilePond.create(inputElement, {
+                allowImagePreview: true,
+                imagePreviewHeight: 140,
+                stylePanelAspectRatio: 2.5, // 5:2 wide rectangle
+                labelIdle: `<span class="filepond--label-action">Drag & Drop or <u>Browse</u></span>`,
+                acceptedFileTypes: ['image/*'],
+                storeAsFile: true,
+                credits: false,
+                allowReplace: true,
+            });
+
+            // Preload existing profile image (if present)
+            const existingProfile = @json($existingProfile);
+            if (existingProfile) {
+                pond.addFile(existingProfile).then(
+                    file => console.log('Preloaded avatar into FilePond', file),
+                    err => console.warn('Could not preload avatar (CORS or network):', err)
+                );
+            }
         });
     </script>
 @endsection
