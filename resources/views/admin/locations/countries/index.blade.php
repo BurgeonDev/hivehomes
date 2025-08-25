@@ -76,12 +76,13 @@
                                 <td>{{ $country->name }}</td>
                                 <td>
                                     <button class="btn btn-sm badge bg-label-info"
-                                        onclick="editCountry({{ $country }})">Edit</button>
+                                        onclick="editCountry({{ $country }})"> <i
+                                            class="icon-base ti tabler-edit"></i></button>
                                     <form method="POST" action="{{ route('countries.destroy', $country) }}"
                                         class="d-inline delete-form">
                                         @csrf @method('DELETE')
-                                        <button type="submit"
-                                            class="btn btn-sm badge bg-label-danger show-confirm">Delete</button>
+                                        <button type="submit" class="btn btn-sm badge bg-label-danger show-confirm"> <i
+                                                class="icon-base ti tabler-trash"></i></button>
                                     </form>
                                 </td>
                             </tr>

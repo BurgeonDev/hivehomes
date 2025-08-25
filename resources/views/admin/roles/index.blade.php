@@ -74,12 +74,14 @@
                                 <td>{{ $role->users_count }}</td>
                                 <td>
                                     <button class="btn btn-sm badge bg-label-info"
-                                        onclick="editRole({{ $role }}, {{ $role->permissions->pluck('name') }})">Edit</button>
+                                        onclick="editRole({{ $role }}, {{ $role->permissions->pluck('name') }})"> <i
+                                            class="icon-base ti tabler-edit"></i></button>
                                     @if ($role->name !== 'super-admin')
                                         <form method="POST" action="{{ route('roles.destroy', $role) }}"
                                             class="delete-form d-inline">
                                             @csrf @method('DELETE')
-                                            <button class="btn btn-sm badge bg-label-danger show-confirm">Delete</button>
+                                            <button class="btn btn-sm badge bg-label-danger show-confirm"> <i
+                                                    class="icon-base ti tabler-trash"></i></button>
                                         </form>
                                     @endif
                                 </td>

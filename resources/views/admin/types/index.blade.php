@@ -65,13 +65,14 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $type->name }}</td>
                                 <td>
-                                    <button class="btn btn-sm badge bg-label-info"
-                                        onclick="editType({{ $type }})">Edit</button>
+                                    <button class="btn btn-sm badge bg-label-info" onclick="editType({{ $type }})">
+                                        <i class="icon-base ti tabler-edit"></i></button>
 
                                     <form method="POST" action="{{ route('admin.types.destroy', $type) }}"
                                         class="d-inline delete-form">
                                         @csrf @method('DELETE')
-                                        <button class="btn btn-sm badge bg-label-danger show-confirm">Delete</button>
+                                        <button class="btn btn-sm badge bg-label-danger show-confirm"> <i
+                                                class="icon-base ti tabler-trash"></i></button>
                                     </form>
                                 </td>
                             </tr>

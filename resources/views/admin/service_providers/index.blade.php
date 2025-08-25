@@ -20,16 +20,43 @@
         <div class="card">
             {{-- Header --}}
             <div class="px-3 mx-0 row card-header flex-column flex-md-row border-bottom">
+                {{-- Title --}}
                 <div class="col-md-auto me-auto">
                     <h5 class="mb-0 card-title">Service Providers</h5>
                 </div>
+
+                {{-- Export + Add Buttons --}}
                 <div class="col-md-auto ms-auto">
-                    <button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSPForm">
-                        <i class="icon-base ti tabler-plus icon-sm"></i>
-                        <span class="d-none d-sm-inline-block">Add Provider</span>
-                    </button>
+                    <div class="flex-wrap mb-0 dt-buttons btn-group">
+                        {{-- Export Dropdown --}}
+                        <div class="btn-group">
+                            <button class="btn buttons-collection btn-label-primary dropdown-toggle me-4" type="button"
+                                id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="gap-2 d-flex align-items-center">
+                                    <i class="icon-base ti tabler-upload icon-xs me-sm-1"></i>
+                                    <span class="d-none d-sm-inline-block">Export</span>
+                                </span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                                <li><a class="dropdown-item" href="#" id="export-csv">CSV</a></li>
+                                <li><a class="dropdown-item" href="#" id="export-excel">Excel</a></li>
+                                <li><a class="dropdown-item" href="#" id="export-pdf">PDF</a></li>
+                                <li><a class="dropdown-item" href="#" id="export-print">Print</a></li>
+                            </ul>
+                        </div>
+
+                        {{-- Add Button --}}
+                        <button class="btn create-new btn-primary" data-bs-toggle="offcanvas"
+                            data-bs-target="#offcanvasSPForm" aria-controls="offcanvasSPForm" type="button">
+                            <span class="gap-2 d-flex align-items-center">
+                                <i class="icon-base ti tabler-plus icon-sm"></i>
+                                <span class="d-none d-sm-inline-block">Add Provider</span>
+                            </span>
+                        </button>
+                    </div>
                 </div>
             </div>
+
 
             {{-- Table --}}
             <div class="p-3 card-datatable table-responsive">
@@ -110,11 +137,13 @@
                                 </td>
                                 <td>
                                     <button class="btn btn-sm badge bg-label-info"
-                                        onclick='editSP(@json($sp))'>Edit</button>
+                                        onclick='editSP(@json($sp))'> <i
+                                            class="icon-base ti tabler-edit"></i></button>
                                     <form action="{{ route('admin.service-providers.destroy', $sp) }}" method="POST"
                                         class="d-inline delete-form">
                                         @csrf @method('DELETE')
-                                        <button class="btn btn-sm badge bg-label-danger show-confirm">Delete</button>
+                                        <button class="btn btn-sm badge bg-label-danger show-confirm"> <i
+                                                class="icon-base ti tabler-trash"></i></button>
                                     </form>
                                 </td>
                             </tr>

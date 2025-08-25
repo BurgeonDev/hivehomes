@@ -23,13 +23,45 @@
 
         {{-- Card & Table --}}
         <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Products</h5>
-                <button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasProduct"
-                    id="btnAddProduct">
-                    <i class="ti ti-plus me-1"></i> Add Product
-                </button>
+            <div class="px-3 mx-0 row card-header flex-column flex-md-row border-bottom">
+                {{-- Title --}}
+                <div class="col-md-auto me-auto">
+                    <h5 class="mb-0 card-title">Products</h5>
+                </div>
+
+                {{-- Export + Add Buttons --}}
+                <div class="col-md-auto ms-auto">
+                    <div class="flex-wrap mb-0 dt-buttons btn-group">
+                        {{-- Export Dropdown --}}
+                        <div class="btn-group">
+                            <button class="btn buttons-collection btn-label-primary dropdown-toggle me-4" type="button"
+                                id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="gap-2 d-flex align-items-center">
+                                    <i class="icon-base ti tabler-upload icon-xs me-sm-1"></i>
+                                    <span class="d-none d-sm-inline-block">Export</span>
+                                </span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                                <li><a class="dropdown-item" href="#" id="export-csv">CSV</a></li>
+                                <li><a class="dropdown-item" href="#" id="export-excel">Excel</a></li>
+                                <li><a class="dropdown-item" href="#" id="export-pdf">PDF</a></li>
+                                <li><a class="dropdown-item" href="#" id="export-print">Print</a></li>
+                            </ul>
+                        </div>
+
+                        {{-- Add Product Button --}}
+                        <button class="btn create-new btn-primary" data-bs-toggle="offcanvas"
+                            data-bs-target="#offcanvasProduct" aria-controls="offcanvasProduct" id="btnAddProduct"
+                            type="button">
+                            <span class="gap-2 d-flex align-items-center">
+                                <i class="icon-base ti tabler-plus icon-sm"></i>
+                                <span class="d-none d-sm-inline-block">Add Product</span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
             </div>
+
             <div class="p-3 card-datatable table-responsive">
                 <table class="table datatables-basic table-striped">
                     <thead>
@@ -71,15 +103,15 @@
                                 </td>
                                 <td>{{ $p->seller->name }}</td>
                                 <td class="text-end">
-                                    <button class="btn btn-sm btn-info btn-edit-product"
+                                    <button class="btn btn-sm badge bg-label-info btn-edit-product"
                                         data-product='@json($p)'>
-                                        Edit
+                                        <i class="icon-base ti tabler-edit"></i>
                                     </button>
                                     <form action="{{ route('admin.products.destroy', $p) }}" method="POST"
                                         class="d-inline delete-form">
                                         @csrf @method('DELETE')
-                                        <button class="btn btn-sm btn-danger show-confirm">
-                                            Delete
+                                        <button class="btn btn-sm badge bg-label-danger show-confirm">
+                                            <i class="icon-base ti tabler-trash"></i>
                                         </button>
                                     </form>
                                 </td>

@@ -71,13 +71,15 @@
                                 </td>
                                 <td class="text-end">
                                     <button class="btn btn-sm badge bg-label-info btn-edit-category"
-                                        data-cat='@json($cat)'>Edit</button>
+                                        data-cat='@json($cat)'> <i
+                                            class="icon-base ti tabler-edit"></i></button>
 
                                     <form method="POST" action="{{ route('admin.product-categories.destroy', $cat) }}"
                                         class="d-inline delete-form">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="show-confirm btn btn-sm badge bg-label-danger">Delete</button>
+                                        <button class="show-confirm btn btn-sm badge bg-label-danger"> <i
+                                                class="icon-base ti tabler-trash"></i></button>
                                     </form>
                                 </td>
 

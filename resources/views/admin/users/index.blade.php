@@ -96,12 +96,13 @@
                                 <td>
                                     <button class="btn btn-sm badge bg-label-info"
                                         onclick="editUser({{ $user }}, '{{ $user->roles->first()->name ?? '' }}')">
-                                        Edit
+                                        <i class="icon-base ti tabler-edit"></i>
                                     </button>
                                     <form method="POST" action="{{ route('users.destroy', $user) }}"
                                         class="delete-form d-inline">
                                         @csrf @method('DELETE')
-                                        <button class="btn btn-sm badge bg-label-danger show-confirm">Delete</button>
+                                        <button class="btn btn-sm badge bg-label-danger show-confirm"> <i
+                                                class="icon-base ti tabler-trash"></i></button>
                                     </form>
                                 </td>
                             </tr>

@@ -16,14 +16,44 @@
         </nav>
 
         <div class="card">
-            <div class="px-3 mx-0 row card-header">
-                <div class="col d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0 card-title">Cities</h5>
-                    <button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddCity">
-                        <i class="icon-base ti tabler-plus icon-sm me-1"></i> Add City
-                    </button>
+            <div class="px-3 mx-0 row card-header flex-column flex-md-row border-bottom">
+                {{-- Title --}}
+                <div class="mt-0 d-md-flex justify-content-between align-items-center dt-layout-start col-md-auto me-auto">
+                    <h5 class="pb-6 mb-0 text-center card-title text-md-start pb-md-0">Cities</h5>
+                </div>
+
+                {{-- Export + Add Button --}}
+                <div class="mt-0 d-md-flex justify-content-between align-items-center dt-layout-end col-md-auto ms-auto">
+                    <div class="flex-wrap mb-0 dt-buttons btn-group">
+                        {{-- Export Dropdown --}}
+                        <div class="btn-group">
+                            <button class="btn buttons-collection btn-label-primary dropdown-toggle me-4" type="button"
+                                id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="gap-2 d-flex align-items-center">
+                                    <i class="icon-base ti tabler-upload icon-xs me-sm-1"></i>
+                                    <span class="d-none d-sm-inline-block">Export</span>
+                                </span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                                <li><a class="dropdown-item" href="#" id="export-csv">CSV</a></li>
+                                <li><a class="dropdown-item" href="#" id="export-excel">Excel</a></li>
+                                <li><a class="dropdown-item" href="#" id="export-pdf">PDF</a></li>
+                                <li><a class="dropdown-item" href="#" id="export-print">Print</a></li>
+                            </ul>
+                        </div>
+
+                        {{-- Add Button --}}
+                        <button class="btn create-new btn-primary" data-bs-toggle="offcanvas"
+                            data-bs-target="#offcanvasAddCity" aria-controls="offcanvasAddCity" type="button">
+                            <span class="gap-2 d-flex align-items-center">
+                                <i class="icon-base ti tabler-plus icon-sm"></i>
+                                <span class="d-none d-sm-inline-block">Add City</span>
+                            </span>
+                        </button>
+                    </div>
                 </div>
             </div>
+
 
             <div class="p-3 card-datatable table-responsive">
                 <table class="table datatables-basic">
@@ -49,18 +79,18 @@
                                         data-state-id="{{ $city->state->id }}"
                                         data-country-id="{{ $city->state->country->id }}" data-bs-toggle="offcanvas"
                                         data-bs-target="#offcanvasAddCity">
-                                        Edit
+                                        <i class="icon-base ti tabler-edit"></i>
                                     </button>
-
                                     <form action="{{ route('cities.destroy', $city->id) }}" method="POST"
-                                        class="delete-form d-inline"
-                                        onsubmit="return confirm('Are you sure you want to delete this city?');">
+                                        class="delete-form d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit"
-                                            class="show-confirm btn btn-sm badge bg-label-danger">Delete</button>
+                                        <button type="submit" class="show-confirm btn btn-sm badge bg-label-danger">
+                                            <i class="icon-base ti tabler-trash"></i>
+                                        </button>
                                     </form>
                                 </td>
+
 
                             </tr>
                         @endforeach

@@ -93,12 +93,13 @@
                                     </form>
                                 </td>
                                 <td>
-                                    <button class="btn btn-sm badge bg-label-info"
-                                        onclick="editPost({{ $post }})">Edit</button>
+                                    <button class="btn btn-sm badge bg-label-info" onclick="editPost({{ $post }})">
+                                        <i class="icon-base ti tabler-edit"></i></button>
                                     <form method="POST" action="{{ route('admin.posts.destroy', $post) }}"
                                         class="d-inline delete-form">
                                         @csrf @method('DELETE')
-                                        <button class="show-confirm btn btn-sm badge bg-label-danger">Delete</button>
+                                        <button class="show-confirm btn btn-sm badge bg-label-danger"> <i
+                                                class="icon-base ti tabler-trash"></i></button>
                                     </form>
                                 </td>
                             </tr>
