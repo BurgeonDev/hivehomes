@@ -640,8 +640,8 @@
 
             // Edit Product
             document.addEventListener('click', e => {
-                if (e.target.closest('.btn-edit-product')) {
-                    const product = JSON.parse(e.target.closest('.btn-edit-product').dataset.product);
+                if (e.target.closest('.btn-open-edit-product')) {
+                    const product = JSON.parse(e.target.closest('.btn-open-edit-product').dataset.product);
 
                     document.getElementById('productId').value = product.id;
                     document.getElementById('prod-title').value = product.title;
@@ -650,6 +650,7 @@
                     document.getElementById('prod-quantity').value = product.quantity;
                     document.getElementById('prod-condition').value = product.condition;
                     document.getElementById('prod-description').value = product.description;
+                    document.getElementById('prod-society').value = product.society_id;
 
                     renderExistingImages(product.images ?? []);
                     pond.removeFiles();
@@ -661,6 +662,7 @@
                     new bootstrap.Modal(document.getElementById('productModal')).show();
                 }
             });
+
         });
     </script>
 @endsection

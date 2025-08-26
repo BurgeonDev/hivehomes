@@ -6,6 +6,7 @@
                 @csrf
                 <input type="hidden" name="_method" id="productFormMethod" value="POST">
                 <input type="hidden" name="id" id="productId">
+                <input type="hidden" id="prod-society" name="society_id">
 
                 <div class="modal-header">
                     <h5 class="modal-title" id="productModalTitle">Add Product</h5>

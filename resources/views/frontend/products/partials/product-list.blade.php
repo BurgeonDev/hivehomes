@@ -106,6 +106,14 @@
                                             'condition' => $product->condition,
                                             'is_negotiable' => (int) $product->is_negotiable,
                                             'is_featured' => (int) $product->is_featured,
+                                            'society_id' => $product->society_id,
+                                            'society_name' => optional($product->society)->name,
+                                            'images' => $product->images->map(
+                                                fn($img) => [
+                                                    'id' => $img->id,
+                                                    'url' => asset('storage/' . $img->path),
+                                                ],
+                                            ),
                                         ];
                                     @endphp
 
