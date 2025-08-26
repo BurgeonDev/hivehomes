@@ -218,7 +218,19 @@
                             </form>
                         </div>
                     </div>
+                    {{-- Sort --}}
+                    <div class="mb-4 card filter-card">
+                        <div class="card-body">
+                            <h6 class="mb-3">Sort By</h6>
+                            <select name="sort" class="form-select form-select-sm" id="sortFilter">
+                                <option value="newest" {{ request('sort', 'newest') === 'newest' ? 'selected' : '' }}>
+                                    Newest</option>
+                                <option value="oldest" {{ request('sort') === 'oldest' ? 'selected' : '' }}>Oldest
+                                </option>
 
+                            </select>
+                        </div>
+                    </div>
                     {{-- Type-wise --}}
                     <div class="mb-4 card filter-card">
                         <div class="card-body">
@@ -310,21 +322,6 @@
                                 </div>
                                 <small class="w-px-20 text-end">{{ $ratingStats['1']['count'] ?? 0 }}</small>
                             </div>
-                        </div>
-                    </div>
-
-
-                    {{-- Sort --}}
-                    <div class="mb-4 card filter-card">
-                        <div class="card-body">
-                            <h6 class="mb-3">Sort By</h6>
-                            <select name="sort" class="form-select form-select-sm" id="sortFilter">
-                                <option value="newest" {{ request('sort', 'newest') === 'newest' ? 'selected' : '' }}>
-                                    Newest</option>
-                                <option value="oldest" {{ request('sort') === 'oldest' ? 'selected' : '' }}>Oldest
-                                </option>
-
-                            </select>
                         </div>
                     </div>
 
