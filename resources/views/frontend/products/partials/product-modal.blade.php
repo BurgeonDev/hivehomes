@@ -73,6 +73,18 @@
                         <label class="form-label">Upload Images</label>
                         <input type="file" id="product-images" name="images[]" multiple>
                     </div>
+                    @role('super_admin')
+                        <div class="mb-3">
+                            <label class="form-label">Society</label>
+                            <select name="society_id" id="prod-society" class="form-select">
+                                <option value="">-- Select Society --</option>
+                                @foreach ($societies as $society)
+                                    <option value="{{ $society->id }}">{{ $society->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endrole
+
                 </div>
 
                 <div class="modal-footer">
