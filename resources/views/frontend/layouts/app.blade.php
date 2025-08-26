@@ -87,7 +87,7 @@
             const notyf = new Notyf({
                 types: [{
                         type: 'success',
-                        background: '#c8c4f9', // always white
+                        background: '#fff', // always white
                         icon: {
                             className: 'notyf__icon--success',
                             tagName: 'i',
