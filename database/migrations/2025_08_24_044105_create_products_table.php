@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // seller
             $table->string('title');
             $table->text('description')->nullable();
-            $table->foreignId('category_id')->nullable()->constrained('categories')->nullOnDelete();
+            $table->foreignId('category_id')->nullable()->constrained('product_categories')->nullOnDelete();
             $table->decimal('price', 12, 2)->nullable();
             $table->unsignedInteger('quantity')->default(1);
             $table->enum('condition', ['new', 'like_new', 'used', 'refurbished', 'other'])->default('used');
