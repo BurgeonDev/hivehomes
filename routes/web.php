@@ -29,6 +29,8 @@ use App\Http\Controllers\Admin\{
 Route::get('/', fn() => view('frontend.home'))->name('home');
 Route::get('/contact-us', fn() => view('frontend.contact.index'))->name('contact');
 Route::get('/faq', fn() => view('frontend.faq.index'))->name('faq');
+Route::get('/terms', fn() => view('frontend.terms.terms'))->name('terms');
+Route::get('/policy', fn() => view('frontend.terms.policy'))->name('policy');
 
 // Contact Form
 Route::post('/contact', [HomeController::class, 'contactStore'])->name('contact.store');

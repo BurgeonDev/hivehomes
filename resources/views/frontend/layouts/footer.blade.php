@@ -47,29 +47,51 @@
                           </div>
                       </form> --}}
                   </div>
-
                   <div class="col-lg-2 col-md-4 col-sm-6">
                       <h6 class="mb-6 footer-title">Pages</h6>
                       <ul class="list-unstyled">
                           <li class="mb-4">
-                              <a href="pricing-page.html" class="footer-link">Pricing</a>
+                              <a href="{{ route('home') }}" class="footer-link">Home</a>
                           </li>
                           <li class="mb-4">
-                              <a href="payment-page.html" class="footer-link">Payment<span
-                                      class="badge bg-primary ms-2">New</span></a>
+                              <a href="{{ route('faq') }}" class="footer-link">FAQ's</a>
                           </li>
                           <li class="mb-4">
-                              <a href="checkout-page.html" class="footer-link">Checkout</a>
+                              <a href="{{ route('contact') }}" class="footer-link">Contact Us</a>
+                          </li>
+
+
+                      </ul>
+                  </div>
+                  <div class="col-lg-2 col-md-4 col-sm-6">
+                      <h6 class="mb-6 footer-title">Terms &amp; Conditions</h6>
+                      <ul class="list-unstyled">
+                          <li class="mb-4">
+                              <a href="{{ route('terms') }}" class="footer-link">Terms of Service</a>
                           </li>
                           <li class="mb-4">
-                              <a href="help-center-landing.html" class="footer-link">Help Center</a>
+                              <a href="{{ route('policy') }}" class="footer-link">Privacy Policy</a>
+                          </li>
+
+                      </ul>
+                  </div>
+                  <div class="col-lg-2 col-md-4 col-sm-6">
+                      <h6 class="mb-6 footer-title">Contact Us</h6>
+                      <ul class="list-unstyled">
+                          <li class="mb-4">
+                              <a href="mailto:info@burgeon-grp.com" class="footer-link">
+                                  <i class="menu-icon icon-base ti tabler-mail me-2"></i> info@burgeon-grp.com
+                              </a>
                           </li>
                           <li class="mb-4">
-                              <a href="../vertical-menu-template/auth-login-cover.html" target="_blank"
-                                  class="footer-link">Login/Register</a>
+                              <a href="tel:+923331342525" class="footer-link">
+                                  <i class="menu-icon icon-base ti tabler-phone me-2"></i> +92-333-134-2525
+                              </a>
                           </li>
                       </ul>
                   </div>
+
+
 
               </div>
           </div>

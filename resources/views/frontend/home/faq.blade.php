@@ -94,23 +94,6 @@
                         </div>
                     </div>
 
-                    <!-- FAQ 5 -->
-                    {{-- <div class="card accordion-item">
-                        <h2 class="accordion-header" id="headingFive">
-                            <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
-                                data-bs-target="#accordionFive" aria-expanded="false" aria-controls="accordionFive">
-                                <i class="icon-base ti tabler-credit-card me-2"></i>
-                                How does payment collection work?
-                            </button>
-                        </h2>
-                        <div id="accordionFive" class="accordion-collapse collapse" aria-labelledby="headingFive"
-                            data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                                Residents can pay maintenance bills and dues via secure online payments. Admins
-                                can track, generate receipts, and manage dues in real-time.
-                            </div>
-                        </div>
-                    </div> --}}
 
                 </div>
             </div>
