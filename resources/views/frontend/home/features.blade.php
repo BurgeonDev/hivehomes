@@ -48,7 +48,7 @@
              </div>
 
              <!-- Notice Board -->
-             <div class="text-center col-lg-4 col-sm-6 features-icon-box">
+             <div class="text-center col-lg-12 col-sm-6 features-icon-box">
                  <div class="mb-4 text-center text-primary">
                      <i class="icon-base ti tabler-bell fs-1 icon-xl"></i>
                  </div>
@@ -59,7 +59,7 @@
              </div>
 
              <!-- Polls & Feedback -->
-             <div class="text-center col-lg-4 col-sm-6 features-icon-box">
+             {{-- <div class="text-center col-lg-4 col-sm-6 features-icon-box">
                  <div class="mb-4 text-center text-primary">
                      <i class="icon-base ti tabler-message-dots fs-1 icon-xl"></i>
                  </div>
@@ -67,10 +67,10 @@
                  <p class="features-icon-description">
                      Vote on society decisions and give feedback to help improve your neighborhood.
                  </p>
-             </div>
+             </div> --}}
 
              <!-- Secure Payments -->
-             <div class="text-center col-lg-4 col-sm-6 features-icon-box">
+             {{-- <div class="text-center col-lg-4 col-sm-6 features-icon-box">
                  <div class="mb-4 text-center text-primary">
                      <i class="icon-base ti tabler-credit-card fs-1 icon-xl"></i>
                  </div>
@@ -78,7 +78,7 @@
                  <p class="features-icon-description">
                      Pay society dues, maintenance bills, and track your payment history securely.
                  </p>
-             </div>
+             </div> --}}
          </div>
      </div>
  </section>

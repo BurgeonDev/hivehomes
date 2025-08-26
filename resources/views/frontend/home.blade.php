@@ -21,11 +21,11 @@
 
 
         <!-- Real customers reviews: Start -->
-        @include('frontend.home.customers')
+        {{-- @include('frontend.home.customers') --}}
         <!-- Real customers reviews: End -->
 
         <!-- Our great team: Start -->
-        @include('frontend.home.team')
+        {{-- @include('frontend.home.team') --}}
         <!-- Our great team: End -->
 
         <!-- Pricing plans: Start -->
@@ -40,7 +40,7 @@
 
 
         <!-- CTA: Start -->
-        @include('frontend.home.cta')
+        {{-- @include('frontend.home.cta') --}}
         <!-- CTA: End -->
 
         <!-- Fun facts: Start -->
