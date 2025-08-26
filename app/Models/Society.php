@@ -12,6 +12,7 @@ class Society extends Model
         'city_id',
         'state_id',
         'country_id',
+        'logo',
         'admin_user_id'
     ];
 

@@ -30,8 +30,12 @@ class SocietyController extends Controller
             'city_id' => 'required|exists:cities,id',
             'state_id' => 'required|exists:states,id',
             'country_id' => 'required|exists:countries,id',
+            'logo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'admin_user_id' => 'nullable|exists:users,id',
         ]);
+        if ($request->hasFile('logo')) {
+            $validated['logo'] = $request->file('logo')->store('logos', 'public');
+        }
 
         Society::create($validated);
 
@@ -46,8 +50,17 @@ class SocietyController extends Controller
             'city_id' => 'required|exists:cities,id',
             'state_id' => 'required|exists:states,id',
             'country_id' => 'required|exists:countries,id',
+            'logo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+
             'admin_user_id' => 'nullable|exists:users,id',
         ]);
+        if ($request->hasFile('logo')) {
+            if ($society->logo && \Storage::disk('public')->exists($society->logo)) {
+                \Storage::disk('public')->delete($society->logo);
+            }
+
+            $validated['logo'] = $request->file('logo')->store('logos', 'public');
+        }
 
         $society->update($validated);
 

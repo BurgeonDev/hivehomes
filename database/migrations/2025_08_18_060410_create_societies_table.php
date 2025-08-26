@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('city_id');
             $table->unsignedBigInteger('state_id');
             $table->unsignedBigInteger('country_id');
+            $table->string('logo')->nullable();
             $table->unsignedBigInteger('admin_user_id')->nullable();
             $table->timestamps();
         });

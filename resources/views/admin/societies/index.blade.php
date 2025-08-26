@@ -5,6 +5,8 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css') }}" />
+    <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />
+
 @endsection
 
 @section('content')
@@ -61,6 +63,7 @@
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th>Logo</th>
                             <th>Name</th>
                             <th>Address</th>
                             <th>City</th>
@@ -74,6 +77,12 @@
                         @foreach ($societies as $society)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
+                                <td>
+                                    @if ($society->logo)
+                                        <img src="{{ asset('storage/' . $society->logo) }}" alt="Logo" width="40">
+                                    @endif
+                                </td>
+
                                 <td>{{ $society->name }}</td>
                                 <td>{{ $society->address }}</td>
                                 <td>{{ $society->city->name ?? '-' }}</td>
@@ -106,7 +115,7 @@
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
         </div>
         <div class="flex-grow-0 p-4 mx-0 offcanvas-body h-100">
-            <form method="POST" action="{{ route('societies.store') }}" id="societyForm">
+            <form method="POST" action="{{ route('societies.store') }}" id="societyForm" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="_method" id="societyFormMethod" value="POST">
 
@@ -144,6 +153,11 @@
                     </select>
                 </div>
 
+                <div class="mb-3">
+                    <label class="form-label">Logo</label>
+                    <input type="file" class="form-control" name="logo" id="society-logo">
+                </div>
+
 
                 <div class="mb-3">
                     <label class="form-label">Admin (optional)</label>
@@ -167,6 +181,7 @@
     <script src="{{ asset('assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.js') }}"></script>
+    <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
 @endsection
 
 @section('page-js')
@@ -245,6 +260,14 @@
             $('#offcanvasAddSocietyLabel').text('Edit Society');
             new bootstrap.Offcanvas(document.getElementById('offcanvasAddSociety')).show();
         }
+        FilePond.registerPlugin();
+
+        FilePond.create(document.querySelector('#society-logo'), {
+            labelIdle: 'Drag & Drop your logo or <span class="filepond--label-action">Browse</span>',
+            acceptedFileTypes: ['image/png', 'image/jpeg', 'image/jpg'],
+            maxFileSize: '2MB',
+            storeAsFile: true // 👈 IMPORTANT: This tells FilePond to behave like a normal file input
+        });
     </script>
 
 @endsection
