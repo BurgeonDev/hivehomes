@@ -15,7 +15,7 @@ class SocietiesTableSeeder extends Seeder
             'country_id' => 1,     // Make sure these IDs exist
             'state_id' => 1,
             'city_id' => 1,
-            'admin_user_id' => 2,  // An existing user who is an admin of this society
+            'admin_user_id' => 1,  // An existing user who is an admin of this society
         ]);
 
         Society::create([

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Database\Seeders;
 
 use App\Models\Category;
@@ -10,7 +9,24 @@ class CategorySeeder extends Seeder
 {
     public function run(): void
     {
-        collect(['Sale Item', 'Giveaway', 'Event', 'Announcement'])
-            ->each(fn($name) => Category::firstOrCreate(['name' => $name]));
+        $categories = [
+            'Giveaway',
+            'Event',
+            'Announcement',
+            'News',
+            'Update',
+            'Promotion',
+            'Offer',
+            'Tutorial',
+            'Tips & Tricks',
+            'Partnership',
+            'Poll',
+            'Survey',
+            'Milestone',
+        ];
+
+        collect($categories)->each(
+            fn($name) => Category::firstOrCreate(['name' => $name])
+        );
     }
 }

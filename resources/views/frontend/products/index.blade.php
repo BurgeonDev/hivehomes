@@ -3,6 +3,8 @@
 
 @section('page-css')
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/app-academy.css') }}">
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
     <style>
         /* --- Card / Filter visuals (adapted from Service Providers) --- */
         .filter-card {
@@ -239,9 +241,13 @@
 
                         </div>
                         <div class="text-center ">
-                            <button id="btnAddProduct" class="btn rounded-pill btn-primary bg-label-primary">
-                                <i class="ti tabler-plus me-1"></i> Add Product
-                            </button>
+                            <div class="text-center ">
+                                <button id="btnAddProduct" class="btn rounded-pill btn-primary bg-label-primary"
+                                    data-bs-toggle="modal" data-bs-target="#productModal">
+                                    <i class="ti tabler-plus me-1"></i> Add Product
+                                </button>
+                            </div>
+                            @include('frontend.products.partials.product-modal')
                         </div>
                     </div>
                 </div>
@@ -373,8 +379,9 @@
                                 </div>
 
                                 <div class="form-check form-switch ms-2">
-                                    <input class="form-check-input" type="checkbox" id="filterFeatured" name="is_featured"
-                                        value="1" {{ request('is_featured') == '1' ? 'checked' : '' }}>
+                                    <input class="form-check-input" type="checkbox" id="filterFeatured"
+                                        name="is_featured" value="1"
+                                        {{ request('is_featured') == '1' ? 'checked' : '' }}>
                                     <label class="form-check-label small muted-very" for="filterFeatured">Featured
                                         only</label>
                                 </div>
@@ -398,9 +405,12 @@
             </div>
         </div>
     </div>
-    @include('frontend.products.partials.product-modal')
 @endsection
-
+@section('vendor-js')
+    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+@endsection
 @section('page-js')
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -570,6 +580,82 @@
                 }
             });
 
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            FilePond.registerPlugin(FilePondPluginImagePreview, FilePondPluginFileValidateType);
+            let pond = FilePond.create(document.querySelector('#product-images'), {
+                allowMultiple: true,
+                acceptedFileTypes: ['image/*'],
+                storeAsFile: true,
+                credits: false
+            });
+
+            const removedInput = document.getElementById('removedImages');
+            let removedIds = [];
+
+            function renderExistingImages(images = []) {
+                const container = document.getElementById('existing-images');
+                container.innerHTML = '';
+                removedIds = [];
+                removedInput.value = JSON.stringify([]);
+
+                images.forEach(img => {
+                    const wrapper = document.createElement('div');
+                    wrapper.classList.add('position-relative');
+                    wrapper.innerHTML = `
+              <img src="${img.url}" width="100" class="rounded">
+              <button type="button" class="top-0 btn btn-sm btn-danger position-absolute end-0 btn-remove-existing" data-id="${img.id}">&times;</button>
+            `;
+                    container.appendChild(wrapper);
+                });
+            }
+
+            // Remove existing image click
+            document.addEventListener('click', e => {
+                if (e.target.classList.contains('btn-remove-existing')) {
+                    const id = e.target.dataset.id;
+                    removedIds.push(id);
+                    removedInput.value = JSON.stringify(removedIds);
+                    e.target.closest('div').remove();
+                }
+            });
+
+            // Add Product
+            document.getElementById('btnAddProduct').addEventListener('click', () => {
+                document.getElementById('productForm').reset();
+                document.getElementById('productFormMethod').value = 'POST';
+                document.getElementById('productModalTitle').innerText = 'Add Product';
+                document.getElementById('productForm').action = "{{ route('products.store') }}";
+                renderExistingImages([]);
+                pond.removeFiles();
+                new bootstrap.Modal(document.getElementById('productModal')).show();
+            });
+
+            // Edit Product
+            document.addEventListener('click', e => {
+                if (e.target.closest('.btn-edit-product')) {
+                    const product = JSON.parse(e.target.closest('.btn-edit-product').dataset.product);
+
+                    document.getElementById('productId').value = product.id;
+                    document.getElementById('prod-title').value = product.title;
+                    document.getElementById('prod-category').value = product.category_id;
+                    document.getElementById('prod-price').value = product.price;
+                    document.getElementById('prod-quantity').value = product.quantity;
+                    document.getElementById('prod-condition').value = product.condition;
+                    document.getElementById('prod-description').value = product.description;
+
+                    renderExistingImages(product.images ?? []);
+                    pond.removeFiles();
+
+                    document.getElementById('productFormMethod').value = 'PUT';
+                    document.getElementById('productModalTitle').innerText = 'Edit Product';
+                    document.getElementById('productForm').action = "/products/" + product.id;
+
+                    new bootstrap.Modal(document.getElementById('productModal')).show();
+                }
+            });
         });
     </script>
 @endsection
