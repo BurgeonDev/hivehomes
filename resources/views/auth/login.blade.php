@@ -58,10 +58,10 @@
 
                             <!-- Email -->
                             <div class="mb-6">
-                                <label for="email" class="form-label">Email or Username</label>
+                                <label for="email" class="form-label">Email or Phone</label>
                                 <input type="text" id="email" name="email"
                                     class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}"
-                                    required autofocus placeholder="Enter your email or username" />
+                                    required autofocus placeholder="Enter your email or phone no" />
                                 @error('email')
                                     <div class="mt-1 text-danger">{{ $message }}</div>
                                 @enderror
