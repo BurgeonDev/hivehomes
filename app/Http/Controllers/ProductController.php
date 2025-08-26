@@ -2,265 +2,151 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\Product;
-use App\Models\ProductImage;
-use App\Models\Category;
+use App\Models\ProductCategory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-    public function __construct()
-    {
-        // require login for all frontend product actions
-        $this->middleware('auth');
-    }
-
     /**
-     * Display a listing of approved products for the current user's society.
+     * Display a listing of approved products for the member's society,
+     * with live filtering, searching and sorting. Super admin sees all.
      */
     public function index(Request $request)
     {
         $user = $request->user();
 
-        $query = Product::query()
-            ->approved()
-            ->forSociety($user->society_id)
-            ->with('primaryImage', 'seller', 'category')
-            ->latest();
+        // Base query: only approved products (super admin bypasses society filter)
+        $query = Product::with(['primaryImage', 'seller', 'society', 'category'])
+            ->where('status', 'approved');
 
-        // Filters
+        // Allow super admin to see all products. Adjust this to your role implementation if needed.
+        $isSuperAdmin = (isset($user->role) && $user->role === 'super_admin')
+            || (method_exists($user, 'hasRole') && $user->hasRole('super_admin'));
+
+        if (! $isSuperAdmin) {
+            $query->where('society_id', $user->society_id);
+        }
+
+        // --------------------------
+        // SEARCH (title OR description)
+        // --------------------------
         if ($request->filled('search')) {
-            $query->where(function ($q) use ($request) {
-                $s = $request->get('search');
-                $q->where('title', 'like', "%{$s}%")
-                    ->orWhere('description', 'like', "%{$s}%");
+            $term = '%' . $request->search . '%';
+            $query->where(function ($q) use ($term) {
+                $q->where('title', 'like', $term)
+                    ->orWhere('description', 'like', $term);
             });
         }
 
+        // --------------------------
+        // FILTERS
+        // --------------------------
         if ($request->filled('category_id')) {
             $query->where('category_id', $request->category_id);
         }
 
+        if ($request->filled('price_min')) {
+            $query->where('price', '>=', $request->price_min);
+        }
+        if ($request->filled('price_max')) {
+            $query->where('price', '<=', $request->price_max);
+        }
+
+        // condition (enum: new, like_new, used, refurbished, other, etc.)
         if ($request->filled('condition')) {
             $query->where('condition', $request->condition);
         }
 
-        if ($request->filled('price_min')) {
-            $query->where('price', '>=', floatval($request->price_min));
+        // negotiable (checkbox => '1')
+        if ($request->filled('is_negotiable') && $request->is_negotiable == '1') {
+            $query->where('is_negotiable', 1);
         }
 
-        if ($request->filled('price_max')) {
-            $query->where('price', '<=', floatval($request->price_max));
+        // featured only (and not expired)
+        if ($request->filled('is_featured') && $request->is_featured == '1') {
+            $query->where('is_featured', 1)
+                ->where(function ($q) {
+                    $q->whereNull('featured_until')
+                        ->orWhere('featured_until', '>=', now());
+                });
         }
 
-        if ($request->filled('negotiable')) {
-            $query->where('is_negotiable', (bool) $request->negotiable);
+        // --------------------------
+        // SORTING
+        // --------------------------
+        switch ($request->get('sort', 'latest')) {
+            case 'price_asc':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_desc':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'alpha':
+                $query->orderBy('title', 'asc');
+                break;
+            default:
+                $query->latest();
         }
 
-        $products = $query->paginate(12)->withQueryString();
-        $categories = Category::orderBy('name')->get();
+        // --------------------------
+        // PAGINATION (per_page with bounds)
+        // --------------------------
+        $perPage = (int) $request->get('per_page', 12);
+        // enforce sane bounds
+        $perPage = $perPage <= 0 ? 12 : $perPage;
+        $perPage = $perPage > 48 ? 48 : $perPage; // max 48 to avoid heavy queries
 
-        return view('marketplace.index', compact('products', 'categories'));
-    }
+        $products = $query
+            ->paginate($perPage)
+            ->appends($request->only([
+                'search',
+                'category_id',
+                'price_min',
+                'price_max',
+                'sort',
+                'condition',
+                'is_negotiable',
+                'is_featured',
+                'per_page',
+                'page'
+            ]));
 
-    /**
-     * Show the form for creating a new product.
-     */
-    public function create()
-    {
-        $categories = Category::orderBy('name')->get();
-        $product = new Product();
+        $categories = ProductCategory::orderBy('name')->get();
 
-        return view('marketplace.form', [
-            'product' => $product,
-            'categories' => $categories,
-            'method' => 'create'
+        // If AJAX — return only the product grid wrapper (fragment) to be injected client-side
+        if ($request->ajax()) {
+            return view('frontend.products.partials.product-list-wrapper', compact('products'))->render();
+        }
+
+        // Regular full page render
+        return view('frontend.products.index', [
+            'products'     => $products,
+            'categories'   => $categories,
+            'filters'      => $request->only([
+                'search',
+                'category_id',
+                'price_min',
+                'price_max',
+                'sort',
+                'condition',
+                'is_negotiable',
+                'is_featured',
+                'per_page'
+            ]),
+            'isSuperAdmin' => $isSuperAdmin,
         ]);
     }
 
-    /**
-     * Store a newly created product in storage.
-     */
-    public function store(Request $request)
-    {
-        $user = $request->user();
 
-        $data = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'category_id' => ['nullable', 'exists:categories,id'],
-            'price' => 'nullable|numeric|min:0',
-            'quantity' => 'required|integer|min:1',
-            'condition' => ['required', Rule::in(['new', 'like_new', 'used', 'refurbished', 'other'])],
-            'is_negotiable' => 'sometimes|boolean',
-            'images.*' => 'nullable|image|max:5120',
+    /**
+     * Show the single‐product detail page.
+     */
+    public function show(Product $product)
+    {
+        return view('frontend.products.show', [
+            'product' => $product->load(['images', 'seller', 'society', 'category']),
         ]);
-
-        $data['user_id'] = $user->id;
-        $data['society_id'] = $user->society_id;
-        $data['is_negotiable'] = $request->has('is_negotiable') ? (bool)$request->is_negotiable : false;
-        // always pending by default (admin will approve)
-        $data['status'] = 'pending';
-
-        DB::transaction(function () use (&$product, $data, $request) {
-            $product = Product::create($data);
-
-            if ($request->hasFile('images')) {
-                foreach ($request->file('images') as $idx => $img) {
-                    $path = $img->store("products/{$product->id}", 'public');
-                    $product->images()->create([
-                        'path' => $path,
-                        'order' => $idx,
-                        'is_primary' => $idx === 0,
-                    ]);
-                }
-            }
-        });
-
-        return redirect()->route('marketplace.show', $product)
-            ->with('success', 'Product submitted for approval.');
-    }
-
-    /**
-     * Display the specified product.
-     */
-    public function show(Request $request, Product $product)
-    {
-        $user = $request->user();
-
-        // visibility: approved OR owner OR admin (society or super)
-        if (
-            $product->status !== 'approved'
-            && $product->user_id !== $user->id
-            && ! $this->isAdmin($user)
-        ) {
-            abort(403, 'Product not visible');
-        }
-
-        // increment views (optional)
-        $product->increment('views');
-
-        $product->load('images', 'seller', 'category');
-
-        return view('marketplace.show', compact('product'));
-    }
-
-    /**
-     * Show the form for editing the specified product.
-     */
-    public function edit(Request $request, Product $product)
-    {
-        $this->authorizeOwnerOrAdmin($request->user(), $product);
-
-        $categories = Category::orderBy('name')->get();
-
-        return view('marketplace.form', [
-            'product' => $product,
-            'categories' => $categories,
-            'method' => 'edit'
-        ]);
-    }
-
-    /**
-     * Update the specified product in storage.
-     */
-    public function update(Request $request, Product $product)
-    {
-        $this->authorizeOwnerOrAdmin($request->user(), $product);
-
-        $data = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'category_id' => ['nullable', 'exists:categories,id'],
-            'price' => 'nullable|numeric|min:0',
-            'quantity' => 'required|integer|min:1',
-            'condition' => ['required', Rule::in(['new', 'like_new', 'used', 'refurbished', 'other'])],
-            'is_negotiable' => 'sometimes|boolean',
-            'images.*' => 'nullable|image|max:5120',
-            'remove_images' => 'sometimes|array',
-            'remove_images.*' => 'integer|exists:product_images,id',
-        ]);
-
-        $data['is_negotiable'] = $request->has('is_negotiable') ? (bool)$request->is_negotiable : false;
-
-        DB::transaction(function () use ($product, $data, $request) {
-            // remove selected images (if any)
-            if ($request->filled('remove_images')) {
-                $toRemove = ProductImage::whereIn('id', $request->remove_images)
-                    ->where('product_id', $product->id)
-                    ->get();
-                foreach ($toRemove as $img) {
-                    Storage::disk('public')->delete($img->path);
-                    $img->delete();
-                }
-            }
-
-            // add new images (if any)
-            if ($request->hasFile('images')) {
-                $currentMax = $product->images()->max('order') ?? 0;
-                foreach ($request->file('images') as $i => $img) {
-                    $path = $img->store("products/{$product->id}", 'public');
-                    $product->images()->create([
-                        'path' => $path,
-                        'order' => $currentMax + $i + 1,
-                        'is_primary' => false,
-                    ]);
-                }
-            }
-
-            // if non-admin edits, send for re-approval
-            if (! $this->isAdmin(request()->user())) {
-                $data['status'] = 'pending';
-            }
-
-            $product->update($data);
-
-            // ensure a primary image exists
-            if (! $product->images()->where('is_primary', true)->exists()) {
-                $first = $product->images()->orderBy('order')->first();
-                if ($first) $first->update(['is_primary' => true]);
-            }
-        });
-
-        return redirect()->route('marketplace.show', $product)->with('success', 'Product updated.');
-    }
-
-    /**
-     * Remove the specified product from storage.
-     */
-    public function destroy(Request $request, Product $product)
-    {
-        $this->authorizeOwnerOrAdmin($request->user(), $product);
-
-        // delete images from storage
-        foreach ($product->images as $img) {
-            Storage::disk('public')->delete($img->path);
-        }
-
-        $product->delete();
-
-        return redirect()->route('marketplace.index')->with('success', 'Product removed.');
-    }
-
-    /* ----------------- helpers ----------------- */
-
-    protected function isAdmin($user)
-    {
-        return method_exists($user, 'hasRole') && ($user->hasRole('super_admin') || $user->hasRole('society_admin'));
-    }
-
-    protected function isSocietyAdmin($user)
-    {
-        return method_exists($user, 'hasRole') && $user->hasRole('society_admin');
-    }
-
-    protected function authorizeOwnerOrAdmin($user, Product $product)
-    {
-        if ($product->user_id !== $user->id && ! $this->isAdmin($user)) {
-            abort(403);
-        }
     }
 }

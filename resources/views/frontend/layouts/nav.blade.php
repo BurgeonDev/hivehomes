@@ -66,6 +66,13 @@
 
 
                     @auth
+                        {{-- profucts --}}
+                        <li class="nav-item">
+                            <a class="nav-link fw-medium {{ request()->routeIs('products.*') ? 'active' : '' }}"
+                                href="{{ route('products.index') }}">
+                                Products
+                            </a>
+                        </li>
                         {{-- Posts --}}
                         <li class="nav-item">
                             <a class="nav-link fw-medium {{ request()->routeIs('posts.*') ? 'active' : '' }}"
