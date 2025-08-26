@@ -103,7 +103,7 @@ require __DIR__ . '/auth.php';
 
 
 
-// Marketplace - Frontend (members)
+// products - Frontend (members)
 Route::middleware('auth')->prefix('products')->name('products.')->group(function () {
     Route::get('/', [ProductController::class, 'index'])->name('index');
     Route::get('create', [ProductController::class, 'create'])->name('create');
