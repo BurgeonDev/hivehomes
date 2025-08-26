@@ -123,29 +123,30 @@
     <!-- Page JS -->
     @yield('page-js')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const notyf = new Notyf({
-                types: [{
-                        type: 'success',
-                        background: '#fff', // always white
-                        icon: {
-                            className: 'notyf__icon--success',
-                            tagName: 'i',
-                            color: '#28a745' // green icon
-                        }
-                    },
-                    {
-                        type: 'error',
-                        background: '#fff', // always white
-                        icon: {
-                            className: 'notyf__icon--error',
-                            tagName: 'i',
-                            color: '#dc3545' // red icon
-                        }
+        // Make notyf globally accessible
+        const notyf = new Notyf({
+            types: [{
+                    type: 'success',
+                    background: '#fff',
+                    icon: {
+                        className: 'notyf__icon--success',
+                        tagName: 'i',
+                        color: '#28a745'
                     }
-                ]
-            });
+                },
+                {
+                    type: 'error',
+                    background: '#fff',
+                    icon: {
+                        className: 'notyf__icon--error',
+                        tagName: 'i',
+                        color: '#dc3545'
+                    }
+                }
+            ]
+        });
 
+        document.addEventListener('DOMContentLoaded', function() {
             @if (session('success'))
                 notyf.success("{{ session('success') }}");
             @endif
@@ -154,7 +155,6 @@
                 notyf.error("{{ session('error') }}");
             @endif
 
-
             @if ($errors->any())
                 @foreach ($errors->all() as $error)
                     notyf.error("{{ $error }}");
@@ -162,6 +162,7 @@
             @endif
         });
     </script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.show-confirm').forEach(button => {

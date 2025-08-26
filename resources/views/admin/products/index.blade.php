@@ -5,7 +5,6 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css') }}" />
-    {{-- FilePond CSS --}}
     <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
     <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
 
@@ -97,10 +96,17 @@
                                 <td>{{ $p->category->name ?? '-' }}</td>
                                 <td>${{ number_format($p->price, 2) }}</td>
                                 <td>
-                                    <span class="badge bg-label-{{ $p->status == 'approved' ? 'success' : 'warning' }}">
-                                        {{ ucfirst($p->status) }}
-                                    </span>
+                                    <select class="form-select form-select-sm status-dropdown"
+                                        data-product-id="{{ $p->id }}">
+                                        <option value="pending" {{ $p->status === 'pending' ? 'selected' : '' }}>Pending
+                                        </option>
+                                        <option value="approved" {{ $p->status === 'approved' ? 'selected' : '' }}>Approved
+                                        </option>
+                                        <option value="rejected" {{ $p->status === 'rejected' ? 'selected' : '' }}>Rejected
+                                        </option>
+                                    </select>
                                 </td>
+
                                 <td>{{ $p->seller->name }}</td>
                                 <td class="text-end">
                                     <button class="btn btn-sm badge bg-label-info btn-edit-product"
@@ -435,6 +441,33 @@
 
                 // allow normal submission to proceed
                 return true;
+            });
+        });
+    </script>
+
+    <script>
+        $(document).on('change', '.status-dropdown', function() {
+            const $select = $(this);
+            const productId = $select.data('product-id');
+            const newStatus = $select.val();
+
+            $.ajax({
+                url: `/admin/products/${productId}/status`,
+                method: 'PATCH',
+                data: {
+                    status: newStatus,
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(res) {
+                    if (res.success) {
+                        notyf.success(res.message || 'Status updated successfully.');
+                    } else {
+                        notyf.error(res.message || 'Failed to update status.');
+                    }
+                },
+                error: function() {
+                    notyf.error('An error occurred. Please try again.');
+                }
             });
         });
     </script>

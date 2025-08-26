@@ -158,4 +158,15 @@ class ProductController extends Controller
 
         return back()->with('success', 'Product removed.');
     }
+    public function updateStatus(Request $request, Product $product)
+    {
+        $request->validate([
+            'status' => 'required|in:pending,approved,rejected',
+        ]);
+
+        $product->status = $request->status;
+        $product->save();
+
+        return response()->json(['success' => true, 'message' => 'Product status updated.']);
+    }
 }
