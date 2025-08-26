@@ -47,7 +47,7 @@
 
                     {{-- Image --}}
                     <div class="col-md-12">
-                        <label class="form-label" for="image">Post Image</label>
+                        <label class="form-label" for="image">Post Image( Post Header Image)</label>
                         <input class="form-control" type="file" id="image" name="image" accept="image/*">
                     </div>
                 </div>
