@@ -41,15 +41,15 @@
 
         <!-- ===== Management Section ===== -->
         <li class="menu-header small">
-            <span class="menu-header-text" data-i18n="Management">Management</span>
+            <span class="menu-header-text" data-i18n="Management">User Management</span>
         </li>
 
-        <li class="menu-item {{ request()->routeIs('roles.*') ? 'active open' : '' }}">
+        {{-- <li class="menu-item {{ request()->routeIs('roles.*') ? 'active open' : '' }}">
             <a href="{{ route('roles.index') }}" class="menu-link">
                 <i class="menu-icon icon-base ti tabler-settings"></i>
                 <div data-i18n="Roles &amp; Permissions">Roles &amp; Permissions</div>
             </a>
-        </li>
+        </li> --}}
 
         <li class="menu-item {{ request()->routeIs('users.*') ? 'active open' : '' }}">
             <a href="{{ route('users.index') }}" class="menu-link">
