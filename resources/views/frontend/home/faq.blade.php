@@ -16,7 +16,7 @@
         <div class="row gy-12 align-items-center">
             <div class="col-lg-5">
                 <div class="text-center">
-                    <img src="{{ asset('assets/img/front-pages/landing-page/faq-boy-with-logos.png') }}"
+                    <img src="{{ asset('assets/img/illustrations/page-misc-under-maintenance.png') }}"
                         alt="faq boy with logos" class="faq-image" />
                 </div>
             </div>
@@ -28,7 +28,7 @@
                         <h2 class="accordion-header" id="headingOne">
                             <button type="button" class="accordion-button" data-bs-toggle="collapse"
                                 data-bs-target="#accordionOne" aria-expanded="true" aria-controls="accordionOne">
-                                <i class="icon-base ti tabler-currency-rupee me-2"></i>
+                                <i class="icon-base ti tabler-currency-dollar me-2"></i>
                                 Is HiveHomes free to use?
                             </button>
                         </h2>
@@ -95,7 +95,7 @@
                     </div>
 
                     <!-- FAQ 5 -->
-                    <div class="card accordion-item">
+                    {{-- <div class="card accordion-item">
                         <h2 class="accordion-header" id="headingFive">
                             <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
                                 data-bs-target="#accordionFive" aria-expanded="false" aria-controls="accordionFive">
@@ -110,7 +110,7 @@
                                 can track, generate receipts, and manage dues in real-time.
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
 
                 </div>
             </div>

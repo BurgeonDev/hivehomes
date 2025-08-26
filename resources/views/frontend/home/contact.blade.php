@@ -28,8 +28,8 @@
                                       <div>
                                           <p class="mb-0">Email</p>
                                           <h6 class="mb-0">
-                                              <a href="mailto:example@gmail.com"
-                                                  class="text-heading">example@gmail.com</a>
+                                              <a href="mailto:example@gmail.com" class="text-heading">
+                                                  info@burgeon-grp.com</a>
                                           </h6>
                                       </div>
                                   </div>
@@ -41,8 +41,8 @@
                                       </div>
                                       <div>
                                           <p class="mb-0">Phone</p>
-                                          <h6 class="mb-0"><a href="tel:+1234-568-963" class="text-heading">+1234
-                                                  568 963</a></h6>
+                                          <h6 class="mb-0"><a href="tel:+1234-568-963"
+                                                  class="text-heading">+92-333-134-2525</a></h6>
                                       </div>
                                   </div>
                               </div>
@@ -54,11 +54,7 @@
                   <div class="card h-100">
                       <div class="card-body">
                           <h4 class="mb-2">Send a message</h4>
-                          <p class="mb-6">
-                              If you would like to discuss anything related to payment, account, licensing,<br
-                                  class="d-none d-lg-block" />
-                              partnerships, or have pre-sales questions, you’re at the right place.
-                          </p>
+
                           <form method="POST" action="{{ route('contact.store') }}">
                               @csrf
                               <div class="row g-4">

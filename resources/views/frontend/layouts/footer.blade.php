@@ -28,9 +28,13 @@
                           <span class="app-brand-text demo footer-link fw-bold ms-2 ps-1">HiveHomes</span>
                       </a>
                       <p class="mb-6 footer-text footer-logo-description">
-                          Most developer friendly & highly customisable Admin Dashboard Template.
+                          Designed and Developed by
+                          <a href="https://burgeon-grp.com" target="_blank" rel="noopener noreferrer">
+                              Burgeon Group
+                          </a>.
                       </p>
-                      <form class="footer-form">
+
+                      {{-- <form class="footer-form">
                           <label for="footer-email" class="small">Subscribe to newsletter</label>
                           <div class="mt-1 d-flex">
                               <input type="email"
@@ -41,33 +45,9 @@
                                   Subscribe
                               </button>
                           </div>
-                      </form>
+                      </form> --}}
                   </div>
-                  <div class="col-lg-2 col-md-4 col-sm-6">
-                      <h6 class="mb-6 footer-title">Demos</h6>
-                      <ul class="list-unstyled">
-                          <li class="mb-4">
-                              <a href="../vertical-menu-template/" target="_blank" class="footer-link">Vertical
-                                  Layout</a>
-                          </li>
-                          <li class="mb-4">
-                              <a href="../horizontal-menu-template/" target="_blank" class="footer-link">Horizontal
-                                  Layout</a>
-                          </li>
-                          <li class="mb-4">
-                              <a href="../vertical-menu-template-bordered/" target="_blank" class="footer-link">Bordered
-                                  Layout</a>
-                          </li>
-                          <li class="mb-4">
-                              <a href="../vertical-menu-template-semi-dark/" target="_blank" class="footer-link">Semi
-                                  Dark Layout</a>
-                          </li>
-                          <li class="mb-4">
-                              <a href="../vertical-menu-template-dark/" target="_blank" class="footer-link">Dark
-                                  Layout</a>
-                          </li>
-                      </ul>
-                  </div>
+
                   <div class="col-lg-2 col-md-4 col-sm-6">
                       <h6 class="mb-6 footer-title">Pages</h6>
                       <ul class="list-unstyled">
@@ -90,15 +70,7 @@
                           </li>
                       </ul>
                   </div>
-                  <div class="col-lg-3 col-md-4">
-                      <h6 class="mb-6 footer-title">Download our app</h6>
-                      <a href="javascript:void(0);" class="mb-4 d-block"><img
-                              src="{{ asset('assets/img/front-pages/landing-page/apple-icon.png') }}"
-                              alt="apple icon" /></a>
-                      <a href="javascript:void(0);" class="d-block"><img
-                              src="{{ asset('assets/img/front-pages/landing-page/google-play-icon.png') }}"
-                              alt="google play icon" /></a>
-                  </div>
+
               </div>
           </div>
       </div>
