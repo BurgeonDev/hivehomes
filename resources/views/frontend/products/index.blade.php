@@ -4,16 +4,108 @@
 @section('page-css')
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/app-academy.css') }}">
     <style>
-        /* modern product marketplace styles */
+        /* --- Card / Filter visuals (adapted from Service Providers) --- */
+        .filter-card {
+            border-radius: .6rem;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(3, 10, 18, 0.03);
+        }
+
+        .filter-card .card-body {
+            padding: .8rem;
+        }
+
+        .list-group-item {
+            padding: .45rem .75rem;
+            font-size: .92rem;
+        }
+
+        .list-group-item .badge {
+            font-size: .78rem;
+            padding: .25rem .45rem;
+            border-radius: .45rem;
+        }
+
         .product-card {
-            border: 0;
-            box-shadow: 0 8px 30px rgba(15, 20, 40, 0.06);
-            border-radius: 14px;
+            border-radius: .5rem;
+            transition: box-shadow .28s ease;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 8px 22px rgba(17, 24, 39, 0.06);
+        }
+
+        .kpi-card {
+            border-radius: .6rem;
+            padding: .85rem;
+        }
+
+        #productsFilterForm .form-control {
+            height: 38px;
+            font-size: .92rem;
+            padding: .35rem .6rem;
+            border-radius: .45rem;
+        }
+
+        #productsFilterForm .btn {
+            height: 36px;
+            padding: .25rem .7rem;
+            font-size: .88rem;
+            border-radius: .45rem;
+        }
+
+        .filters-top-toolbar {
+            display: flex;
+            gap: .5rem;
+            align-items: center;
+            justify-content: space-between;
+            padding: .6rem .75rem;
+            background: linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(250, 250, 250, .98));
+            border-bottom: 1px solid rgba(0, 0, 0, .03);
+        }
+
+        .rating-clickable {
+            cursor: pointer;
+            gap: .5rem;
+            padding: .25rem 0;
+            align-items: center;
+            font-size: .86rem;
+        }
+
+        .rating-clickable .progress {
+            height: 6px;
+            margin: 0 .6rem;
+            border-radius: 999px;
+            background: rgba(13, 110, 253, 0.06);
+            flex: 1;
             overflow: hidden;
         }
 
-        .product-card .card-body {
-            padding: 0.85rem 1rem;
+        .rating-clickable .progress-bar {
+            box-shadow: none;
+            transition: width .35s ease;
+        }
+
+        .rating-clickable .w-px-20 {
+            width: 40px;
+            text-align: right;
+            font-size: .82rem;
+        }
+
+        .filter-card .list-group-item.active {
+            background-color: rgba(13, 110, 253, 0.06);
+            border-color: rgba(13, 110, 253, 0.12);
+        }
+
+        .position-sticky {
+            top: 95px;
+        }
+
+        @media (max-width:991px) {
+            .position-sticky {
+                position: static;
+                top: auto;
+            }
         }
 
         .product-media {
@@ -21,45 +113,7 @@
             width: 100%;
             object-fit: cover;
             display: block;
-            border-top-left-radius: 14px;
-            border-bottom-left-radius: 14px;
-        }
-
-        .product-badge {
-            font-size: .72rem;
-            padding: .22rem .5rem;
-            border-radius: 999px;
-        }
-
-        .kpi-card {
-            padding: .8rem 1rem;
-            border-radius: 12px;
-            min-width: 170px;
-        }
-
-        .filter-card {
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(32, 32, 80, 0.04);
-        }
-
-        .no-image-placeholder {
-            height: 140px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            background: linear-gradient(135deg, #adb5bd, #6c757d);
-        }
-
-        .seller-meta {
-            font-size: .82rem;
-            color: #6b7280;
-        }
-
-        .product-cta {
-            gap: .6rem;
-            display: flex;
-            align-items: center;
+            border-top-left-radius: .5rem;
         }
 
         .meta-pill {
@@ -74,27 +128,98 @@
             font-size: .88rem;
         }
 
-        .label-row {
-            gap: .5rem;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
+        /* Card visuals for product grid */
+        .product-card {
+            border-radius: .75rem;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(12, 20, 40, 0.06);
         }
 
-        .card .card-footer {
+        .product-media {
+            height: 180px;
+            width: 100%;
+            object-fit: cover;
+            display: block;
+            border-top-left-radius: .75rem;
+        }
+
+        .product-image-wrap {
+            position: relative;
+            overflow: hidden;
+            height: 180px;
+        }
+
+        .product-cat-badge {
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            z-index: 5;
+            font-size: .78rem;
+            padding: .35rem .6rem;
+            border-radius: 999px;
+            box-shadow: 0 6px 18px rgba(12, 20, 40, 0.08);
+        }
+
+        .product-featured-badge {
+            position: absolute;
+            right: 12px;
+            top: 12px;
+            z-index: 5;
+            font-size: .75rem;
+            padding: .28rem .45rem;
+            border-radius: 999px;
+            box-shadow: 0 6px 18px rgba(12, 20, 40, 0.08);
+        }
+
+        .no-image-placeholder {
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            background: linear-gradient(135deg, #adb5bd, #6c757d);
+        }
+
+        .meta-pill {
+            font-size: .78rem;
+            padding: .28rem .6rem;
+            border-radius: 999px;
+            display: inline-block;
+            margin-right: .4rem;
+        }
+
+        .product-title {
+            font-weight: 600;
+            font-size: 1rem;
+            line-height: 1.1;
+        }
+
+        .product-card .card-body {
+            padding: .9rem;
+        }
+
+        .product-card .card-footer {
             background: transparent;
             border-top: 1px dashed rgba(0, 0, 0, 0.04);
+            padding: .55rem .9rem;
+        }
+
+        .small-muted {
+            color: #6b7280;
+            font-size: .85rem;
         }
     </style>
 @endsection
 
 @section('content')
-    <section class="overflow-hidden section-py first-section-pt" style="min-height:200px; background:#f8f9fa;">
+    {{-- Banner / Breadcrumb (visual) --}}
+    <section class="overflow-hidden section-py first-section-pt position-relative" style="min-height:240px;">
         <div class="container py-4 text-center">
             <nav aria-label="breadcrumb">
-                <ol class="mb-0 breadcrumb justify-content-center">
-                    <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-decoration-none">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Products</li>
+                <ol class="mb-0 breadcrumb justify-content-center fs-4">
+                    <li class="breadcrumb-item"><a href="{{ route('home') }}"
+                            class="text-decoration-none text-primary">Home</a></li>
+                    <li class="breadcrumb-item active text-dark" aria-current="page">Products</li>
                 </ol>
             </nav>
         </div>
@@ -103,157 +228,169 @@
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="row g-4">
             {{-- Left: Products List --}}
-            <div class="col-lg-8">
-                {{-- KPI & Actions --}}
-                <div class="mb-4 d-flex align-items-center justify-content-between">
-                    <div class="gap-3 d-flex align-items-center">
+            <div class="col-lg-9">
+                {{-- KPI --}}
+                <div class="mb-4 card">
+                    <div class="card-body d-flex align-items-center justify-content-between">
                         <div>
-                            <h4 class="mb-0">Products</h4>
+                            <h5 class="mb-1">Products</h5>
                             <small class="text-muted">Approved items listed by members</small>
-                        </div>
 
-                        <div class="text-center shadow-sm kpi-card bg-label-primary">
-                            <div class="small text-white-50">Total</div>
-                            <div class="mb-0 text-white h4">{{ number_format($products->total()) }}</div>
-                        </div>
 
-                        <div class="text-center shadow-sm kpi-card bg-label-info">
-                            <div class="small text-white-50">Categories</div>
-                            <div class="mb-0 text-white h5">{{ number_format($categories->count()) }}</div>
                         </div>
-                    </div>
-
-                    <div class="gap-2 d-flex align-items-center">
-                        {{-- Add Product rounded-pill --}}
-                        @can('create', App\Models\Product::class)
-                            <a href="{{ route('products.create') }}" class="btn rounded-pill btn-primary bg-label-success">
+                        <div class="text-center ">
+                            <button id="btnAddProduct" class="btn rounded-pill btn-primary bg-label-primary">
                                 <i class="ti tabler-plus me-1"></i> Add Product
-                            </a>
-                        @endcan
-
-                        @if (!empty($isSuperAdmin) && $isSuperAdmin)
-                            <span class="badge bg-label-warning rounded-pill">Super Admin — viewing all societies</span>
-                        @endif
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                {{-- Products container (AJAX swaps this) --}}
-                <div id="productsContainer" class="mb-4">
+                {{-- Products List (AJAX) --}}
+                <div id="productsContainer">
                     @include('frontend.products.partials.product-list', ['products' => $products])
                 </div>
             </div>
 
             {{-- Right: Filters Sidebar --}}
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <div class="position-sticky" style="top:95px;">
-                    <div class="p-3 mb-3 card filter-card">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="small muted-very">Filters</div>
-                            <div>
+
+                    {{-- Top toolbar with Reset --}}
+                    <div class="mb-3 card filter-card">
+                        <div class="filters-top-toolbar">
+                            <div class="small text-muted">Filters</div>
+                            <div class="reset-wrap">
                                 <button id="resetFilters" type="button"
                                     class="btn btn-sm btn-outline-secondary rounded-pill">Reset</button>
                             </div>
                         </div>
                     </div>
 
+                    {{-- Search --}}
                     <div class="mb-4 card filter-card">
                         <div class="card-body">
-                            <form id="landingFilterForm" autocomplete="off">
-                                <div class="mb-3">
-                                    <input type="search" name="search" id="filterSearch"
-                                        class="form-control form-control-sm" placeholder="Search products… (title, desc)"
-                                        value="{{ request('search') }}">
-                                </div>
-
-                                <div class="mb-3">
-                                    <select name="sort" id="filterSort" class="mb-3 form-select form-select-sm">
-                                        <option value="latest"
-                                            {{ request('sort', 'latest') == 'latest' ? 'selected' : '' }}>
-                                            Newest</option>
-                                        <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>
-                                            Price
-                                            ↑</option>
-                                        <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>
-                                            Price ↓</option>
-                                        <option value="alpha" {{ request('sort') == 'alpha' ? 'selected' : '' }}>A to Z
-                                        </option>
-                                    </select>
-                                </div>
-
-                                <div class="mb-3">
-                                    <select name="category_id" id="filterCategory" class="mb-3 form-select form-select-sm">
-                                        <option value="">All Categories</option>
-                                        @foreach ($categories as $cat)
-                                            <option value="{{ $cat->id }}"
-                                                {{ request('category_id') == $cat->id ? 'selected' : '' }}>
-                                                {{ $cat->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="gap-2 mb-3 d-flex">
-                                    <input type="number" name="price_min" id="filterMin"
-                                        class="form-control form-control-sm" placeholder="Min"
-                                        value="{{ request('price_min') }}">
-                                    <input type="number" name="price_max" id="filterMax"
-                                        class="form-control form-control-sm" placeholder="Max"
-                                        value="{{ request('price_max') }}">
-                                </div>
-
-                                <div class="mb-3">
-                                    <select name="condition" id="filterCondition" class="form-select form-select-sm">
-                                        <option value="">Any Condition</option>
-                                        <option value="new" {{ request('condition') == 'new' ? 'selected' : '' }}>New
-                                        </option>
-                                        <option value="like_new"
-                                            {{ request('condition') == 'like_new' ? 'selected' : '' }}>
-                                            Like New</option>
-                                        <option value="used" {{ request('condition') == 'used' ? 'selected' : '' }}>Used
-                                        </option>
-                                        <option value="refurbished"
-                                            {{ request('condition') == 'refurbished' ? 'selected' : '' }}>Refurbished
-                                        </option>
-                                        <option value="other" {{ request('condition') == 'other' ? 'selected' : '' }}>
-                                            Other
-                                        </option>
-                                    </select>
-                                </div>
-
-                                <div class="gap-2 mb-3 d-flex align-items-center">
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" id="filterNegotiable"
-                                            name="is_negotiable" value="1"
-                                            {{ request('is_negotiable') == '1' ? 'checked' : '' }}>
-                                        <label class="form-check-label small muted-very" for="filterNegotiable">Only
-                                            Negotiable</label>
-                                    </div>
-
-                                    <div class="form-check form-switch ms-2">
-                                        <input class="form-check-input" type="checkbox" id="filterFeatured"
-                                            name="is_featured" value="1"
-                                            {{ request('is_featured') == '1' ? 'checked' : '' }}>
-                                        <label class="form-check-label small muted-very" for="filterFeatured">Featured
-                                            only</label>
-                                    </div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <select name="per_page" id="filterPerPage" class="form-select form-select-sm">
-                                        <option value="6" {{ request('per_page') == '6' ? 'selected' : '' }}>Show 6
-                                        </option>
-                                        <option value="12" {{ request('per_page', 12) == '12' ? 'selected' : '' }}>
-                                            Show
-                                            12</option>
-                                        <option value="24" {{ request('per_page') == '24' ? 'selected' : '' }}>Show 24
-                                        </option>
-                                        <option value="48" {{ request('per_page') == '48' ? 'selected' : '' }}>Show 48
-                                        </option>
-                                    </select>
-                                </div>
-
-                                {{-- NOTE: Apply button removed: filters run automatically on input/change --}}
+                            <h6 class="mb-3">Search</h6>
+                            <form id="productsFilterForm" class="d-flex" action="javascript:void(0)" method="GET">
+                                <input type="search" name="search" class="form-control form-control-sm me-2"
+                                    placeholder="Search title or description…" value="{{ request('search') }}" />
                             </form>
+                        </div>
+                    </div>
+
+                    {{-- Sort --}}
+                    <div class="mb-4 card filter-card">
+                        <div class="card-body">
+                            <h6 class="mb-3">Sort By</h6>
+                            <select name="sort" class="form-select form-select-sm" id="sortFilter">
+                                <option value="latest" {{ request('sort', 'latest') === 'latest' ? 'selected' : '' }}>Newest
+                                </option>
+                                <option value="price_asc" {{ request('sort') === 'price_asc' ? 'selected' : '' }}>Price: Low
+                                    →
+                                    High</option>
+                                <option value="price_desc" {{ request('sort') === 'price_desc' ? 'selected' : '' }}>Price:
+                                    High → Low</option>
+                                <option value="alpha" {{ request('sort') === 'alpha' ? 'selected' : '' }}>A → Z</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    {{-- Categories (type-like list) --}}
+                    <div class="mb-4 card filter-card">
+                        <div class="card-body">
+                            <h6 class="mb-3">Categories</h6>
+                            <ul id="categoriesList" class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between {{ request()->filled('category_id') ? '' : 'active' }}"
+                                    data-cat="">
+                                    <span>All</span>
+                                    <span class="badge bg-label-secondary">{{ number_format($products->total()) }}</span>
+                                </li>
+                                @foreach ($categories as $cat)
+                                    <li class="list-group-item d-flex justify-content-between {{ request('category_id') == $cat->id ? 'active' : '' }}"
+                                        data-cat="{{ $cat->id }}">
+                                        <span>{{ $cat->name }}</span>
+                                        {{-- quick count (simple) --}}
+                                        <span class="badge bg-label-secondary">
+                                            {{ number_format($cat->products()->where('status', 'approved')->count()) }}
+                                        </span>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+
+                    {{-- Condition Distribution (like rating) --}}
+                    <div class="mb-4 card filter-card">
+                        <div class="card-body" id="conditionList">
+                            <h6 class="mb-3">Condition</h6>
+                            @php $selectedCondition = request('condition') ? request('condition') : null; @endphp
+
+                            @php
+                                $conditions = [
+                                    'new' => 'New',
+                                    'like_new' => 'Like New',
+                                    'used' => 'Used',
+                                    'refurbished' => 'Refurbished',
+                                    'other' => 'Other',
+                                ];
+                            @endphp
+
+                            @foreach ($conditions as $key => $label)
+                                @php
+                                    $count = \App\Models\Product::where('condition', $key)
+                                        ->where('status', 'approved')
+                                        ->when(!(isset($isSuperAdmin) && $isSuperAdmin), function ($q) {
+                                            $q->where('society_id', auth()->user()->society_id);
+                                        })
+                                        ->count();
+                                    $percent = $products->total() ? round(($count / $products->total()) * 100) : 0;
+                                @endphp
+
+                                <div class="gap-2 mb-1 d-flex align-items-center rating-clickable {{ $selectedCondition === $key ? 'active' : '' }}"
+                                    data-condition="{{ $key }}">
+                                    <small>{{ $label }}</small>
+                                    <div class="mx-2 progress w-100 bg-label-primary">
+                                        <div class="progress-bar bg-label-primary" role="progressbar"
+                                            style="width: {{ $percent }}%" aria-valuenow="{{ $count }}"
+                                            aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <small class="w-px-20 text-end">{{ $count }}</small>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    {{-- Toggles + per page --}}
+                    <div class="mb-4 card filter-card">
+                        <div class="card-body">
+                            <div class="gap-2 mb-3 d-flex align-items-center">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="filterNegotiable"
+                                        name="is_negotiable" value="1"
+                                        {{ request('is_negotiable') == '1' ? 'checked' : '' }}>
+                                    <label class="form-check-label small muted-very" for="filterNegotiable">Only
+                                        Negotiable</label>
+                                </div>
+
+                                <div class="form-check form-switch ms-2">
+                                    <input class="form-check-input" type="checkbox" id="filterFeatured" name="is_featured"
+                                        value="1" {{ request('is_featured') == '1' ? 'checked' : '' }}>
+                                    <label class="form-check-label small muted-very" for="filterFeatured">Featured
+                                        only</label>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <select name="per_page" id="filterPerPage" class="form-select form-select-sm">
+                                    <option value="6" {{ request('per_page') == '6' ? 'selected' : '' }}>Show 6
+                                    </option>
+                                    <option value="12" {{ request('per_page', 12) == '12' ? 'selected' : '' }}>Show 12
+                                    </option>
+                                    <option value="24" {{ request('per_page') == '24' ? 'selected' : '' }}>Show 24
+                                    </option>
+                                </select>
+                            </div>
+
                         </div>
                     </div>
 
@@ -261,146 +398,178 @@
             </div>
         </div>
     </div>
+    @include('frontend.products.partials.product-modal')
 @endsection
 
-@push('scripts')
+@section('page-js')
     <script>
-        (function() {
-            const form = document.getElementById('landingFilterForm');
-            const resetBtn = document.getElementById('resetFilters');
+        document.addEventListener('DOMContentLoaded', () => {
             const container = document.getElementById('productsContainer');
-            let timeout;
+            const form = document.getElementById('productsFilterForm');
+            const sortSel = document.getElementById('sortFilter');
+            const categoriesList = document.getElementById('categoriesList');
+            const conditionList = document.getElementById('conditionList');
+            const resetBtn = document.getElementById('resetFilters');
+            const routeUrl = '{{ route('products.index') }}';
 
-            const getFilters = () => {
-                const data = {};
-                // inputs to capture
-                ['filterSearch', 'filterSort', 'filterCategory', 'filterMin', 'filterMax', 'filterCondition',
-                    'filterPerPage', 'filterNegotiable', 'filterFeatured'
-                ].forEach(id => {
-                    const el = document.getElementById(id);
-                    if (!el) return;
-                    // switches/checkboxes
-                    if (el.type === 'checkbox') {
-                        if (el.checked) data[el.name] = el.value;
-                    } else {
-                        if (el.value !== null && el.value !== '') data[el.name] = el.value;
-                    }
-                });
-                return data;
-            };
+            let selectedCategory = '{{ request('category_id', '') }}' || '';
+            let selectedCondition = '{{ request('condition', '') }}' || '';
 
-            const buildUrl = (params) => {
-                const url = new URL(window.location.href);
-                url.search = new URLSearchParams(params).toString();
-                return url.toString();
-            };
-
-            const injectHtml = (html) => {
-                const temp = document.createElement('div');
-                temp.innerHTML = html;
-                const newWrapper = temp.querySelector('#productsContainer');
-                if (newWrapper) {
-                    container.innerHTML = newWrapper.innerHTML;
-                } else {
-                    container.innerHTML = html;
-                }
-            };
-
-            const fetchProducts = (page = null, replaceState = true) => {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => {
-                    const params = getFilters();
-                    if (page) params.page = page;
-                    const query = new URLSearchParams(params).toString();
-                    const url = `{{ route('products.index') }}?${query}`;
-
-                    fetch(url, {
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest'
-                            }
-                        })
-                        .then(res => {
-                            if (!res.ok) throw new Error('Network response was not ok');
-                            return res.text();
-                        })
-                        .then(html => {
-                            injectHtml(html);
-                            if (replaceState) history.pushState(params, '', buildUrl(params));
-                            attachPaginationHandlers();
-                        })
-                        .catch(err => {
-                            console.error('Product load failed', err);
-                        });
-                }, 250); // debounce
-            };
-
-            // live filtering: input and change (no apply button)
-            ['input', 'change'].forEach(evt => {
-                form.querySelectorAll('input, select').forEach(el => {
-                    el.addEventListener(evt, () => fetchProducts(1));
-                });
-            });
-
-            // reset
-            resetBtn.addEventListener('click', () => {
-                form.reset();
-                // ensure checkboxes become unchecked
-                document.getElementById('filterNegotiable').checked = false;
-                document.getElementById('filterFeatured').checked = false;
-                fetchProducts(1);
-            });
-
-            // pagination delegation inside injected HTML
-            const attachPaginationHandlers = () => {
-                container.querySelectorAll('.pagination a').forEach(link => {
-                    link.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        const href = link.getAttribute('href');
-                        if (!href) return;
-                        const url = new URL(href, window.location.origin);
-                        const page = url.searchParams.get('page') || 1;
-                        fetchProducts(page);
-                    });
-                });
-
-                // optional: attach any quick-action contact buttons inside injected HTML
-                container.querySelectorAll('.btn-contact-seller').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        // example noop — ensure these exist in partial
-                    });
-                });
-            };
-
-            // back/forward
-            window.addEventListener('popstate', () => {
-                const params = new URLSearchParams(window.location.search);
-                // map back to form
-                const map = {
-                    search: 'filterSearch',
-                    sort: 'filterSort',
-                    category_id: 'filterCategory',
-                    price_min: 'filterMin',
-                    price_max: 'filterMax',
-                    condition: 'filterCondition',
-                    per_page: 'filterPerPage',
-                    is_negotiable: 'filterNegotiable',
-                    is_featured: 'filterFeatured'
+            function debounce(fn, wait) {
+                let t;
+                return (...args) => {
+                    clearTimeout(t);
+                    t = setTimeout(() => fn(...args), wait);
                 };
-                Object.keys(map).forEach(k => {
-                    const el = document.getElementById(map[k]);
-                    if (!el) return;
-                    const val = params.get(k);
-                    if (el.type === 'checkbox') {
-                        el.checked = val === '1';
-                    } else {
-                        el.value = val || '';
-                    }
+            }
+
+            function buildParams(page = null) {
+                const s = (form.querySelector('[name=search]') || {
+                    value: ''
+                }).value || '';
+                const sort = (sortSel && sortSel.value) || 'latest';
+                const per_page = (document.getElementById('filterPerPage') && document.getElementById(
+                    'filterPerPage').value) || '';
+                const is_neg = (document.getElementById('filterNegotiable') && document.getElementById(
+                    'filterNegotiable').checked) ? '1' : '';
+                const is_feat = (document.getElementById('filterFeatured') && document.getElementById(
+                    'filterFeatured').checked) ? '1' : '';
+
+                const params = new URLSearchParams();
+                if (s) params.set('search', s);
+                if (sort) params.set('sort', sort);
+                if (selectedCategory !== '' && selectedCategory !== null) params.set('category_id',
+                    selectedCategory);
+                if (selectedCondition !== '' && selectedCondition !== null) params.set('condition',
+                    selectedCondition);
+                if (is_neg) params.set('is_negotiable', is_neg);
+                if (is_feat) params.set('is_featured', is_feat);
+                if (per_page) params.set('per_page', per_page);
+                if (page) params.set('page', page);
+                return params;
+            }
+
+            async function fetchProducts(page = null) {
+                try {
+                    const params = buildParams(page);
+                    const url = routeUrl + (params.toString() ? `?${params.toString()}` : '');
+                    container.style.opacity = 0.5;
+
+                    const resp = await fetch(url, {
+                        method: 'GET',
+                        credentials: 'same-origin',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'text/html'
+                        }
+                    });
+                    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                    const html = await resp.text();
+                    container.innerHTML = html;
+
+                    // update URL without reload
+                    const newUrl = new URL(window.location.href);
+                    newUrl.search = params.toString();
+                    window.history.replaceState({}, '', newUrl.toString());
+                } catch (err) {
+                    console.error('Failed to load products:', err);
+                    container.innerHTML =
+                        `<div class="card"><div class="card-body text-danger">Failed to load products. Try again.</div></div>`;
+                } finally {
+                    container.style.opacity = 1;
+                }
+            }
+
+            const debouncedFetch = debounce(() => fetchProducts(), 300);
+
+            // search input
+            if (form) {
+                form.addEventListener('submit', e => {
+                    e.preventDefault();
+                    fetchProducts();
                 });
-                fetchProducts(params.get('page') || 1, false);
+                const sInput = form.querySelector('[name=search]');
+                if (sInput) sInput.addEventListener('input', debouncedFetch);
+            }
+
+            // sort change
+            if (sortSel) sortSel.addEventListener('change', () => fetchProducts());
+
+            // categories click
+            if (categoriesList) {
+                categoriesList.addEventListener('click', (e) => {
+                    const item = e.target.closest('[data-cat]');
+                    if (!item) return;
+                    const newCat = item.getAttribute('data-cat') ?? '';
+                    selectedCategory = (newCat === '') ? '' : String(newCat);
+                    categoriesList.querySelectorAll('[data-cat]').forEach(el => el.classList.remove(
+                        'active'));
+                    item.classList.add('active');
+                    fetchProducts();
+                });
+            }
+
+            // condition click
+            if (conditionList) {
+                conditionList.addEventListener('click', (e) => {
+                    const item = e.target.closest('[data-condition]');
+                    if (!item) return;
+                    selectedCondition = String(item.getAttribute('data-condition'));
+                    conditionList.querySelectorAll('[data-condition]').forEach(el => el.classList.remove(
+                        'active'));
+                    item.classList.add('active');
+                    fetchProducts();
+                });
+            }
+
+            // toggles & per_page
+            ['filterNegotiable', 'filterFeatured', 'filterPerPage'].forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                el.addEventListener('change', () => fetchProducts());
             });
 
-            // initial attach
-            attachPaginationHandlers();
-        })();
+            // reset filters
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => {
+                    if (form) form.reset();
+                    if (sortSel) sortSel.value = 'latest';
+                    selectedCategory = '';
+                    selectedCondition = '';
+                    if (categoriesList) {
+                        categoriesList.querySelectorAll('[data-cat]').forEach(el => el.classList.remove(
+                            'active'));
+                        const all = categoriesList.querySelector('[data-cat=""]');
+                        if (all) all.classList.add('active');
+                    }
+                    if (conditionList) conditionList.querySelectorAll('[data-condition]').forEach(el => el
+                        .classList.remove('active'));
+                    document.getElementById('filterNegotiable').checked = false;
+                    document.getElementById('filterFeatured').checked = false;
+                    document.getElementById('filterPerPage').value = '12';
+                    fetchProducts();
+                });
+            }
+
+            // pagination & links delegation
+            container.addEventListener('click', (e) => {
+                const a = e.target.closest('a');
+                if (!a) return;
+                const href = a.getAttribute('href') || '';
+                if (!/page=/.test(href)) {
+                    // not a pagination link, allow default
+                    return;
+                }
+                e.preventDefault();
+                try {
+                    const url = new URL(href, window.location.origin);
+                    const page = url.searchParams.get('page');
+                    fetchProducts(page);
+                } catch (err) {
+                    fetchProducts();
+                }
+            });
+
+        });
     </script>
-@endpush
+@endsection
