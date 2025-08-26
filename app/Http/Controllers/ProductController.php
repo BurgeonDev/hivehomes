@@ -139,6 +139,7 @@ class ProductController extends Controller
                 'per_page'
             ]),
             'isSuperAdmin' => $isSuperAdmin,
+            'approvedCount' => Product::where('status', 'approved')->count(),
             'societies' => Society::all()
         ]);
     }

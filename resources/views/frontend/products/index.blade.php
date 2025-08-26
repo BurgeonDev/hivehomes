@@ -231,26 +231,31 @@
         <div class="row g-4">
             {{-- Left: Products List --}}
             <div class="col-lg-9">
-                {{-- KPI --}}
+                <!-- Products KPI Card -->
                 <div class="mb-4 card">
-                    <div class="card-body d-flex align-items-center justify-content-between">
-                        <div>
-                            <h5 class="mb-1">Products</h5>
-                            <small class="text-muted">Approved items listed by members</small>
-
-
+                    <div class="gap-3 card-body d-flex flex-column flex-md-row align-items-start">
+                        <div class="flex-grow-1">
+                            <h4 class="mb-1">Products</h4>
+                            <p class="mb-0 text-muted">Approved items listed by members</p>
                         </div>
-                        <div class="text-center ">
-                            <div class="text-center ">
-                                <button id="btnAddProduct" class="btn rounded-pill btn-primary bg-label-primary"
-                                    data-bs-toggle="modal" data-bs-target="#productModal">
-                                    <i class="ti tabler-plus me-1"></i> Add Product
+                        <div class="gap-2 d-flex align-items-center">
+                            <button type="button" class="btn btn-label-primary waves-effect">
+                                Total Products
+                                <span
+                                    class="text-white badge bg-primary badge-center ms-1">{{ number_format($approvedCount ?? 0) }}</span>
+                            </button>
+
+                            <div class="ms-2">
+                                <button id="btnAddProduct" class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#productModal">
+                                    <i class="menu-icon icon-base ti tabler-plus me-1"></i> Add Product
                                 </button>
+                                @include('frontend.products.partials.product-modal')
                             </div>
-                            @include('frontend.products.partials.product-modal')
                         </div>
                     </div>
                 </div>
+
 
                 {{-- Products List (AJAX) --}}
                 <div id="productsContainer">

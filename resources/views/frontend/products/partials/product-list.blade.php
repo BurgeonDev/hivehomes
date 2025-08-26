@@ -17,7 +17,7 @@
 
                                     {{-- Category badge on image (solid look) --}}
                                     @if ($product->category)
-                                        <span class="badge bg-label-primary text-white product-cat-badge">
+                                        <span class="text-dark badge bg-label-primary product-cat-badge">
                                             {{ $product->category->name }}
                                         </span>
                                     @endif
@@ -35,8 +35,8 @@
                         <div class="col-6">
                             <div class="card-body d-flex flex-column h-100">
                                 <div>
-                                    <div class="d-flex justify-content-between align-items-start mb-1">
-                                        <h6 class="product-title mb-1">
+                                    <div class="mb-1 d-flex justify-content-between align-items-start">
+                                        <h6 class="mb-1 product-title">
                                             <a href="{{ route('products.show', $product) }}"
                                                 class="text-dark text-decoration-none">
                                                 {{ Str::limit($product->title, 80) }}
@@ -49,11 +49,11 @@
                                             {{ $product->price !== null ? number_format($product->price, 2) : 'N/A' }}</strong>
                                         &nbsp;&middot;&nbsp;
                                         <span
-                                            class="badge bg-label-info text-white text-capitalize">{{ str_replace('_', ' ', $product->condition) }}</span>
+                                            class="text-dark badge bg-label-info text-capitalize">{{ str_replace('_', ' ', $product->condition) }}</span>
 
                                         @if ($product->is_negotiable)
                                             &nbsp;&middot;&nbsp;<span
-                                                class="badge bg-label-success text-white rounded-pill">Negotiable</span>
+                                                class="text-dark badge bg-label-success rounded-pill">Negotiable</span>
                                         @endif
                                     </p>
 
@@ -71,32 +71,13 @@
                                     </p>
 
                                     <div class="mb-2">
-                                        <span class="meta-pill bg-label-secondary text-white">Qty:
+                                        <span class="text-dark meta-pill bg-label-secondary">Qty:
                                             {{ $product->quantity }}</span>
-                                        <span class="meta-pill bg-label-primary text-white">Views:
-                                            {{ number_format($product->views ?? 0) }}</span>
+
                                     </div>
                                 </div>
 
-                                {{-- Action buttons --}}
-                                <div class="mt-auto d-flex gap-2">
-                                    <a href="{{ route('products.show', $product) }}"
-                                        class="btn btn-sm rounded-pill btn-outline-primary w-50">
-                                        <i class="ti tabler-eye me-1"></i> View
-                                    </a>
 
-                                    @if ($product->seller_id)
-                                        <a href="{{ route('messages.create', ['to' => $product->seller_id]) }}"
-                                            class="btn btn-sm rounded-pill bg-label-success text-white w-50">
-                                            <i class="ti tabler-message me-1"></i> Contact
-                                        </a>
-                                    @else
-                                        <a href="{{ route('products.show', $product) }}"
-                                            class="btn btn-sm rounded-pill bg-label-success text-white w-50">
-                                            <i class="ti tabler-info me-1"></i> Details
-                                        </a>
-                                    @endif
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -104,9 +85,14 @@
                     {{-- Footer with owner-only Edit --}}
                     <div class="card-footer">
                         <div class="d-flex justify-content-between align-items-center">
-                            <div class="small text-muted">Status: <span
-                                    class="text-capitalize ms-1">{{ $product->status }}</span></div>
 
+                            {{-- Action buttons --}}
+                            <div class="gap-2 d-flex">
+                                <a href="{{ route('products.show', $product) }}"
+                                    class="btn btn-sm rounded-pill btn-outline-primary w-100">
+                                    <i class="ti tabler-eye me-1"></i> View
+                                </a>
+                            </div>
                             <div class="d-flex align-items-center">
                                 @if (auth()->check() && auth()->id() == $product->user_id)
                                     @php
@@ -123,7 +109,8 @@
                                         ];
                                     @endphp
 
-                                    <button class="small btn btn-outline-secondary btn-sm me-3 btn-open-edit-product"
+                                    <button
+                                        class="small btn btn-outline-secondary rounded-pill btn-sm me-3 btn-open-edit-product"
                                         type="button" data-product='@json($productPayload)'>
                                         <i class="ti tabler-pencil me-1"></i> Edit
                                     </button>
