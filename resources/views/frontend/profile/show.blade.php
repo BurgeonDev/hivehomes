@@ -241,7 +241,7 @@
 
             {{-- Delete Account --}}
             <div class="tab-pane fade" id="delete">
-                <div class="border shadow-sm card border-danger">
+                <div class="border shadow-sm card ">
                     <div class="card-body">
                         <h5 class="mb-4 card-title text-danger">
                             <i class="icon-base ti tabler-trash me-1"></i>

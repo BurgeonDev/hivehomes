@@ -39,6 +39,15 @@
     <script src="{{ asset('assets/vendor/js/helpers.js') }}"></script>
     <script src="{{ asset('assets/vendor/js/template-customizer.js') }}"></script>
     <script src="{{ asset('assets/js/front-config.js') }}"></script>
+    <style>
+        /* Force text to be dark */
+        .notyf__message {
+            color: #7367f0;
+            !important;
+
+            /* dark gray text */
+        }
+    </style>
 </head>
 
 <body>
@@ -75,7 +84,27 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const notyf = new Notyf();
+            const notyf = new Notyf({
+                types: [{
+                        type: 'success',
+                        background: '#c8c4f9', // always white
+                        icon: {
+                            className: 'notyf__icon--success',
+                            tagName: 'i',
+                            color: '#28a745' // green icon
+                        }
+                    },
+                    {
+                        type: 'error',
+                        background: '#fff', // always white
+                        icon: {
+                            className: 'notyf__icon--error',
+                            tagName: 'i',
+                            color: '#dc3545' // red icon
+                        }
+                    }
+                ]
+            });
 
             @if (session('success'))
                 notyf.success("{{ session('success') }}");
