@@ -11,10 +11,12 @@
                 <div class="row g-0 flex-grow-1">
                     <div class="col-5">
                         <a href="{{ route('posts.show', $post->id) }}" class="overflow-hidden d-block rounded-start">
-                            <img src="{{ $post->image ? asset('storage/' . $post->image) : asset('assets/img/pages/app-academy-tutor-1.png') }}"
-                                alt="{{ $post->title }}" class="img-fluid post-img w-100 h-100 object-fit-cover"
-                                style="height:180px;">
+                            @if ($post->image)
+                                <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
+                                    class="img-fluid post-img w-100 h-100 object-fit-cover" style="height:180px;">
+                            @endif
                         </a>
+
                     </div>
                     <div class="col-7">
                         <div class="card-body d-flex flex-column">
