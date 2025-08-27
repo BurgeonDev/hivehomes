@@ -471,6 +471,160 @@
     totalEarningChart.render();
   }
 
+  // Additional Society Charts
+  // Top Societies by Members Bar Chart
+  const topSocietiesMembersChartEl = document.querySelector('#topSocietiesMembersChart');
+  if (topSocietiesMembersChartEl) {
+    const topSocietiesMembersChartConfig = {
+      chart: {
+        height: 250,
+        type: 'bar',
+        toolbar: { show: false }
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: '50%',
+          endingShape: 'rounded'
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      series: [{
+        name: 'Members',
+        data: @json($membersSeries)
+      }],
+      xaxis: {
+        categories: @json($membersLabels),
+        labels: {
+          rotate: -45,
+          style: {
+            colors: labelColor,
+            fontSize: '12px'
+          }
+        }
+      },
+      yaxis: {
+        title: {
+          text: 'Member Count'
+        }
+      },
+      colors: [config.colors.primary],
+      tooltip: {
+        y: {
+          formatter: function (val) {
+            return val + " members";
+          }
+        }
+      }
+    };
+    const topSocietiesMembersChart = new ApexCharts(topSocietiesMembersChartEl, topSocietiesMembersChartConfig);
+    topSocietiesMembersChart.render();
+  }
+
+  // Top Societies by Products Bar Chart
+  const topSocietiesProductsChartEl = document.querySelector('#topSocietiesProductsChart');
+  if (topSocietiesProductsChartEl) {
+    const topSocietiesProductsChartConfig = {
+      chart: {
+        height: 250,
+        type: 'bar',
+        toolbar: { show: false }
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: '50%',
+          endingShape: 'rounded'
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      series: [{
+        name: 'Products',
+        data: @json($productsSeries)
+      }],
+      xaxis: {
+        categories: @json($productsLabels),
+        labels: {
+          rotate: -45,
+          style: {
+            colors: labelColor,
+            fontSize: '12px'
+          }
+        }
+      },
+      yaxis: {
+        title: {
+          text: 'Product Count'
+        }
+      },
+      colors: [config.colors.info],
+      tooltip: {
+        y: {
+          formatter: function (val) {
+            return val + " products";
+          }
+        }
+      }
+    };
+    const topSocietiesProductsChart = new ApexCharts(topSocietiesProductsChartEl, topSocietiesProductsChartConfig);
+    topSocietiesProductsChart.render();
+  }
+
+  // Top Societies by Providers Bar Chart
+  const topSocietiesProvidersChartEl = document.querySelector('#topSocietiesProvidersChart');
+  if (topSocietiesProvidersChartEl) {
+    const topSocietiesProvidersChartConfig = {
+      chart: {
+        height: 250,
+        type: 'bar',
+        toolbar: { show: false }
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: '50%',
+          endingShape: 'rounded'
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      series: [{
+        name: 'Providers',
+        data: @json($providersSeries)
+      }],
+      xaxis: {
+        categories: @json($providersLabels),
+        labels: {
+          rotate: -45,
+          style: {
+            colors: labelColor,
+            fontSize: '12px'
+          }
+        }
+      },
+      yaxis: {
+        title: {
+          text: 'Provider Count'
+        }
+      },
+      colors: [config.colors.success],
+      tooltip: {
+        y: {
+          formatter: function (val) {
+            return val + " providers";
+          }
+        }
+      }
+    };
+    const topSocietiesProvidersChart = new ApexCharts(topSocietiesProvidersChartEl, topSocietiesProvidersChartConfig);
+    topSocietiesProvidersChart.render();
+  }
+
   //  For Datatable
   // --------------------------------------------------------------------
   const dt_project_table = document.querySelector('.datatable-project');
