@@ -110,7 +110,6 @@ class DashboardController extends Controller
         $totalPosts = Post::when(!$isSuper, $queryScope)->count();
         $approvedPosts = Post::where('status', 'approved')->when(!$isSuper, $queryScope)->count();
         $completionRate = $totalPosts > 0 ? round($approvedPosts / $totalPosts * 100) : 0;
-        $approvalRate = $completionRate;
 
         $newPostsThisMonth = Post::whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
             ->when(!$isSuper, $queryScope)
@@ -138,23 +137,24 @@ class DashboardController extends Controller
         }
 
         $totalUsers = $usersCount;
-        $prevMonthUsers = User::whereBetween('created_at', [$prevMonthStart . ' 00:00:00', $prevMonthEnd . ' 23:59:59'])->when(!$isSuper, $queryScope)->count();
-        $usersChange = $prevMonthUsers > 0 ? round(($totalUsers - $prevMonthUsers) / $prevMonthUsers * 100, 1) : 0;
+        $newUsersThisMonth = User::whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
+            ->when(!$isSuper, $queryScope)
+            ->count();
+        $usersPrevTotal = $usersCount - $newUsersThisMonth;
+        $usersChange = $usersPrevTotal > 0 ? round(($newUsersThisMonth / $usersPrevTotal) * 100, 1) : 0;
         $usersChangeClass = $usersChange >= 0 ? 'success' : 'danger';
 
         $newPosts = $newPostsThisMonth;
         $newProducts = Product::whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])->when(!$isSuper, $queryScope)->count();
-        $postsPercentage = $totalThisMonth > 0 ? round($newPosts / $totalThisMonth * 100, 1) : 0;
-        $productsPercentage = $totalThisMonth > 0 ? round($newProducts / $totalThisMonth * 100, 1) : 0;
+        $totalActivitiesThisMonth = $newPosts + $newProducts;
+        $postsPercentage = $totalActivitiesThisMonth > 0 ? round($newPosts / $totalActivitiesThisMonth * 100, 1) : 0;
+        $productsPercentage = $totalActivitiesThisMonth > 0 ? round($newProducts / $totalActivitiesThisMonth * 100, 1) : 0;
 
-        $totalPostsMonthly = $totalThisMonth;
+        $totalPostsMonthly = $newPosts;
         $approvedMonthly = $postsByStatus['approved'] ?? 0;
         $pendingMonthly = $postsByStatus['pending'] ?? 0;
         $rejectedMonthly = $postsByStatus['rejected'] ?? 0;
-
-        $newUsersThisMonth = User::whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
-            ->when(!$isSuper, $queryScope)
-            ->count();
+        $approvalRate = $totalPostsMonthly > 0 ? round($approvedMonthly / $totalPostsMonthly * 100) : 0;
 
         $productsNew = $productsByCondition['new'] ?? 0;
         $productsUsed = $productsByCondition['used'] ?? 0;
