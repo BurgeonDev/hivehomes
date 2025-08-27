@@ -18,8 +18,8 @@ class UserController extends Controller
         if ($user->hasRole('super_admin')) {
             $users = User::with('roles', 'society')->get();
 
-            $activeUsersCount = User::where('status', 'active')->count();
-            $inactiveUsersCount = User::where('status', 'inactive')->count();
+            $activeUsersCount = User::where('is_active', 'active')->count();
+            $inactiveUsersCount = User::where('is_active', 'inactive')->count();
 
             $roles = Role::all();
             $societies = Society::all();
@@ -28,11 +28,11 @@ class UserController extends Controller
                 ->where('society_id', $user->society_id)
                 ->get();
 
-            $activeUsersCount = User::where('status', 'active')
+            $activeUsersCount = User::where('is_active', 'active')
                 ->where('society_id', $user->society_id)
                 ->count();
 
-            $inactiveUsersCount = User::where('status', 'inactive')
+            $inactiveUsersCount = User::where('is_active', 'inactive')
                 ->where('society_id', $user->society_id)
                 ->count();
 
@@ -49,10 +49,6 @@ class UserController extends Controller
         ));
     }
 
-
-
-
-
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -62,7 +58,7 @@ class UserController extends Controller
             'role'     => 'required',
             'phone'    => 'nullable|string|max:20',
             'profile_pic' => 'nullable|image|max:2048',
-            'status'   => 'required|in:active,inactive',
+            'is_active'   => 'required|in:active,inactive',
             'society_id'  => 'required|exists:societies,id',
         ]);
 
@@ -89,7 +85,7 @@ class UserController extends Controller
             'role'         => 'required',
             'phone'        => 'nullable|string|max:20',
             'profile_pic'  => 'nullable|image|max:2048',
-            'status'       => 'required|in:active,inactive',
+            'is_active'       => 'required|in:active,inactive',
             'society_id'  => 'required|exists:societies,id',
         ]);
 

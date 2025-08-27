@@ -106,7 +106,7 @@
                             <th>Phone</th>
                             <th>Society</th>
                             <th>Roles</th>
-                            <th>Status</th>
+                            <th>Active</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -133,8 +133,8 @@
                                 </td>
                                 <td>
                                     <span
-                                        class="badge {{ $user->status === 'active' ? 'badge bg-label-success' : 'badge bg-label-danger' }}">
-                                        {{ ucfirst($user->status) }}
+                                        class="badge {{ $user->is_active === 'active' ? 'badge bg-label-success' : 'badge bg-label-danger' }}">
+                                        {{ ucfirst($user->is_active) }}
                                     </span>
                                 </td>
                                 <td>
@@ -186,7 +186,7 @@
 
                 <div class="mb-3">
                     <label class="form-label" for="user-status">Status</label>
-                    <select name="status" id="user-status" class="form-select">
+                    <select name="is_active" id="user-status" class="form-select">
                         <option value="active">Active</option>
                         <option value="inactive">Inactive</option>
                     </select>
@@ -260,7 +260,7 @@
             $('#user-name').val(user.name);
             $('#user-email').val(user.email);
             $('#user-phone').val(user.phone);
-            $('#user-status').val(user.status);
+            $('#user-status').val(user.is_active);
             $('#user-role').val(role);
             $('#user-password').removeAttr('required').closest('#passwordField').hide();
 

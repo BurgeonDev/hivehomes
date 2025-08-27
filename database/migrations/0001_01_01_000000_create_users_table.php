@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('password');
             $table->unsignedBigInteger('society_id')->nullable();
             $table->string('profile_pic')->nullable();
-            $table->enum('status', ['active', 'inactive'])
+            $table->enum('is_active', ['active', 'inactive'])
                 ->default('inactive');
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();

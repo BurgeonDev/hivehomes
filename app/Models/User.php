@@ -24,7 +24,7 @@ class User extends Authenticatable
         'password',
         'phone',
         'profile_pic',
-        'status',
+        'is_active',
         'society_id'
     ];
 

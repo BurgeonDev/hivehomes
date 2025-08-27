@@ -91,8 +91,8 @@
                                         <li class="gap-2 list-inline-item d-flex align-items-center">
                                             <i class="icon-base ti tabler-circle-dot me-1"></i>
                                             <span
-                                                class="badge {{ $user->status === 'active' ? 'bg-label-success' : 'bg-label-danger' }}">
-                                                {{ ucfirst($user->status) }}
+                                                class="badge {{ $user->is_active === 'active' ? 'bg-label-success' : 'bg-label-danger' }}">
+                                                {{ ucfirst($user->is_active) }}
                                             </span>
                                         </li>
                                     </ul>
