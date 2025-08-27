@@ -33,4 +33,16 @@ class Society extends Model
     {
         return $this->belongsTo(User::class, 'admin_user_id');
     }
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+    public function serviceProviders()
+    {
+        return $this->hasMany(ServiceProvider::class);
+    }
 }

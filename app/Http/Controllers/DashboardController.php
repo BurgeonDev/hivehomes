@@ -159,6 +159,40 @@ class DashboardController extends Controller
         $productsNew = $productsByCondition['new'] ?? 0;
         $productsUsed = $productsByCondition['used'] ?? 0;
 
+        // Additional Society KPIs for Super Admin
+        $topSocietiesMembers = collect();
+        $bottomSocietiesMembers = collect();
+        $topSocietiesProducts = collect();
+        $topSocietiesProviders = collect();
+        $membersLabels = [];
+        $membersSeries = [];
+        $productsLabels = [];
+        $productsSeries = [];
+        $providersLabels = [];
+        $providersSeries = [];
+        $avgMembersPerSociety = 0;
+        $avgProductsPerSociety = 0;
+        $avgProvidersPerSociety = 0;
+
+        if ($isSuper) {
+            $topSocietiesMembers = Society::withCount('users')->orderByDesc('users_count')->take(5)->get();
+            $bottomSocietiesMembers = Society::withCount('users')->orderBy('users_count')->take(5)->get();
+            $topSocietiesProducts = Society::withCount('products')->orderByDesc('products_count')->take(5)->get();
+            $topSocietiesProviders = Society::withCount('serviceProviders')->orderByDesc('service_providers_count')->take(5)->get();
+
+            $membersLabels = $topSocietiesMembers->pluck('name')->toArray();
+            $membersSeries = $topSocietiesMembers->pluck('users_count')->toArray();
+            $productsLabels = $topSocietiesProducts->pluck('name')->toArray();
+            $productsSeries = $topSocietiesProducts->pluck('products_count')->toArray();
+            $providersLabels = $topSocietiesProviders->pluck('name')->toArray();
+            $providersSeries = $topSocietiesProviders->pluck('service_providers_count')->toArray();
+
+            $totalMembers = User::count();
+            $avgMembersPerSociety = $societiesCount > 0 ? round($totalMembers / $societiesCount, 2) : 0;
+            $avgProductsPerSociety = $societiesCount > 0 ? round($totalProducts / $societiesCount, 2) : 0;
+            $avgProvidersPerSociety = $societiesCount > 0 ? round($totalServiceProviders / $societiesCount, 2) : 0;
+        }
+
         return view('admin.dashboard', compact(
             'usersCount',
             'societiesCount',
@@ -204,7 +238,21 @@ class DashboardController extends Controller
             'approvedProviders',
             'pendingProviders',
             'avgApprovalTime',
-            'approvalRate'
+            'approvalRate',
+            'isSuper',
+            'topSocietiesMembers',
+            'bottomSocietiesMembers',
+            'topSocietiesProducts',
+            'topSocietiesProviders',
+            'membersLabels',
+            'membersSeries',
+            'productsLabels',
+            'productsSeries',
+            'providersLabels',
+            'providersSeries',
+            'avgMembersPerSociety',
+            'avgProductsPerSociety',
+            'avgProvidersPerSociety'
         ));
     }
 

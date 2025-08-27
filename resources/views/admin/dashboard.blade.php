@@ -671,6 +671,119 @@
             <!--/ Product Conditions -->
 
         </div>
+
+        @if ($isSuper)
+            <!-- Society Related KPIs and Graphs -->
+            <div class="mt-6 row g-6">
+                <!-- Top 5 Societies by Members -->
+                <div class="col-xl-4 col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header d-flex justify-content-between">
+                            <div class="mb-0 card-title">
+                                <h5 class="mb-1">Top 5 Societies by Members</h5>
+                                <p class="card-subtitle">Avg Members/Society: {{ $avgMembersPerSociety }}</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div id="topSocietiesMembersChart"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top 5 Societies by Products -->
+                <div class="col-xl-4 col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header d-flex justify-content-between">
+                            <div class="mb-0 card-title">
+                                <h5 class="mb-1">Top 5 Societies by Products</h5>
+                                <p class="card-subtitle">Avg Products/Society: {{ $avgProductsPerSociety }}</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div id="topSocietiesProductsChart"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top 5 Societies by Service Providers -->
+                <div class="col-xl-4 col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header d-flex justify-content-between">
+                            <div class="mb-0 card-title">
+                                <h5 class="mb-1">Top 5 Societies by Providers</h5>
+                                <p class="card-subtitle">Avg Providers/Society: {{ $avgProvidersPerSociety }}</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div id="topSocietiesProvidersChart"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom 5 Societies by Members -->
+                <div class="col-xl-4 col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header d-flex justify-content-between">
+                            <div class="mb-0 card-title">
+                                <h5 class="mb-1">Bottom 5 Societies by Members</h5>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled">
+                                @foreach ($bottomSocietiesMembers as $society)
+                                    <li class="mb-2 d-flex justify-content-between">
+                                        <span>{{ $society->name }}</span>
+                                        <span class="fw-medium">{{ $society->users_count }}</span>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top 5 Societies by Products (List) -->
+                <div class="col-xl-4 col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header d-flex justify-content-between">
+                            <div class="mb-0 card-title">
+                                <h5 class="mb-1">Top 5 Societies by Products (List)</h5>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled">
+                                @foreach ($topSocietiesProducts as $society)
+                                    <li class="mb-2 d-flex justify-content-between">
+                                        <span>{{ $society->name }}</span>
+                                        <span class="fw-medium">{{ $society->products_count }}</span>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top 5 Societies by Providers (List) -->
+                <div class="col-xl-4 col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header d-flex justify-content-between">
+                            <div class="mb-0 card-title">
+                                <h5 class="mb-1">Top 5 Societies by Providers (List)</h5>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled">
+                                @foreach ($topSocietiesProviders as $society)
+                                    <li class="mb-2 d-flex justify-content-between">
+                                        <span>{{ $society->name }}</span>
+                                        <span class="fw-medium">{{ $society->service_providers_count }}</span>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 
 @endsection
