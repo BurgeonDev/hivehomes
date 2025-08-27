@@ -47,19 +47,4 @@ class Product extends Model
     {
         return $this->hasOne(ProductImage::class)->where('is_primary', true);
     }
-
-    // Scopes
-    public function scopeApproved($q)
-    {
-        return $q->where('status', 'approved');
-    }
-    public function scopeForSociety($q, $societyId)
-    {
-        return $q->where('society_id', $societyId);
-    }
-    public function scopeSearch($q, $term)
-    {
-        if (!$term) return $q;
-        return $q->where('title', 'like', "%{$term}%")->orWhere('description', 'like', "%{$term}%");
-    }
 }

@@ -1,12 +1,12 @@
-<!-- Product Modal -->
+<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 <div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-simple modal-dialog-centered">
         <div class="modal-content">
             <form id="productForm" method="POST" action="{{ route('products.store') }}" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="_method" id="productFormMethod" value="POST">
                 <input type="hidden" name="id" id="productId">
-                <input type="hidden" id="prod-society" name="society_id">
+
 
                 <div class="modal-header">
                     <h5 class="modal-title" id="productModalTitle">Add Product</h5>
@@ -77,14 +77,19 @@
                     @role('super_admin')
                         <div class="mb-3">
                             <label class="form-label">Society</label>
-                            <select name="society_id" id="prod-society" class="form-select">
+                            <select id="prod-society" name="society_id" class="form-control">
                                 <option value="">-- Select Society --</option>
                                 @foreach ($societies as $society)
                                     <option value="{{ $society->id }}">{{ $society->name }}</option>
                                 @endforeach
                             </select>
+
                         </div>
+                    @else
+                        {{-- Normal users: keep their society_id fixed --}}
+                        <input type="hidden" name="society_id" value="{{ auth()->user()->society_id }}">
                     @endrole
+
 
                 </div>
 
