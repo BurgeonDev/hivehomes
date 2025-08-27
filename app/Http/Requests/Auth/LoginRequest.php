@@ -52,8 +52,27 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        $user = Auth::user();
+
+        // 🚫 Block if user is inactive
+        if (! $user->is_active) {
+            Auth::logout();
+            throw ValidationException::withMessages([
+                'email' => 'Your account is inactive. Please contact support.',
+            ]);
+        }
+
+        // 🚫 Block if user's society is inactive
+        if ($user->society && ! $user->society->is_active) {
+            Auth::logout();
+            throw ValidationException::withMessages([
+                'email' => 'Your society is inactive. Please contact administrator.',
+            ]);
+        }
+
         RateLimiter::clear($this->throttleKey());
     }
+
 
 
     /**
