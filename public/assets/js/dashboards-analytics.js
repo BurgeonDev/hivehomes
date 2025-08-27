@@ -27,99 +27,58 @@
     });
   }
 
-  // Average Daily Sales
+  // Average Daily Posts
   // --------------------------------------------------------------------
-  const averageDailySalesEl = document.querySelector('#averageDailySales'),
-    averageDailySalesConfig = {
-      chart: {
-        height: 105,
-        type: 'area',
-        toolbar: {
-          show: false
-        },
-        sparkline: {
-          enabled: true
-        }
-      },
-      markers: {
-        colors: 'transparent',
-        strokeColors: 'transparent'
-      },
-      grid: {
-        show: false
-      },
-      colors: [config.colors.success],
-      fill: {
-        type: 'gradient',
-        gradient: {
-          shadeIntensity: 1,
-          opacityFrom: 0.4,
-          gradientToColors: [config.colors.cardColor],
-          opacityTo: 0.1,
-          stops: [0, 100]
-        }
-      },
-      dataLabels: {
-        enabled: false
-      },
-      stroke: {
-        width: 2,
-        curve: 'smooth'
-      },
-      series: [
-        {
-          data: [500, 160, 930, 670]
-        }
-      ],
-      xaxis: {
-        show: true,
-        lines: {
-          show: false
-        },
-        labels: {
-          show: false
-        },
-        stroke: {
-          width: 0
-        },
-        axisBorder: {
-          show: false
-        }
-      },
-      yaxis: {
-        stroke: {
-          width: 0
-        },
-        show: false
-      },
-      tooltip: {
-        enabled: false
-      },
-      responsive: [
-        {
-          breakpoint: 1387,
-          options: {
-            chart: {
-              height: 80
-            }
-          }
-        },
-        {
-          breakpoint: 1200,
-          options: {
-            chart: {
-              height: 123
-            }
-          }
-        }
-      ]
-    };
-  if (typeof averageDailySalesEl !== undefined && averageDailySalesEl !== null) {
-    const averageDailySales = new ApexCharts(averageDailySalesEl, averageDailySalesConfig);
-    averageDailySales.render();
-  }
 
-  // Earning Reports Bar Chart
+    const averageDailySalesEl = document.querySelector('#averageDailySales'),
+      averageDailySalesConfig = {
+        chart: {
+          height: 105,
+          type: 'area',
+          toolbar: { show: false },
+          sparkline: { enabled: true }
+        },
+        markers: { colors: 'transparent', strokeColors: 'transparent' },
+        grid: { show: false },
+        colors: [config.colors.success],
+        fill: {
+          type: 'gradient',
+          gradient: {
+            shadeIntensity: 1,
+            opacityFrom: 0.4,
+            gradientToColors: [config.colors.cardColor],
+            opacityTo: 0.1,
+            stops: [0, 100]
+          }
+        },
+        dataLabels: { enabled: false },
+        stroke: { width: 2, curve: 'smooth' },
+        series: [
+          { data: @json($series) }
+        ],
+        xaxis: {
+          categories: @json($labels),
+          show: true,
+          lines: { show: false },
+          labels: { show: false },
+          stroke: { width: 0 },
+          axisBorder: { show: false }
+        },
+        yaxis: { stroke: { width: 0 }, show: false },
+        tooltip: { enabled: true, y: { formatter: v => v } }, // enable tooltip to inspect values
+        responsive: [
+          { breakpoint: 1387, options: { chart: { height: 80 } } },
+          { breakpoint: 1200, options: { chart: { height: 123 } } }
+        ]
+      };
+
+    if (typeof averageDailySalesEl !== 'undefined' && averageDailySalesEl !== null) {
+      const averageDailySales = new ApexCharts(averageDailySalesEl, averageDailySalesConfig);
+      averageDailySales.render();
+    }
+  })();
+
+  // Weekly Posts Bar Chart
   // --------------------------------------------------------------------
   const weeklyEarningReportsEl = document.querySelector('#weeklyEarningReports'),
     weeklyEarningReportsConfig = {
@@ -164,14 +123,14 @@
       },
       series: [
         {
-          data: [40, 65, 50, 45, 90, 55, 70]
+          data: @json($weeklyPosts)
         }
       ],
       legend: {
         show: false
       },
       xaxis: {
-        categories: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
+        categories: @json($weeklyLabels),
         axisBorder: {
           show: false
         },
@@ -222,12 +181,12 @@
     weeklyEarningReports.render();
   }
 
-  // Support Tracker - Radial Bar Chart
+  // Post Tracker - Radial Bar Chart
   // --------------------------------------------------------------------
   const supportTrackerEl = document.querySelector('#supportTracker'),
     supportTrackerOptions = {
-      series: [85],
-      labels: ['Completed Task'],
+      series: [@json($completionRate)],
+      labels: ['Approved Posts'],
       chart: {
         height: 337,
         type: 'radialBar'
@@ -320,7 +279,7 @@
     supportTracker.render();
   }
 
-  // Total Earning Chart - Bar Chart
+  // Total Posts & Products Chart - Bar Chart
   // --------------------------------------------------------------------
   const totalEarningChartEl = document.querySelector('#totalEarningChart'),
     totalEarningChartOptions = {
@@ -333,12 +292,12 @@
       },
       series: [
         {
-          name: 'Earning',
-          data: [300, 200, 350, 150, 250, 325, 250, 270]
+          name: 'Posts',
+          data: @json($monthlyPosts)
         },
         {
-          name: 'Expense',
-          data: [-180, -225, -180, -280, -125, -200, -125, -150]
+          name: 'Products',
+          data: @json($monthlyProducts)
         }
       ],
       tooltip: {
@@ -383,6 +342,7 @@
         }
       },
       xaxis: {
+        categories: @json($monthlyLabels),
         labels: {
           show: false
         },
@@ -518,9 +478,9 @@
   if (dt_project_table) {
     let tableTitle = document.createElement('h5');
     tableTitle.classList.add('card-title', 'mb-0', 'text-md-start', 'text-center', 'pt-md-0', 'pt-6');
-    tableTitle.innerHTML = 'Project List';
+    tableTitle.innerHTML = 'Post List';
     var dt_project = new DataTable(dt_project_table, {
-      ajax: assetsPath + 'json/user-profile.json', // JSON file to add data
+      ajax: '{{ route("dashboard.projectsJson") }}', // Assume route name 'dashboard.projectsJson'
       columns: [
         { data: 'id' },
         { data: 'id', orderable: false, render: DataTable.render.select() },
@@ -568,7 +528,7 @@
             if (userImg) {
               // For Avatar image
               output =
-                '<img src="' + assetsPath + 'img/icons/brands/' + userImg + '" alt="Avatar" class="rounded-circle">';
+                '<img src="' + userImg + '" alt="Avatar" class="rounded-circle">';
             } else {
               // For Avatar badge
               var stateNum = Math.floor(Math.random() * 6);
@@ -599,7 +559,7 @@
           }
         },
         {
-          // Task
+          // Author
           targets: 3,
           render: function (data, type, full, meta) {
             var task = full['project_leader'];
@@ -607,7 +567,7 @@
           }
         },
         {
-          // Teams
+          // Teams (empty)
           targets: 4,
           orderable: false,
           searchable: false,
@@ -648,7 +608,7 @@
           }
         },
         {
-          // Label
+          // Status progress
           targets: -2,
           render: function (data, type, full, meta) {
             const statusNumber = full['status'];
@@ -695,7 +655,7 @@
         },
         topEnd: {
           search: {
-            placeholder: 'Search Project',
+            placeholder: 'Search Post',
             text: '_INPUT_'
           }
         },

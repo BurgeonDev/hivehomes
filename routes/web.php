@@ -13,7 +13,8 @@ use App\Http\Controllers\{
     StateController,
     UserController,
     ServiceProviderController,
-    ProductController
+    ProductController,
+    DashboardController
 };
 use App\Http\Controllers\Admin\{
     ContactController,
@@ -48,7 +49,9 @@ Route::middleware('auth')->group(function () {
 });
 
 // Authenticated Dashboard
-Route::middleware(['auth', 'verified'])->get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
+// Route::middleware(['auth', 'verified'])->get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
 
 // Profile
 Route::middleware('auth')->group(function () {
