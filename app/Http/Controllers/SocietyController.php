@@ -78,4 +78,19 @@ class SocietyController extends Controller
         $societies = Society::where('city_id', $city_id)->get();
         return response()->json($societies);
     }
+    public function updateStatus(Request $request, Society $society)
+    {
+        $request->validate([
+            'status' => 'required|boolean'
+        ]);
+
+        $society->is_active = $request->status;
+        $society->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Society status updated successfully.',
+            'status' => $society->is_active
+        ]);
+    }
 }

@@ -71,6 +71,7 @@ Route::middleware('auth')->group(function () {
         ->name('providers.reviews.store');
     // Roles users data
     Route::get('roles/users/data', [RoleController::class, 'usersData'])->name('roles.users.data');
+    Route::patch('/societies/{society}/status', [SocietyController::class, 'updateStatus'])->name('societies.update-status');
 });
 
 // Admin Backend

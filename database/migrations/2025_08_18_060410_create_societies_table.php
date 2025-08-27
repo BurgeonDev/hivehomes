@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('country_id');
             $table->string('logo')->nullable();
             $table->unsignedBigInteger('admin_user_id')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

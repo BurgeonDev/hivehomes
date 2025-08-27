@@ -70,6 +70,7 @@
                             <th>State</th>
                             <th>Country</th>
                             <th>Admin</th>
+                            <th>Active</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -89,6 +90,19 @@
                                 <td>{{ $society->state->name ?? '-' }}</td>
                                 <td>{{ $society->country->name ?? '-' }}</td>
                                 <td>{{ $society->admin->name ?? '-' }}</td>
+                                <td style="min-width: 100px;">
+                                    <label class="switch switch-sm me-0">
+                                        <input type="checkbox" class="switch-input status-toggle"
+                                            data-society-id="{{ $society->id }}"
+                                            {{ $society->is_active ? 'checked' : '' }}>
+                                        <span class="switch-toggle-slider">
+                                            <span class="switch-on"></span>
+                                            <span class="switch-off"></span>
+                                        </span>
+                                    </label>
+                                </td>
+
+
                                 <td>
                                     <button class="btn btn-sm badge bg-label-info"
                                         onclick='editSociety(@json($society))'> <i
@@ -181,6 +195,7 @@
     <script src="{{ asset('assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.js') }}"></script>
+    <script src="{{ asset('assets/js/form-basic-inputs.js') }}"></script>
     <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
 @endsection
 
@@ -267,6 +282,37 @@
             acceptedFileTypes: ['image/png', 'image/jpeg', 'image/jpg'],
             maxFileSize: '2MB',
             storeAsFile: true // 👈 IMPORTANT: This tells FilePond to behave like a normal file input
+        });
+    </script>
+    <script>
+        $(document).on('change', '.status-toggle', function() {
+            const $toggle = $(this);
+            const societyId = $toggle.data('society-id');
+            const newStatus = $toggle.is(':checked') ? 1 : 0;
+
+            $.ajax({
+                url: `/societies/${societyId}/status`,
+                method: 'PATCH',
+                data: {
+                    status: newStatus,
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(res) {
+                    if (res.success) {
+                        const label = $toggle.closest('.form-check').find('.form-check-label');
+                        label.text(res.status ? 'Active' : 'Inactive');
+
+                        notyf.success(res.message || 'Status updated successfully.');
+                    } else {
+                        notyf.error(res.message || 'Failed to update status.');
+                    }
+                },
+                error: function() {
+                    notyf.error('An error occurred. Please try again.');
+                    // revert toggle if error
+                    $toggle.prop('checked', !$toggle.is(':checked'));
+                }
+            });
         });
     </script>
 

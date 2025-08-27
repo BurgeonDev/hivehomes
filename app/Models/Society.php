@@ -13,7 +13,8 @@ class Society extends Model
         'state_id',
         'country_id',
         'logo',
-        'admin_user_id'
+        'admin_user_id',
+        'is_active'
     ];
 
     public function city()
