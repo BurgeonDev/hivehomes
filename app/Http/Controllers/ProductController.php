@@ -115,7 +115,30 @@ class ProductController extends Controller
                 'page'
             ]));
 
-        $categories = ProductCategory::orderBy('name')->get();
+        if ($isSuperAdmin) {
+            // Super admin: count all approved products
+            $categories = ProductCategory::withCount([
+                'products as approved_count' => function ($q) {
+                    $q->where('status', 'approved');
+                }
+            ])->orderBy('name')->get();
+
+            $approvedCount = Product::where('status', 'approved')->count();
+        } else {
+            // Member: count only approved products from their own society
+            $categories = ProductCategory::withCount([
+                'products as approved_count' => function ($q) use ($user) {
+                    $q->where('status', 'approved')
+                        ->where('society_id', $user->society_id);
+                }
+            ])->orderBy('name')->get();
+
+            $approvedCount = Product::where('status', 'approved')
+                ->where('society_id', $user->society_id)
+                ->count();
+        }
+
+
 
         // If AJAX — return only the product grid wrapper (fragment) to be injected client-side
         if ($request->ajax()) {
@@ -123,11 +146,10 @@ class ProductController extends Controller
         }
 
 
-        // Regular full page render
         return view('frontend.products.index', [
-            'products'     => $products,
-            'categories'   => $categories,
-            'filters'      => $request->only([
+            'products'      => $products,
+            'categories'    => $categories,
+            'filters'       => $request->only([
                 'search',
                 'category_id',
                 'price_min',
@@ -138,9 +160,9 @@ class ProductController extends Controller
                 'is_featured',
                 'per_page'
             ]),
-            'isSuperAdmin' => $isSuperAdmin,
-            'approvedCount' => Product::where('status', 'approved')->count(),
-            'societies' => Society::all()
+            'isSuperAdmin'  => $isSuperAdmin,
+            'approvedCount' => $approvedCount,
+            'societies'     => $isSuperAdmin ? Society::all() : collect([$user->society])
         ]);
     }
 
