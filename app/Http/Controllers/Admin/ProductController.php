@@ -16,17 +16,38 @@ class ProductController extends Controller
         $user = $request->user();
         $query = Product::with(['seller', 'society', 'primaryImage', 'images'])->latest();
 
+        // Restrict products for society admin
         if ($user->hasRole('society_admin')) {
             $query->where('society_id', $user->society_id);
         }
 
-        $societies  = auth()->user()->hasRole('super_admin')
-            ? Society::all()
-            : collect();
+        // Super admin can see all societies
+        $societies = $user->hasRole('super_admin') ? Society::all() : collect();
         $products   = $query->paginate(30);
         $categories = ProductCategory::all();
 
-        return view('admin.products.index', compact('products', 'categories', 'societies'));
+        // Define isSuperAdmin
+        $isSuperAdmin = $user->hasRole('super_admin');
+
+        // Product counts by status
+        if ($isSuperAdmin) {
+            $approvedCount   = Product::where('status', 'approved')->count();
+            $unapprovedCount = Product::where('status', 'pending')->count();
+            $rejectedCount   = Product::where('status', 'rejected')->count();
+        } else {
+            $approvedCount   = Product::where('status', 'approved')->where('society_id', $user->society_id)->count();
+            $unapprovedCount = Product::where('status', 'pending')->where('society_id', $user->society_id)->count();
+            $rejectedCount   = Product::where('status', 'rejected')->where('society_id', $user->society_id)->count();
+        }
+
+        return view('admin.products.index', compact(
+            'products',
+            'categories',
+            'societies',
+            'approvedCount',
+            'unapprovedCount',
+            'rejectedCount'
+        ));
     }
 
 

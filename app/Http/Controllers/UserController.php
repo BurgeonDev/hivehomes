@@ -13,29 +13,42 @@ class UserController extends Controller
 {
     public function index()
     {
-        // Super Admin sees all users; Society Admin & Members see only their own society’s users
-        if (auth()->user()->hasRole('super_admin')) {
+        $user = auth()->user();
+
+        if ($user->hasRole('super_admin')) {
             $users = User::with('roles', 'society')->get();
+
+            $activeUsersCount = User::where('status', 'active')->count();
+            $inactiveUsersCount = User::where('status', 'inactive')->count();
+
+            $roles = Role::all();
+            $societies = Society::all();
         } else {
             $users = User::with('roles', 'society')
-                ->where('society_id', auth()->user()->society_id)
+                ->where('society_id', $user->society_id)
                 ->get();
-        }
 
-        // Super Admin sees all roles; others only “member”
-        if (auth()->user()->hasRole('super_admin')) {
-            $roles = Role::all();
-        } else {
+            $activeUsersCount = User::where('status', 'active')
+                ->where('society_id', $user->society_id)
+                ->count();
+
+            $inactiveUsersCount = User::where('status', 'inactive')
+                ->where('society_id', $user->society_id)
+                ->count();
+
             $roles = Role::where('name', 'member')->get();
+            $societies = collect(); // empty for non-superadmin
         }
 
-        // Societies for Super Admin only (for the create form)
-        $societies = auth()->user()->hasRole('super_admin')
-            ? Society::all()
-            : collect();
-
-        return view('admin.users.index', compact('users', 'roles', 'societies'));
+        return view('admin.users.index', compact(
+            'users',
+            'roles',
+            'societies',
+            'activeUsersCount',
+            'inactiveUsersCount'
+        ));
     }
+
 
 
 

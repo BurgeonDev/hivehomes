@@ -19,13 +19,46 @@ class PostController extends Controller
 
     public function index()
     {
-        $posts      = Post::with('user', 'society', 'category')->latest()->get();
+        $user = auth()->user();
+
+        $posts = Post::with('user', 'society', 'category')->latest()->get();
         $categories = Category::all();
-        $societies  = auth()->user()->hasRole('super_admin')
-            ? Society::all()
-            : collect();
-        return view('admin.posts.index', compact('posts', 'categories', 'societies'));
+        $societies = $user->hasRole('super_admin') ? Society::all() : collect();
+
+        if ($user->hasRole('super_admin')) {
+            $approvedCount = Post::where('status', 'approved')->count();
+            $pendingCount  = Post::where('status', 'pending')->count();
+            $rejectedCount = Post::where('status', 'rejected')->count();
+            $expiredCount  = Post::where('status', 'expired')->count();
+        } else {
+            $approvedCount = Post::where('status', 'approved')
+                ->where('society_id', $user->society_id)
+                ->count();
+
+            $pendingCount = Post::where('status', 'pending')
+                ->where('society_id', $user->society_id)
+                ->count();
+
+            $rejectedCount = Post::where('status', 'rejected')
+                ->where('society_id', $user->society_id)
+                ->count();
+
+            $expiredCount = Post::where('status', 'expired')
+                ->where('society_id', $user->society_id)
+                ->count();
+        }
+
+        return view('admin.posts.index', compact(
+            'posts',
+            'categories',
+            'societies',
+            'approvedCount',
+            'pendingCount',
+            'rejectedCount',
+            'expiredCount'
+        ));
     }
+
 
     public function store(StorePostRequest $request)
     {

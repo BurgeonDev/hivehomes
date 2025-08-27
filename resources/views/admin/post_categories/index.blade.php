@@ -57,7 +57,6 @@
                         <tr>
                             <th>#</th>
                             <th>Category</th>
-                            <th>Posts Count</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -66,7 +65,6 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $category->name }}</td>
-                                <td>{{ $category->posts_count ?? 0 }}</td>
                                 <td>
                                     <button class="btn btn-sm badge bg-label-info"
                                         onclick="editCategory({{ $category }})">

@@ -19,6 +19,72 @@
                 <li class="breadcrumb-item active">Products</li>
             </ol>
         </nav>
+        <div class="mb-6 row g-6">
+            <div class="col-sm-6 col-xl-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div class="content-left">
+                                <span class="text-heading">Approved Posts</span>
+                                <div class="my-1 d-flex align-items-center">
+                                    <h4 class="mb-0 me-2">{{ $approvedCount }}</h4>
+                                </div>
+                                <small class="mb-0">Total approved listings</small>
+                            </div>
+                            <div class="avatar">
+                                <span class="rounded avatar-initial bg-label-success">
+                                    <i class="icon-base ti tabler-check icon-26px"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-xl-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div class="content-left">
+                                <span class="text-heading">Pending Posts</span>
+                                <div class="my-1 d-flex align-items-center">
+                                    <h4 class="mb-0 me-2">{{ $unapprovedCount }}</h4>
+                                </div>
+                                <small class="mb-0">Awaiting approval</small>
+                            </div>
+                            <div class="avatar">
+                                <span class="rounded avatar-initial bg-label-warning">
+                                    <i class="icon-base ti tabler-clock icon-26px"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-xl-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div class="content-left">
+                                <span class="text-heading">Rejected Posts</span>
+                                <div class="my-1 d-flex align-items-center">
+                                    <h4 class="mb-0 me-2">{{ $rejectedCount }}</h4>
+                                </div>
+                                <small class="mb-0">Posts declined</small>
+                            </div>
+                            <div class="avatar">
+                                <span class="rounded avatar-initial bg-label-danger">
+                                    <i class="icon-base ti tabler-x icon-26px"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
 
         {{-- Card & Table --}}
         <div class="card">
@@ -100,9 +166,11 @@
                                         data-product-id="{{ $p->id }}">
                                         <option value="pending" {{ $p->status === 'pending' ? 'selected' : '' }}>Pending
                                         </option>
-                                        <option value="approved" {{ $p->status === 'approved' ? 'selected' : '' }}>Approved
+                                        <option value="approved" {{ $p->status === 'approved' ? 'selected' : '' }}>
+                                            Approved
                                         </option>
-                                        <option value="rejected" {{ $p->status === 'rejected' ? 'selected' : '' }}>Rejected
+                                        <option value="rejected" {{ $p->status === 'rejected' ? 'selected' : '' }}>
+                                            Rejected
                                         </option>
                                     </select>
                                 </td>

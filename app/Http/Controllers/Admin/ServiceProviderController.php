@@ -17,30 +17,40 @@ class ServiceProviderController extends Controller
      */
     public function index(Request $request)
     {
-        // Load societies for the dropdown if super-admin
         $isSuperAdmin = $request->user()->hasRole('super_admin');
-        $allSocieties = $isSuperAdmin
-            ? Society::all()
-            : collect();
 
-        // Build the base query
+        $allSocieties = $isSuperAdmin ? Society::all() : collect();
+
         $query = ServiceProvider::query();
 
         if ($isSuperAdmin) {
-            // If they picked a society in the dropdown, filter it:
             if ($request->filled('society_id')) {
                 $query->where('society_id', $request->input('society_id'));
             }
-            // else no where() → returns all
         } else {
-            // Non-super-admin → force their own society
             $query->where('society_id', $request->user()->society_id);
         }
 
+        // Clone base query for counts
+        $activeCount     = (clone $query)->where('is_active', true)->count();
+        $inactiveCount   = (clone $query)->where('is_active', false)->count();
+        $approvedCount   = (clone $query)->where('is_approved', true)->count();
+        $unapprovedCount = (clone $query)->where('is_approved', false)->count();
+
         $providers = $query->orderBy('created_at', 'desc')->get();
-        $types = ServiceProviderType::all();
-        return view('admin.service_providers.index', compact('providers', 'allSocieties', 'types'));
+        $types     = ServiceProviderType::all();
+
+        return view('admin.service_providers.index', compact(
+            'providers',
+            'allSocieties',
+            'types',
+            'activeCount',
+            'inactiveCount',
+            'approvedCount',
+            'unapprovedCount'
+        ));
     }
+
 
 
     /**

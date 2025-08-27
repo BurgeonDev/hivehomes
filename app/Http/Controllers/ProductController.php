@@ -140,6 +140,7 @@ class ProductController extends Controller
 
 
 
+
         // If AJAX — return only the product grid wrapper (fragment) to be injected client-side
         if ($request->ajax()) {
             return view('frontend.products.partials.product-list', compact('products'))->render();

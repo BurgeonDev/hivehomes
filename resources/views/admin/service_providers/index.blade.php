@@ -16,6 +16,91 @@
                 <li class="breadcrumb-item active">Service Providers</li>
             </ol>
         </nav>
+        <div class="mb-6 row g-6">
+            <div class="col-sm-6 col-xl-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div class="content-left">
+                                <span class="text-heading">Active Providers</span>
+                                <div class="my-1 d-flex align-items-center">
+                                    <h4 class="mb-0 me-2">{{ $activeCount }}</h4>
+                                </div>
+                                <small class="mb-0">Currently providing services</small>
+                            </div>
+                            <div class="avatar">
+                                <span class="rounded avatar-initial bg-label-success">
+                                    <i class="icon-base ti tabler-user-check icon-26px"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-xl-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div class="content-left">
+                                <span class="text-heading">Inactive Providers</span>
+                                <div class="my-1 d-flex align-items-center">
+                                    <h4 class="mb-0 me-2">{{ $inactiveCount }}</h4>
+                                </div>
+                                <small class="mb-0">Disabled or suspended</small>
+                            </div>
+                            <div class="avatar">
+                                <span class="rounded avatar-initial bg-label-danger">
+                                    <i class="icon-base ti tabler-user-x icon-26px"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-xl-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div class="content-left">
+                                <span class="text-heading">Approved Providers</span>
+                                <div class="my-1 d-flex align-items-center">
+                                    <h4 class="mb-0 me-2">{{ $approvedCount }}</h4>
+                                </div>
+                                <small class="mb-0">Verified by admin</small>
+                            </div>
+                            <div class="avatar">
+                                <span class="rounded avatar-initial bg-label-primary">
+                                    <i class="icon-base ti tabler-check icon-26px"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-xl-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div class="content-left">
+                                <span class="text-heading">Unapproved Providers</span>
+                                <div class="my-1 d-flex align-items-center">
+                                    <h4 class="mb-0 me-2">{{ $unapprovedCount }}</h4>
+                                </div>
+                                <small class="mb-0">Awaiting admin review</small>
+                            </div>
+                            <div class="avatar">
+                                <span class="rounded avatar-initial bg-label-warning">
+                                    <i class="icon-base ti tabler-clock icon-26px"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="card">
             {{-- Header --}}

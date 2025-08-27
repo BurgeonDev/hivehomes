@@ -9,13 +9,57 @@
 
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
-
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
                 <li class="breadcrumb-item active">Users</li>
             </ol>
         </nav>
+
+        <div class="mb-6 row g-6">
+            <div class="col-sm-6 col-xl-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div class="content-left">
+                                <span class="text-heading">Active Users</span>
+                                <div class="my-1 d-flex align-items-center">
+                                    <h4 class="mb-0 me-2">{{ $activeUsersCount }}</h4>
+                                </div>
+                                <small class="mb-0">Currently active members</small>
+                            </div>
+                            <div class="avatar">
+                                <span class="rounded avatar-initial bg-label-success">
+                                    <i class="icon-base ti tabler-user-check icon-26px"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-xl-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div class="content-left">
+                                <span class="text-heading">Inactive Users</span>
+                                <div class="my-1 d-flex align-items-center">
+                                    <h4 class="mb-0 me-2">{{ $inactiveUsersCount }}</h4>
+                                </div>
+                                <small class="mb-0">Currently inactive members</small>
+                            </div>
+                            <div class="avatar">
+                                <span class="rounded avatar-initial bg-label-danger">
+                                    <i class="icon-base ti tabler-user-off icon-26px"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <div class="card">
             <!-- Card Header -->
