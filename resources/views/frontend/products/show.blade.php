@@ -119,10 +119,16 @@
 
                                 </div>
                             @else
-                                <figure class="mb-4">
-                                    <img src="{{ asset('assets/img/placeholder-hero.png') }}" alt="{{ $product->title }}"
-                                        class="rounded w-100" style="height: 420px; object-fit: cover;">
+                                <figure class="mb-4 rounded w-100 d-flex align-items-center justify-content-center"
+                                    style="height: 420px;
+           background: linear-gradient(135deg, #e0e0e0, #f5f5f5);
+           color: #555;
+           font-size: 1.25rem;
+           font-weight: 600;
+           text-align: center;">
+                                    {{ $product->title }}
                                 </figure>
+
                             @endif
 
 
