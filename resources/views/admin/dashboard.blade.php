@@ -5,6 +5,9 @@
 @endsection
 @section('page-css')
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/cards-advance.css') }}" />
+    <!-- add this once in your layout (before any chart initialization scripts) -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
 @endsection
 
 @section('content')
@@ -306,59 +309,50 @@
                 </div>
             </div>
             <!--/ Weekly Posts Reports -->
-
-            <!-- Post Tracker -->
-            <div class="col-12 col-md-6">
-                <div class="card h-100">
+            <!-- keep your original card HTML exactly as you had -->
+            <!-- Line Area Chart (keeps design equal) -->
+            <div class="col-12">
+                <div class="card">
                     <div class="card-header d-flex justify-content-between">
-                        <div class="mb-0 card-title">
-                            <h5 class="mb-1">Post Tracker</h5>
-                            <p class="card-subtitle">Last 7 Days</p>
+                        <div>
+                            <h5 class="mb-0 card-title">Last updates</h5>
+                            <p class="my-0 card-subtitle">Commercial networks</p>
                         </div>
-
-                    </div>
-                    <div class="card-body row">
-                        <div class="col-12 col-sm-4">
-                            <div class="mb-2 mt-lg-4 mt-lg-2 mb-lg-6">
-                                <h2 class="mb-0">{{ $totalPosts }}</h2>
-                                <p class="mb-0">Total Posts</p>
-                            </div>
-                            <ul class="p-0 m-0">
-                                <li class="gap-4 pb-1 d-flex align-items-center mb-lg-3">
-                                    <div class="rounded badge bg-label-primary p-1_5">
-                                        <i class="icon-base ti tabler-ticket icon-md"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0 text-nowrap">New Posts</h6>
-                                        <small class="text-body-secondary">{{ $newPostsThisMonth }}</small>
-                                    </div>
+                        <div class="dropdown">
+                            <button type="button" class="px-0 btn dropdown-toggle" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <i class="icon-base ti tabler-calendar"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a href="javascript:void(0);"
+                                        class="dropdown-item d-flex align-items-center">Today</a></li>
+                                <li><a href="javascript:void(0);"
+                                        class="dropdown-item d-flex align-items-center">Yesterday</a></li>
+                                <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Last 7
+                                        Days</a></li>
+                                <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Last 30
+                                        Days</a></li>
+                                <li>
+                                    <hr class="dropdown-divider" />
                                 </li>
-                                <li class="gap-4 pb-1 d-flex align-items-center mb-lg-3">
-                                    <div class="rounded badge bg-label-info p-1_5">
-                                        <i class="icon-base ti tabler-circle-check icon-md"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0 text-nowrap">Pending Posts</h6>
-                                        <small class="text-body-secondary">{{ $pendingPosts }}</small>
-                                    </div>
-                                </li>
-                                <li class="gap-4 pb-1 d-flex align-items-center">
-                                    <div class="rounded badge bg-label-info p-1_5">
-                                        <i class="icon-base ti tabler-clock icon-md"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0 text-nowrap">Avg Response Time</h6>
-                                        <small class="text-body-secondary">{{ $avgResponseTime }} Days</small>
-                                    </div>
-                                </li>
+                                <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Current
+                                        Month</a></li>
+                                <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Last
+                                        Month</a></li>
                             </ul>
                         </div>
-                        <div class="col-12 col-md-8">
-                            <div id="supportTracker"></div>
-                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- keep id the same as before — script will find this or fallback to #lineChart -->
+                        <div id="lineAreaChart"></div>
                     </div>
                 </div>
             </div>
+            <!-- /Line Area Chart -->
+
+
+
+
             <!--/ Post Tracker -->
 
             <!-- Posts by Status -->
@@ -820,4 +814,5 @@
 @section('page-js')
     {{-- <script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script> --}}
     @include('admin.dashboard.script')
+    @include('admin.dashboard.line-chart')
 @endsection

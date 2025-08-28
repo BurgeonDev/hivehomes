@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Society;
 use App\Models\User;
 use App\Models\ServiceProvider;
+use App\Services\DashboardService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -277,9 +278,10 @@ class DashboardController extends Controller
             $avgProductsPerSociety = $societiesCount > 0 ? round($totalProducts / $societiesCount, 2) : 0;
             $avgProvidersPerSociety = $societiesCount > 0 ? round($totalServiceProviders / $societiesCount, 2) : 0;
         }
-
+        $growth = DashboardService::growthData(12, $societyId);
         return view('admin.dashboard', compact(
             'usersCount',
+            'growth',
             'societiesCount',
             'postsByStatus',
             'productsByCondition',
