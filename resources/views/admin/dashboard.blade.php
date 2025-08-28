@@ -173,7 +173,8 @@
                         <small class="text-muted">Avg/day: {{ number_format($avgPerDay, 2) }}</small>
                     </div>
                     <div class="px-0 card-body">
-                        <div id="averageDailySales"></div>
+                        <div id="averageDailyPosts"></div>
+
                     </div>
                 </div>
             </div>
@@ -824,8 +825,8 @@
 
 @endsection
 @section('page-js')
-    {{-- <script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script> --}}
-    @include('admin.dashboard.script')
+    <script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script>
+    {{-- @include('admin.dashboard.script') --}}
     @include('admin.dashboard.radial-chart')
     @include('admin.dashboard.line-chart')
 @endsection

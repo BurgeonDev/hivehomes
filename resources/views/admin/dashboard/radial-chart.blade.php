@@ -105,3 +105,98 @@
             });
     });
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const averageDailyPostsEl = document.querySelector('#averageDailyPosts');
+
+        if (averageDailyPostsEl) {
+            const seriesData = @json($series); // from Controller
+            const labels = @json($labels); // dates (for x-axis if needed)
+
+            const averageDailyPostsConfig = {
+                chart: {
+                    height: 105,
+                    type: 'area',
+                    toolbar: {
+                        show: false
+                    },
+                    sparkline: {
+                        enabled: true
+                    }
+                },
+                markers: {
+                    colors: 'transparent',
+                    strokeColors: 'transparent'
+                },
+                grid: {
+                    show: false
+                },
+                colors: [config.colors.success],
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shadeIntensity: 1,
+                        opacityFrom: 0.4,
+                        gradientToColors: [config.colors.cardColor],
+                        opacityTo: 0.1,
+                        stops: [0, 100]
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    width: 2,
+                    curve: 'smooth'
+                },
+                series: [{
+                    name: 'Posts',
+                    data: seriesData
+                }],
+                xaxis: {
+                    categories: labels,
+                    labels: {
+                        show: false
+                    },
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false
+                    }
+                },
+                yaxis: {
+                    show: false
+                },
+                tooltip: {
+                    enabled: true,
+                    y: {
+                        formatter: function(val) {
+                            return val + " posts";
+                        }
+                    }
+                },
+                responsive: [{
+                        breakpoint: 1387,
+                        options: {
+                            chart: {
+                                height: 80
+                            }
+                        }
+                    },
+                    {
+                        breakpoint: 1200,
+                        options: {
+                            chart: {
+                                height: 123
+                            }
+                        }
+                    }
+                ]
+            };
+
+            const averageDailyPostsChart = new ApexCharts(averageDailyPostsEl, averageDailyPostsConfig);
+            averageDailyPostsChart.render();
+        }
+    });
+</script>
