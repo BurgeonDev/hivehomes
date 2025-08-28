@@ -432,21 +432,6 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 class="mb-0 card-title">Total Posts & Products</h5>
                         </div>
-
-                        {{-- Dynamic completion chevron (green up / red down) --}}
-                        <div class="d-flex align-items-center">
-                            <h2 class="mb-0 me-2">{{ $completionRate }}%</h2>
-
-                            @php
-                                $compUp = ($completionRate ?? 0) >= 0;
-                            @endphp
-
-                            <i
-                                class="icon-base ti tabler-chevron-{{ $compUp ? 'up' : 'down' }} {{ $compUp ? 'text-success' : 'text-danger' }} me-1"></i>
-                            <h6 class="mb-0 {{ $compUp ? 'text-success' : 'text-danger' }}">
-                                {{ number_format($weeklyChangePercent ?? 0, 1) }}%
-                            </h6>
-                        </div>
                     </div>
 
                     <div class="card-body">
