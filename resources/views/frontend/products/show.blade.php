@@ -150,8 +150,11 @@
                                         <span class="badge bg-label-success align-self-center">Negotiable</span>
                                     @endif
 
-                                    <a href="mailto:{{ $product->user->email }}" class="btn btn-sm btn-primary">Contact
-                                        Seller</a>
+                                    <button type="button" class="btn btn-sm btn-primary w-100" data-bs-toggle="modal"
+                                        data-bs-target="#contactModal">
+                                        Contact
+                                    </button>
+
 
 
                                 </div>
@@ -244,8 +247,11 @@
                                 <div class="mt-3">
                                     <a href="{{ route('products.index', ['author' => $product->user->id]) }}"
                                         class="mb-2 btn btn-sm btn-outline-primary w-100">More by seller</a>
-                                    <a href="mailto:{{ $product->user->email }}"
-                                        class="btn btn-sm btn-primary w-100">Contact</a>
+                                    <button type="button" class="btn btn-sm btn-primary w-100" data-bs-toggle="modal"
+                                        data-bs-target="#contactModal">
+                                        Contact
+                                    </button>
+
                                 </div>
                             </div>
                         </div>
@@ -253,16 +259,45 @@
                         {{-- Quick info --}}
                         <div class="mb-3 shadow-sm card">
                             <div class="card-body">
-                                <h6 class="mb-2">Quick Info</h6>
-                                <ul class="mb-0 list-unstyled small">
-                                    <li><strong>Posted:</strong> {{ optional($product->created_at)->format('F j, Y') }}
-                                    </li>
-                                    <li><strong>Category:</strong> {{ $product->category->name ?? '—' }}</li>
-                                    <li><strong>Quantity:</strong> {{ $product->quantity }}</li>
-                                    <li><strong>Negotiable:</strong> {{ $product->is_negotiable ? 'Yes' : 'No' }}</li>
-                                </ul>
+                                <h6 class="mb-3">Quick Info</h6>
+                                <div class="row g-2 small">
+
+                                    <div class="col-6">
+                                        <div
+                                            class="p-2 rounded bg-label-primary d-flex justify-content-between align-items-center">
+                                            <small class="text-muted">Posted</small>
+                                            <strong>{{ optional($product->created_at)->format('F j, Y') }}</strong>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <div
+                                            class="p-2 rounded bg-label-info d-flex justify-content-between align-items-center">
+                                            <small class="text-muted">Category</small>
+                                            <strong>{{ $product->category->name ?? '—' }}</strong>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <div
+                                            class="p-2 rounded bg-label-success d-flex justify-content-between align-items-center">
+                                            <small class="text-muted">Quantity</small>
+                                            <strong>{{ $product->quantity }}</strong>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <div
+                                            class="p-2 rounded bg-label-warning d-flex justify-content-between align-items-center">
+                                            <small class="text-muted">Negotiable</small>
+                                            <strong>{{ $product->is_negotiable ? 'Yes' : 'No' }}</strong>
+                                        </div>
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
+
 
                         {{-- Related products --}}
                         @php
@@ -325,7 +360,37 @@
                 </div>
             </div>
         </div>
+        <!-- Contact Modal -->
+        <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="contactModalLabel">Seller Contact Info</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <ul class="mb-0 list-unstyled">
+                            <li><strong>Name:</strong> {{ $product->user->name }}</li>
+                            <li><strong>Email:</strong> {{ $product->user->email }}</li>
+                            <li><strong>Phone:</strong> {{ $product->user->phone ?? 'Not provided' }}</li>
+                            <li><strong>Society:</strong> {{ optional($product->society)->name ?? '—' }}</li>
+                        </ul>
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </section>
+
+
 @endsection
 @section('page-js')
     <script src="{{ asset('assets/js/ui-carousel.js') }}"></script>

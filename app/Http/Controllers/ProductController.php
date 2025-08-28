@@ -172,7 +172,8 @@ class ProductController extends Controller
      * Show the single‐product detail page.
      */
     public function show(Product $product)
-    {
+    {   // increment simple view counter
+        $product->increment('views');
         return view('frontend.products.show', [
             'product' => $product->load(['images', 'seller', 'society', 'category']),
         ]);
