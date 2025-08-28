@@ -16,7 +16,11 @@ class PostController extends Controller
 
         // Base query: only approved posts
         $query = Post::with(['user', 'category', 'society'])
-            ->withCount('comments', 'likedByUsers')
+            ->withCount([
+                'comments',
+                'likedByUsers as likes_count'
+            ])
+
             ->where('status', 'approved');
 
         if (! $user->hasRole('super_admin')) {
@@ -190,9 +194,9 @@ class PostController extends Controller
         }
 
         return response()->json([
-            'success' => true,
-            'liked'   => $liked,
-            'count'   => $post->likedByUsers()->count(),
+            'success'     => true,
+            'liked'       => $liked,
+            'likes_count' => $post->likedByUsers()->count(),
         ]);
     }
 }

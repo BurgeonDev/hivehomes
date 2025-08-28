@@ -113,13 +113,14 @@
                             </div>
 
                             <div class="gap-2 d-flex align-items-center">
-                                {{-- Like button (keeps original classes/behavior) --}}
                                 @php $liked = in_array($post->id, $likedPostIds); @endphp
+
                                 <button
-                                    class="btn btn-sm btn-outline-{{ $liked ? 'danger liked text-danger' : 'muted' }} like-button"
+                                    class="btn btn-xl like-button {{ $liked ? 'btn-danger text-danger' : 'btn-outline-danger' }}"
                                     data-post-id="{{ $post->id }}" aria-pressed="{{ $liked ? 'true' : 'false' }}">
                                     <i class="ti tabler-heart"></i>
                                 </button>
+
 
                                 {{-- Owner-only Edit (preserves existing logic & modal include) --}}
                                 @if (auth()->id() === $post->user_id)
