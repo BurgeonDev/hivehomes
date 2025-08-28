@@ -160,7 +160,7 @@
 
                                 <td>{{ $p->title }}</td>
                                 <td>{{ $p->category->name ?? '-' }}</td>
-                                <td>${{ number_format($p->price, 2) }}</td>
+                                <td>Rs.{{ number_format($p->price, 2) }}</td>
                                 <td>
                                     <select class="form-select form-select-sm status-dropdown"
                                         data-product-id="{{ $p->id }}">

@@ -165,8 +165,9 @@
                                     </a>
                                 </td>
                                 <td>
-                                    {!! $post->body !!}
+                                    {{ \Illuminate\Support\Str::limit(strip_tags($post->body), 30, '...') }}
                                 </td>
+
                                 <td>{{ $post->category->name ?? '-' }}</td>
 
                                 <td>{{ $post->society->name }}</td>
