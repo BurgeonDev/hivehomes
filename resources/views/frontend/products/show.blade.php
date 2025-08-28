@@ -1,5 +1,34 @@
 @extends('frontend.layouts.app')
 @section('title', $product->title)
+@section('page-css')
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/swiper/swiper.css') }}" />
+    <style>
+        #swiper-gallery .gallery-top {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        #swiper-gallery .gallery-thumbs {
+            padding-top: 5px;
+        }
+
+        #swiper-gallery .gallery-thumbs .swiper-slide {
+            height: 72px;
+            opacity: 0.6;
+            cursor: pointer;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        #swiper-gallery .gallery-thumbs .swiper-slide-thumb-active {
+            opacity: 1;
+            border: 2px solid #0d6efd;
+        }
+    </style>
+@endsection
+@section('vendor-css')
+    <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/ui-carousel.css') }}" />
+@endsection
 
 @php
     use Illuminate\Support\Str;
@@ -51,28 +80,43 @@
                                     {{ $product->category->name ?? 'Uncategorized' }}
                                 </span>
                             </div>
-
-                            {{-- Images gallery --}}
+                            {{-- Images gallery with Swiper --}}
                             @php
                                 $images = $product->images->sortBy('order')->values();
-                                $primary = $images->firstWhere('is_primary', 1) ?? $images->first();
                             @endphp
 
                             @if ($images && $images->count())
-                                <figure class="mb-4">
-                                    <img src="{{ asset('storage/' . ($primary->path ?? '')) }}" alt="{{ $product->title }}"
-                                        class="rounded w-100" style="height: 420px; object-fit: cover;">
-                                </figure>
-
-                                <div class="gap-2 mb-4 d-flex">
-                                    @foreach ($images as $img)
-                                        <div style="width:92px; height:72px; overflow:hidden; border-radius:8px;">
-                                            <a href="{{ asset('storage/' . $img->path) }}" target="_blank">
-                                                <img src="{{ asset('storage/' . $img->path) }}" alt=""
-                                                    style="width:100%; height:100%; object-fit:cover;">
-                                            </a>
+                                <div id="swiper-gallery" class="mb-4">
+                                    {{-- Main Gallery --}}
+                                    <div class="mb-3 rounded shadow-sm swiper gallery-top">
+                                        <div class="swiper-wrapper">
+                                            @foreach ($images as $img)
+                                                <div class="swiper-slide d-flex align-items-center justify-content-center"
+                                                    style="background:#f8f9fa; height:420px;">
+                                                    <img src="{{ asset('storage/' . $img->path) }}"
+                                                        alt="{{ $product->title }}"
+                                                        style="max-height:100%; max-width:100%; object-fit:contain;">
+                                                </div>
+                                            @endforeach
                                         </div>
-                                    @endforeach
+                                        <div class="swiper-button-next"></div>
+                                        <div class="swiper-button-prev"></div>
+                                    </div>
+
+                                    {{-- Thumbnail Gallery --}}
+                                    <div class="swiper gallery-thumbs">
+                                        <div class="swiper-wrapper">
+                                            @foreach ($images as $img)
+                                                <div class="swiper-slide d-flex align-items-center justify-content-center"
+                                                    style="background:#f8f9fa; height:auto;">
+                                                    <img src="{{ asset('storage/' . $img->path) }}"
+                                                        alt="{{ $product->title }}"
+                                                        style="max-height:100%; max-width:100%; object-fit:cover;">
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+
                                 </div>
                             @else
                                 <figure class="mb-4">
@@ -80,6 +124,7 @@
                                         class="rounded w-100" style="height: 420px; object-fit: cover;">
                                 </figure>
                             @endif
+
 
                             {{-- Price & CTA --}}
                             <div class="mb-3 d-flex align-items-center">
@@ -245,16 +290,18 @@
                                         @foreach ($related as $r)
                                             <li class="mb-2 d-flex">
                                                 @php $thumb = $r->images->sortBy('order')->first(); @endphp
-                                                <div style="width:56px; height:56px; overflow:hidden; border-radius:6px;">
+                                                <div style="width:56px; height:56px; overflow:hidden; border-radius:6px; background:#f8f9fa;"
+                                                    class="d-flex align-items-center justify-content-center">
                                                     @if ($thumb)
                                                         <img src="{{ asset('storage/' . $thumb->path) }}" alt=""
-                                                            style="width:100%; height:100%; object-fit:cover;">
+                                                            style="max-width:100%; max-height:100%; object-fit:contain;">
                                                     @else
                                                         <img src="{{ asset('assets/img/placeholder-sm.png') }}"
                                                             alt=""
-                                                            style="width:100%; height:100%; object-fit:cover;">
+                                                            style="max-width:100%; max-height:100%; object-fit:contain;">
                                                     @endif
                                                 </div>
+
 
                                                 <div class="ms-2">
                                                     <a href="{{ route('products.show', $r->id) }}"
@@ -279,4 +326,31 @@
             </div>
         </div>
     </section>
+@endsection
+@section('page-js')
+    <script src="{{ asset('assets/js/ui-carousel.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var galleryThumbs = new Swiper('.gallery-thumbs', {
+                spaceBetween: 10,
+                slidesPerView: 5,
+                freeMode: true,
+                watchSlidesProgress: true,
+            });
+            var galleryTop = new Swiper('.gallery-top', {
+                spaceBetween: 10,
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                thumbs: {
+                    swiper: galleryThumbs
+                }
+            });
+        });
+    </script>
+
+@endsection
+@section('vendor-js')
+    <script src="{{ asset('assets/vendor/libs/swiper/swiper.js') }}"></script>
 @endsection
