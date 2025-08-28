@@ -280,3 +280,116 @@
         }
     });
 </script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const totalEarningChartEl = document.querySelector('#totalEarningChart');
+
+        if (totalEarningChartEl) {
+            // Injected dynamic data from controller
+            const postsData = @json($postsWeekly);
+            const productsData = @json($productsWeekly);
+            const categories = @json($weekLabels);
+
+            const totalEarningChartOptions = {
+                chart: {
+                    height: 175,
+                    parentHeightOffset: 0,
+                    stacked: true,
+                    type: 'bar',
+                    toolbar: {
+                        show: false
+                    }
+                },
+                series: [{
+                        name: 'Posts',
+                        data: postsData
+                    },
+                    {
+                        name: 'Products',
+                        data: productsData
+                    }
+                ],
+                tooltip: {
+                    enabled: true,
+                    y: {
+                        formatter: val => val + ''
+                    }
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: '40%',
+                        borderRadius: 7,
+                        startingShape: 'rounded',
+                        endingShape: 'rounded',
+                        borderRadiusApplication: 'around',
+                        borderRadiusWhenStacked: 'last'
+                    }
+                },
+                colors: [config.colors.primary, config.colors.secondary],
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    width: 4,
+                    lineCap: 'round',
+                    colors: [config.colors.cardColor]
+                },
+                legend: {
+                    show: true,
+                    position: 'top',
+                    horizontalAlign: 'right',
+                    labels: {
+                        colors: config.colors.textMuted
+                    }
+                },
+                fill: {
+                    opacity: 1
+                },
+                grid: {
+                    show: false
+                },
+                xaxis: {
+                    categories: categories,
+                    labels: {
+                        style: {
+                            colors: config.colors.textMuted,
+                            fontSize: '12px'
+                        }
+                    },
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false
+                    }
+                },
+                yaxis: {
+                    labels: {
+                        style: {
+                            colors: config.colors.textMuted,
+                            fontSize: '12px'
+                        }
+                    }
+                },
+                states: {
+                    hover: {
+                        filter: {
+                            type: 'none'
+                        }
+                    },
+                    active: {
+                        filter: {
+                            type: 'none'
+                        }
+                    }
+                }
+            };
+
+            const totalEarningChart = new ApexCharts(totalEarningChartEl, totalEarningChartOptions);
+            totalEarningChart.render();
+        }
+    });
+</script>

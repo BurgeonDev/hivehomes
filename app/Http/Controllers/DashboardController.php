@@ -278,11 +278,30 @@ class DashboardController extends Controller
             $avgProductsPerSociety = $societiesCount > 0 ? round($totalProducts / $societiesCount, 2) : 0;
             $avgProvidersPerSociety = $societiesCount > 0 ? round($totalServiceProviders / $societiesCount, 2) : 0;
         }
+
         $growth = DashboardService::growthDataRange(12, $societyId);
+
+        // Posts weekly data (already calculated as $weeklyPosts, $weeklyLabels)
+        $postsWeekly = $weeklyPosts;
+        $weekLabels = $weeklyLabels;
+
+        // Products weekly data (similar loop)
+        $productsWeekly = [];
+        for ($i = 0; $i < 7; $i++) {
+            $day = Carbon::now()->startOfWeek()->addDays($i)->toDateString();
+            $count = Product::whereDate('created_at', $day)
+                ->when(!$isSuper, $queryScope)
+                ->count();
+            $productsWeekly[] = $count;
+        }
+
         return view('admin.dashboard', compact(
             'usersCount',
             'growth',
             'societiesCount',
+            'postsWeekly',
+            'productsWeekly',
+            'weekLabels',
             'postsByStatus',
             'productsByCondition',
             'productsConditionChange',
