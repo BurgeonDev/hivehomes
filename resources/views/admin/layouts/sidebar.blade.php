@@ -30,7 +30,9 @@
     <div class="menu-inner-shadow"></div>
 
     <ul class="py-1 menu-inner">
-
+        @php
+            $user = auth()->user();
+        @endphp
         <!-- Dashboard -->
         <li class="menu-item {{ request()->routeIs('dashboard') ? 'active open' : '' }}">
             <a href="{{ route('dashboard') }}" class="menu-link">
@@ -50,7 +52,20 @@
                 <div data-i18n="Roles &amp; Permissions">Roles &amp; Permissions</div>
             </a>
         </li> --}}
-
+        @if ($user && $user->hasRole('super_admin'))
+            <li class="menu-item {{ request()->routeIs('societies.*') ? 'active open' : '' }}">
+                <a href="{{ route('societies.index') }}" class="menu-link">
+                    <i class="menu-icon icon-base ti tabler-building-skyscraper"></i>
+                    <div data-i18n="Societies">Societies</div>
+                </a>
+            </li>
+            <li class="menu-item {{ request()->routeIs('admin.contacts.*') ? 'active open' : '' }}">
+                <a href="{{ route('admin.contacts.index') }}" class="menu-link">
+                    <i class="menu-icon icon-base ti tabler-message-dots"></i>
+                    <div data-i18n="Contact Messages">Contact Messages</div>
+                </a>
+            </li>
+        @endif
         <li class="menu-item {{ request()->routeIs('users.*') ? 'active open' : '' }}">
             <a href="{{ route('users.index') }}" class="menu-link">
                 <i class="menu-icon icon-base ti tabler-users"></i>
@@ -58,46 +73,44 @@
             </a>
         </li>
 
-        <!-- ===== Location Section ===== -->
-        <li class="menu-header small">
-            <span class="menu-header-text" data-i18n="Location">Location</span>
-        </li>
 
-        <li class="menu-item {{ request()->routeIs('countries.*', 'states.*', 'cities.*') ? 'active open' : '' }}">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon icon-base ti tabler-map"></i>
-                <div data-i18n="Location">Location</div>
-            </a>
-            <ul class="menu-sub">
-                <li class="menu-item {{ request()->routeIs('countries.*') ? 'active' : '' }}">
-                    <a href="{{ route('countries.index') }}" class="menu-link">
-                        <div data-i18n="Countries">Countries</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ request()->routeIs('states.*') ? 'active' : '' }}">
-                    <a href="{{ route('states.index') }}" class="menu-link">
-                        <div data-i18n="States">States</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ request()->routeIs('cities.*') ? 'active' : '' }}">
-                    <a href="{{ route('cities.index') }}" class="menu-link">
-                        <div data-i18n="Cities">Cities</div>
-                    </a>
-                </li>
-            </ul>
-        </li>
 
+        @if ($user && $user->hasRole('super_admin'))
+            <!-- ===== Location Section ===== -->
+            <li class="menu-header small">
+                <span class="menu-header-text" data-i18n="Location">Location</span>
+            </li>
+
+            <li class="menu-item {{ request()->routeIs('countries.*', 'states.*', 'cities.*') ? 'active open' : '' }}">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                    <i class="menu-icon icon-base ti tabler-map"></i>
+                    <div data-i18n="Location">Location</div>
+                </a>
+                <ul class="menu-sub">
+                    <li class="menu-item {{ request()->routeIs('countries.*') ? 'active' : '' }}">
+                        <a href="{{ route('countries.index') }}" class="menu-link">
+                            <div data-i18n="Countries">Countries</div>
+                        </a>
+                    </li>
+                    <li class="menu-item {{ request()->routeIs('states.*') ? 'active' : '' }}">
+                        <a href="{{ route('states.index') }}" class="menu-link">
+                            <div data-i18n="States">States</div>
+                        </a>
+                    </li>
+                    <li class="menu-item {{ request()->routeIs('cities.*') ? 'active' : '' }}">
+                        <a href="{{ route('cities.index') }}" class="menu-link">
+                            <div data-i18n="Cities">Cities</div>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        @endif
         <!-- ===== Content Section ===== -->
         <li class="menu-header small">
             <span class="menu-header-text" data-i18n="Content">Content</span>
         </li>
 
-        <li class="menu-item {{ request()->routeIs('societies.*') ? 'active open' : '' }}">
-            <a href="{{ route('societies.index') }}" class="menu-link">
-                <i class="menu-icon icon-base ti tabler-building-skyscraper"></i>
-                <div data-i18n="Societies">Societies</div>
-            </a>
-        </li>
+
 
         <li class="menu-item {{ request()->routeIs('admin.posts.*') ? 'active open' : '' }}">
             <a href="{{ route('admin.posts.index') }}" class="menu-link">
@@ -105,32 +118,26 @@
                 <div data-i18n="Posts">Posts</div>
             </a>
         </li>
-
-        <li class="menu-item {{ request()->routeIs('admin.post-categories.*') ? 'active open' : '' }}">
-            <a href="{{ route('admin.post-categories.index') }}" class="menu-link">
-                <i class="menu-icon icon-base ti tabler-category"></i>
-                <div data-i18n="Post Categories">Post Categories</div>
-            </a>
-        </li>
-
-
-        <li class="menu-item {{ request()->routeIs('admin.contacts.*') ? 'active open' : '' }}">
-            <a href="{{ route('admin.contacts.index') }}" class="menu-link">
-                <i class="menu-icon icon-base ti tabler-message-dots"></i>
-                <div data-i18n="Contact Messages">Contact Messages</div>
-            </a>
-        </li>
-
+        @if ($user && $user->hasRole('super_admin'))
+            <li class="menu-item {{ request()->routeIs('admin.post-categories.*') ? 'active open' : '' }}">
+                <a href="{{ route('admin.post-categories.index') }}" class="menu-link">
+                    <i class="menu-icon icon-base ti tabler-category"></i>
+                    <div data-i18n="Post Categories">Post Categories</div>
+                </a>
+            </li>
+        @endif
         <!-- ===== Service Provider Section ===== -->
         <li class="menu-header small">
             <span class="menu-header-text" data-i18n="Service Providers">Service Providers</span>
         </li>
-        <li class="menu-item {{ request()->routeIs('admin.types.*') ? 'active open' : '' }}">
-            <a href="{{ route('admin.types.index') }}" class="menu-link">
-                <i class="menu-icon icon-base ti tabler-list-check"></i>
-                <div data-i18n=" Provider Types">Provider Types</div>
-            </a>
-        </li>
+        @if ($user && $user->hasRole('super_admin'))
+            <li class="menu-item {{ request()->routeIs('admin.types.*') ? 'active open' : '' }}">
+                <a href="{{ route('admin.types.index') }}" class="menu-link">
+                    <i class="menu-icon icon-base ti tabler-list-check"></i>
+                    <div data-i18n=" Provider Types">Provider Types</div>
+                </a>
+            </li>
+        @endif
         <li class="menu-item {{ request()->routeIs('admin.service-providers.*') ? 'active open' : '' }}">
             <a href="{{ route('admin.service-providers.index') }}" class="menu-link">
                 <i class="menu-icon icon-base ti tabler-tool"></i>
@@ -142,14 +149,14 @@
         <li class="menu-header small">
             <span class="menu-header-text" data-i18n="Products">Products</span>
         </li>
-
-        <li class="menu-item {{ request()->routeIs('admin.product-categories.*') ? 'active open' : '' }}">
-            <a href="{{ route('admin.product-categories.index') }}" class="menu-link">
-                <i class="menu-icon icon-base ti tabler-category"></i>
-                <div data-i18n="Product Categories">Product Categories</div>
-            </a>
-        </li>
-
+        @if ($user && $user->hasRole('super_admin'))
+            <li class="menu-item {{ request()->routeIs('admin.product-categories.*') ? 'active open' : '' }}">
+                <a href="{{ route('admin.product-categories.index') }}" class="menu-link">
+                    <i class="menu-icon icon-base ti tabler-category"></i>
+                    <div data-i18n="Product Categories">Product Categories</div>
+                </a>
+            </li>
+        @endif
         <li class="menu-item {{ request()->routeIs('admin.products.*') ? 'active open' : '' }}">
             <a href="{{ route('admin.products.index') }}" class="menu-link">
                 <i class="menu-icon icon-base ti tabler-box"></i>
