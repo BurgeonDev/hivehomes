@@ -192,7 +192,7 @@
                             <div class="col-4">
                                 <div class="gap-2 mb-2 d-flex align-items-center">
                                     <span class="p-1 rounded badge bg-label-info"><i
-                                            class="icon-base ti tabler-shopping-cart icon-sm"></i></span>
+                                            class="icon-base ti tabler-inbox icon-sm"></i></span>
                                     <p class="mb-0">Posts</p>
                                 </div>
                                 <h5 class="pt-1 mb-0">{{ $postsPercentage }}%</h5>
@@ -209,7 +209,7 @@
                                 <div class="gap-2 mb-2 d-flex justify-content-end align-items-center">
                                     <p class="mb-0">Products</p>
                                     <span class="p-1 rounded badge bg-label-primary"><i
-                                            class="icon-base ti tabler-link icon-sm"></i></span>
+                                            class="icon-base ti tabler-building-store icon-sm"></i></span>
                                 </div>
                                 <h5 class="pt-1 mb-0">{{ $productsPercentage }}%</h5>
                                 <small class="text-body-secondary">{{ $newProducts }}</small>
@@ -238,18 +238,7 @@
                             <h5 class="mb-1">Weekly Posts Reports</h5>
                             <p class="card-subtitle">Weekly Posts Overview</p>
                         </div>
-                        <div class="dropdown">
-                            <button
-                                class="p-2 border-0 btn btn-text-secondary waves-effect rounded-pill dropdown-toggle hide-arrow"
-                                type="button" id="earningReportsId" data-bs-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">
-                                <i class="icon-base ti tabler-dots-vertical icon-22px"></i>
-                            </button>
-                            <div class="m-0 dropdown-menu dropdown-menu-end" aria-labelledby="earningReportsId">
-                                <a class="dropdown-item" href="javascript:void(0);">View More</a>
-                                <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                            </div>
-                        </div>
+
                     </div>
                     <div class="card-body">
                         <div class="row align-items-center g-md-8">
@@ -270,7 +259,7 @@
                                 <div class="col-12 col-sm-4">
                                     <div class="gap-2 d-flex align-items-center">
                                         <div class="p-1 rounded badge bg-label-primary">
-                                            <i class="icon-base ti tabler-currency-dollar icon-18px"></i>
+                                            <i class="icon-base ti tabler-clear-all icon-18px"></i>
                                         </div>
                                         <h6 class="mb-0 fw-normal">Total Posts</h6>
                                     </div>
@@ -285,7 +274,7 @@
                                 <div class="col-12 col-sm-4">
                                     <div class="gap-2 d-flex align-items-center">
                                         <div class="p-1 rounded badge bg-label-info">
-                                            <i class="icon-base ti tabler-chart-pie-2 icon-18px"></i>
+                                            <i class="icon-base ti tabler-progress-check icon-18px"></i>
                                         </div>
                                         <h6 class="mb-0 fw-normal">Approved</h6>
                                     </div>
@@ -299,7 +288,7 @@
                                 <div class="col-12 col-sm-4">
                                     <div class="gap-2 d-flex align-items-center">
                                         <div class="p-1 rounded badge bg-label-danger">
-                                            <i class="icon-base ti tabler-brand-paypal icon-18px"></i>
+                                            <i class="icon-base ti tabler-pennant icon-18px"></i>
                                         </div>
                                         <h6 class="mb-0 fw-normal">Pending</h6>
                                     </div>
@@ -326,17 +315,7 @@
                             <h5 class="mb-1">Post Tracker</h5>
                             <p class="card-subtitle">Last 7 Days</p>
                         </div>
-                        <div class="dropdown">
-                            <button class="p-2 border-0 btn btn-text-secondary rounded-pill text-body-secondary me-n1"
-                                type="button" id="supportTrackerMenu" data-bs-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">
-                                <i class="icon-base ti tabler-dots-vertical icon-md text-body-secondary"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="supportTrackerMenu">
-                                <a class="dropdown-item" href="javascript:void(0);">View More</a>
-                                <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                            </div>
-                        </div>
+
                     </div>
                     <div class="card-body row">
                         <div class="col-12 col-sm-4">
@@ -364,7 +343,7 @@
                                     </div>
                                 </li>
                                 <li class="gap-4 pb-1 d-flex align-items-center">
-                                    <div class="rounded badge bg-label-warning p-1_5">
+                                    <div class="rounded badge bg-label-info p-1_5">
                                         <i class="icon-base ti tabler-clock icon-md"></i>
                                     </div>
                                     <div>
@@ -390,18 +369,7 @@
                             <h5 class="mb-1">Posts by Status</h5>
                             <p class="card-subtitle">Monthly Posts Overview</p>
                         </div>
-                        <div class="dropdown">
-                            <button class="border-0 btn btn-text-secondary btn-icon rounded-pill text-body-secondary me-n1"
-                                type="button" id="salesByCountry" data-bs-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">
-                                <i class="icon-base ti tabler-dots-vertical icon-22px text-body-secondary"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="salesByCountry">
-                                <a class="dropdown-item" href="javascript:void(0);">Download</a>
-                                <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
-                                <a class="dropdown-item" href="javascript:void(0);">Share</a>
-                            </div>
-                        </div>
+
                     </div>
                     <div class="card-body">
                         <ul class="p-0 m-0">
@@ -480,55 +448,76 @@
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 class="mb-0 card-title">Total Posts & Products</h5>
-                            <div class="dropdown">
-                                <button class="p-2 border-0 btn btn-text-secondary rounded-pill text-body-secondary me-n1"
-                                    type="button" id="totalEarning" data-bs-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false">
-                                    <i class="icon-base ti tabler-dots-vertical icon-md text-body-secondary"></i>
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="totalEarning">
-                                    <a class="dropdown-item" href="javascript:void(0);">View
-                                        More</a>
-                                    <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                                </div>
-                            </div>
                         </div>
+
+                        {{-- Dynamic completion chevron (green up / red down) --}}
                         <div class="d-flex align-items-center">
                             <h2 class="mb-0 me-2">{{ $completionRate }}%</h2>
-                            <i class="icon-base ti tabler-chevron-up text-success me-1"></i>
-                            <h6 class="mb-0 text-success">25.8%</h6>
+
+                            @php
+                                $compUp = ($completionRate ?? 0) >= 0;
+                            @endphp
+
+                            <i
+                                class="icon-base ti tabler-chevron-{{ $compUp ? 'up' : 'down' }} {{ $compUp ? 'text-success' : 'text-danger' }} me-1"></i>
+                            <h6 class="mb-0 {{ $compUp ? 'text-success' : 'text-danger' }}">
+                                {{ number_format($weeklyChangePercent ?? 0, 1) }}%
+                            </h6>
                         </div>
                     </div>
+
                     <div class="card-body">
                         <div id="totalEarningChart"></div>
+
+                        {{-- Total Posts --}}
                         <div class="my-4 d-flex align-items-start">
                             <div class="p-2 rounded badge bg-label-primary me-4">
-                                <i class="icon-base ti tabler-brand-paypal icon-md"></i>
+                                {{-- relevant icon for posts --}}
+                                <i class="icon-base ti tabler-file-text icon-md" aria-hidden="true"></i>
                             </div>
+
                             <div class="gap-2 d-flex justify-content-between w-100 align-items-center">
                                 <div class="me-2">
                                     <h6 class="mb-0">Total Posts</h6>
                                     <small class="text-body">{{ $totalPosts }}</small>
                                 </div>
-                                <h6 class="mb-0 text-success">+{{ $weeklyChange > 0 ? $weeklyChange : 0 }}</h6>
+
+                                {{-- weekly percent (safe fallback) --}}
+                                @php
+                                    $postPct = $weeklyChangePercent ?? 0;
+                                @endphp
+                                <h6 class="mb-0 {{ $postPct >= 0 ? 'text-success' : 'text-danger' }}">
+                                    {{ $postPct >= 0 ? '+' . $postPct : $postPct }}%
+                                </h6>
                             </div>
                         </div>
+
+                        {{-- Total Products --}}
                         <div class="d-flex align-items-start">
                             <div class="p-2 rounded badge bg-label-secondary me-4">
-                                <i class="icon-base ti tabler-currency-dollar icon-md"></i>
+                                {{-- relevant icon for products --}}
+                                <i class="icon-base ti tabler-box icon-md" aria-hidden="true"></i>
                             </div>
+
                             <div class="gap-2 d-flex justify-content-between w-100 align-items-center">
                                 <div class="me-2">
                                     <h6 class="mb-0">Total Products</h6>
                                     <small class="text-body">{{ $totalProducts }}</small>
                                 </div>
-                                <h6 class="mb-0 text-success">+{{ $usersChange > 0 ? $usersChange : 0 }}</h6>
+
+                                @php
+                                    $prodPct = $usersChangePercent ?? 0;
+                                @endphp
+                                <h6 class="mb-0 {{ $prodPct >= 0 ? 'text-success' : 'text-danger' }}">
+                                    {{ $prodPct >= 0 ? '+' . $prodPct : $prodPct }}%
+                                </h6>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <!--/ Total Posts & Products -->
+
 
             <!-- Service Providers Overview -->
             <div class="col-xxl-4 col-md-6">
@@ -538,60 +527,62 @@
                             <h5 class="mb-1">Service Providers Overview</h5>
                             <p class="card-subtitle">{{ $totalServiceProviders }} Providers</p>
                         </div>
-                        <div class="dropdown">
-                            <button class="p-2 border-0 btn btn-text-secondary rounded-pill text-body-secondary me-n1"
-                                type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">
-                                <i class="icon-base ti tabler-dots-vertical icon-md text-body-secondary"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
-                                <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
-                                <a class="dropdown-item" href="javascript:void(0);">Download</a>
-                                <a class="dropdown-item" href="javascript:void(0);">View All</a>
-                            </div>
-                        </div>
                     </div>
                     <div class="card-body">
                         <ul class="p-0 m-0">
+
+                            <!-- Total -->
                             <li class="mb-6 d-flex justify-content-between align-items-center">
-                                <div class="rounded badge bg-label-success p-1_5">
-                                    <i class="icon-base ti tabler-mail icon-md"></i>
+                                <div class="rounded badge bg-label-primary p-1_5">
+                                    <i class="ti tabler-users icon-md"></i>
                                 </div>
                                 <div class="flex-wrap d-flex justify-content-between w-100">
                                     <h6 class="mb-0 ms-4">Total</h6>
                                     <div class="d-flex">
                                         <p class="mb-0">{{ $totalServiceProviders }}</p>
-                                        <p class="mb-0 ms-4 text-success">+0.3%</p>
+                                        <p class="mb-0 ms-4 text-muted">All time</p>
                                     </div>
                                 </div>
                             </li>
+
+                            <!-- Approved -->
                             <li class="mb-6 d-flex justify-content-between align-items-center">
-                                <div class="rounded badge bg-label-info p-1_5">
-                                    <i class="icon-base ti tabler-link icon-md"></i>
+                                <div class="rounded badge bg-label-success p-1_5">
+                                    <i class="ti tabler-check icon-md"></i>
                                 </div>
                                 <div class="flex-wrap d-flex justify-content-between w-100">
                                     <h6 class="mb-0 ms-4">Approved</h6>
                                     <div class="d-flex">
                                         <p class="mb-0">{{ $approvedProviders }}</p>
-                                        <p class="mb-0 ms-4 text-success">+2.1%</p>
+                                        <p
+                                            class="mb-0 ms-4 {{ $approvedProvidersChange >= 0 ? 'text-success' : 'text-danger' }}">
+                                            {{ $approvedProvidersChange }}%
+                                        </p>
                                     </div>
                                 </div>
                             </li>
+
+                            <!-- Pending -->
                             <li class="mb-6 d-flex justify-content-between align-items-center">
                                 <div class="rounded badge bg-label-warning p-1_5">
-                                    <i class="icon-base ti tabler-click icon-md"></i>
+                                    <i class="ti tabler-clock icon-md"></i>
                                 </div>
                                 <div class="flex-wrap d-flex justify-content-between w-100">
                                     <h6 class="mb-0 ms-4">Pending</h6>
                                     <div class="d-flex">
                                         <p class="mb-0">{{ $pendingProviders }}</p>
-                                        <p class="mb-0 ms-4 text-danger">-1.5%</p>
+                                        <p
+                                            class="mb-0 ms-4 {{ $pendingProvidersChange >= 0 ? 'text-success' : 'text-danger' }}">
+                                            {{ $pendingProvidersChange }}%
+                                        </p>
                                     </div>
                                 </div>
                             </li>
+
+                            <!-- Avg Approval Time -->
                             <li class="mb-6 d-flex justify-content-between align-items-center">
-                                <div class="rounded badge bg-label-danger p-1_5">
-                                    <i class="icon-base ti tabler-alert-circle icon-md"></i>
+                                <div class="rounded badge bg-label-info p-1_5">
+                                    <i class="ti tabler-hourglass icon-md"></i>
                                 </div>
                                 <div class="flex-wrap d-flex justify-content-between w-100">
                                     <h6 class="mb-0 ms-4">Avg Approval Time</h6>
@@ -601,11 +592,14 @@
                                     </div>
                                 </div>
                             </li>
+
                         </ul>
                     </div>
                 </div>
             </div>
             <!--/ Service Providers Overview -->
+
+
 
             <!-- Product Conditions -->
             <div class="col-xxl-4 col-md-6 col-12">
@@ -615,73 +609,80 @@
                             <h5 class="mb-1">Product Conditions</h5>
                             <p class="card-subtitle">{{ $totalProducts }} Products</p>
                         </div>
-                        <div class="dropdown">
-                            <button class="p-2 border-0 btn btn-text-secondary rounded-pill text-body-secondary me-n1"
-                                type="button" id="sourceVisits" data-bs-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">
-                                <i class="icon-base ti tabler-dots-vertical icon-md text-body-secondary"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="sourceVisits">
-                                <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
-                                <a class="dropdown-item" href="javascript:void(0);">Download</a>
-                                <a class="dropdown-item" href="javascript:void(0);">View All</a>
-                            </div>
-                        </div>
                     </div>
                     <div class="card-body">
                         <ul class="mb-0 list-unstyled">
-                            <li class="mb-6">
-                                <div class="d-flex align-items-center">
-                                    <div class="p-2 rounded badge bg-label-secondary text-body me-4">
-                                        <i class="icon-base ti tabler-shadow icon-md"></i>
-                                    </div>
-                                    <div class="flex-wrap gap-2 d-flex justify-content-between w-100">
-                                        <div class="me-2">
-                                            <h6 class="mb-0">New Products</h6>
-                                            <small class="text-body">New condition</small>
+                            @php
+                                // Map conditions to icons
+                                $conditionIcons = [
+                                    'new' => 'tabler-star',
+                                    'like_new' => 'tabler-sparkles',
+                                    'used' => 'tabler-recycle',
+                                    'refurbished' => 'tabler-tool',
+                                    'damaged' => 'tabler-alert-triangle',
+                                    'expired' => 'tabler-calendar-x',
+                                    'other' => 'tabler-dots',
+                                ];
+
+                                // Simulate percentage changes (replace later with real calc)
+                                $conditionChanges = [
+                                    'new' => '+4%',
+                                    'like_new' => '+1%',
+                                    'used' => '+2%',
+                                    'refurbished' => '+3%',
+                                    'damaged' => '-1%',
+                                    'expired' => '-5%',
+                                    'other' => '+0%',
+                                ];
+                            @endphp
+
+                            @foreach ($productsByCondition as $condition => $count)
+                                <li class="mb-6">
+                                    <div class="d-flex align-items-center">
+                                        <div class="p-2 rounded badge bg-label-secondary text-body me-4">
+                                            <i
+                                                class="icon-base ti {{ $conditionIcons[$condition] ?? $conditionIcons['other'] }} icon-md"></i>
                                         </div>
-                                        <div class="d-flex align-items-center">
-                                            <p class="mb-0">{{ $productsNew }}</p>
-                                            <div class="ms-4 badge bg-label-success">+4.2%</div>
+                                        <div class="flex-wrap gap-2 d-flex justify-content-between w-100">
+                                            <div class="me-2">
+                                                <h6 class="mb-0">{{ Str::headline($condition) }} Products</h6>
+                                                <small class="text-body">{{ Str::headline($condition) }} condition</small>
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <p class="mb-0">{{ $count }}</p>
+                                                <div class="ms-4 badge bg-label-success">
+                                                    {{ $conditionChanges[$condition] ?? '+0%' }}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </li>
-                            <li class="mb-6">
-                                <div class="d-flex align-items-center">
-                                    <div class="p-2 rounded badge bg-label-secondary text-body me-4">
-                                        <i class="icon-base ti tabler-globe icon-md"></i>
-                                    </div>
-                                    <div class="flex-wrap gap-2 d-flex justify-content-between w-100">
-                                        <div class="me-2">
-                                            <h6 class="mb-0">Used Products</h6>
-                                            <small class="text-body">Used condition</small>
-                                        </div>
-                                        <div class="d-flex align-items-center">
-                                            <p class="mb-0">{{ $productsUsed }}</p>
-                                            <div class="ms-4 badge bg-label-success">+8.2%</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
+                                </li>
+                            @endforeach
                         </ul>
                     </div>
                 </div>
             </div>
             <!--/ Product Conditions -->
 
-        </div>
 
+        </div>
         @if ($isSuper)
             <!-- Society Related KPIs and Graphs -->
             <div class="mt-6 row g-6">
+
                 <!-- Top 5 Societies by Members -->
                 <div class="col-xl-4 col-md-6">
-                    <div class="card h-100">
-                        <div class="card-header d-flex justify-content-between">
+                    <div class="border-0 shadow-sm card h-100">
+                        <div class="card-header d-flex align-items-center justify-content-between">
                             <div class="mb-0 card-title">
-                                <h5 class="mb-1">Top 5 Societies by Members</h5>
-                                <p class="card-subtitle">Avg Members/Society: {{ $avgMembersPerSociety }}</p>
+                                <h5 class="mb-1 d-flex align-items-center">
+                                    <i class="icon-base ti tabler-users icon-md me-2 text-primary"></i>
+                                    Top 5 Societies by Members
+                                </h5>
+                                <p class="card-subtitle text-muted">
+                                    <i class="icon-base ti tabler-chart-bar icon-md me-1 text-secondary"></i>
+                                    Avg Members/Society: {{ $avgMembersPerSociety }}
+                                </p>
                             </div>
                         </div>
                         <div class="card-body">
@@ -692,11 +693,17 @@
 
                 <!-- Top 5 Societies by Products -->
                 <div class="col-xl-4 col-md-6">
-                    <div class="card h-100">
-                        <div class="card-header d-flex justify-content-between">
+                    <div class="border-0 shadow-sm card h-100">
+                        <div class="card-header d-flex align-items-center justify-content-between">
                             <div class="mb-0 card-title">
-                                <h5 class="mb-1">Top 5 Societies by Products</h5>
-                                <p class="card-subtitle">Avg Products/Society: {{ $avgProductsPerSociety }}</p>
+                                <h5 class="mb-1 d-flex align-items-center">
+                                    <i class="icon-base ti tabler-box-seam icon-md me-2 text-success"></i>
+                                    Top 5 Societies by Products
+                                </h5>
+                                <p class="card-subtitle text-muted">
+                                    <i class="icon-base ti tabler-package icon-md me-1 text-secondary"></i>
+                                    Avg Products/Society: {{ $avgProductsPerSociety }}
+                                </p>
                             </div>
                         </div>
                         <div class="card-body">
@@ -705,13 +712,19 @@
                     </div>
                 </div>
 
-                <!-- Top 5 Societies by Service Providers -->
+                <!-- Top 5 Societies by Providers -->
                 <div class="col-xl-4 col-md-6">
-                    <div class="card h-100">
-                        <div class="card-header d-flex justify-content-between">
+                    <div class="border-0 shadow-sm card h-100">
+                        <div class="card-header d-flex align-items-center justify-content-between">
                             <div class="mb-0 card-title">
-                                <h5 class="mb-1">Top 5 Societies by Providers</h5>
-                                <p class="card-subtitle">Avg Providers/Society: {{ $avgProvidersPerSociety }}</p>
+                                <h5 class="mb-1 d-flex align-items-center">
+                                    <i class="icon-base ti tabler-building-store icon-md me-2 text-warning"></i>
+                                    Top 5 Societies by Providers
+                                </h5>
+                                <p class="card-subtitle text-muted">
+                                    <i class="icon-base ti tabler-briefcase icon-md me-1 text-secondary"></i>
+                                    Avg Providers/Society: {{ $avgProvidersPerSociety }}
+                                </p>
                             </div>
                         </div>
                         <div class="card-body">
@@ -722,17 +735,21 @@
 
                 <!-- Bottom 5 Societies by Members -->
                 <div class="col-xl-4 col-md-6">
-                    <div class="card h-100">
-                        <div class="card-header d-flex justify-content-between">
-                            <div class="mb-0 card-title">
-                                <h5 class="mb-1">Bottom 5 Societies by Members</h5>
-                            </div>
+                    <div class="border-0 shadow-sm card h-100">
+                        <div class="card-header">
+                            <h5 class="mb-1 d-flex align-items-center">
+                                <i class="icon-base ti tabler-arrow-down-right icon-md me-2 text-danger"></i>
+                                Bottom 5 Societies by Members
+                            </h5>
                         </div>
                         <div class="card-body">
                             <ul class="list-unstyled">
                                 @foreach ($bottomSocietiesMembers as $society)
-                                    <li class="mb-2 d-flex justify-content-between">
-                                        <span>{{ $society->name }}</span>
+                                    <li class="pb-1 mb-2 d-flex justify-content-between border-bottom">
+                                        <span>
+                                            <i class="icon-base ti tabler-home icon-md me-2 text-muted"></i>
+                                            {{ $society->name }}
+                                        </span>
                                         <span class="fw-medium">{{ $society->users_count }}</span>
                                     </li>
                                 @endforeach
@@ -743,17 +760,21 @@
 
                 <!-- Top 5 Societies by Products (List) -->
                 <div class="col-xl-4 col-md-6">
-                    <div class="card h-100">
-                        <div class="card-header d-flex justify-content-between">
-                            <div class="mb-0 card-title">
-                                <h5 class="mb-1">Top 5 Societies by Products (List)</h5>
-                            </div>
+                    <div class="border-0 shadow-sm card h-100">
+                        <div class="card-header">
+                            <h5 class="mb-1 d-flex align-items-center">
+                                <i class="icon-base ti tabler-cube icon-md me-2 text-success"></i>
+                                Top 5 Societies by Products (List)
+                            </h5>
                         </div>
                         <div class="card-body">
                             <ul class="list-unstyled">
                                 @foreach ($topSocietiesProducts as $society)
-                                    <li class="mb-2 d-flex justify-content-between">
-                                        <span>{{ $society->name }}</span>
+                                    <li class="pb-1 mb-2 d-flex justify-content-between border-bottom">
+                                        <span>
+                                            <i class="icon-base ti tabler-building icon-md me-2 text-muted"></i>
+                                            {{ $society->name }}
+                                        </span>
                                         <span class="fw-medium">{{ $society->products_count }}</span>
                                     </li>
                                 @endforeach
@@ -764,17 +785,21 @@
 
                 <!-- Top 5 Societies by Providers (List) -->
                 <div class="col-xl-4 col-md-6">
-                    <div class="card h-100">
-                        <div class="card-header d-flex justify-content-between">
-                            <div class="mb-0 card-title">
-                                <h5 class="mb-1">Top 5 Societies by Providers (List)</h5>
-                            </div>
+                    <div class="border-0 shadow-sm card h-100">
+                        <div class="card-header">
+                            <h5 class="mb-1 d-flex align-items-center">
+                                <i class="icon-base ti tabler-heart-handshake icon-md me-2 text-info"></i>
+                                Top 5 Societies by Providers (List)
+                            </h5>
                         </div>
                         <div class="card-body">
                             <ul class="list-unstyled">
                                 @foreach ($topSocietiesProviders as $society)
-                                    <li class="mb-2 d-flex justify-content-between">
-                                        <span>{{ $society->name }}</span>
+                                    <li class="pb-1 mb-2 d-flex justify-content-between border-bottom">
+                                        <span>
+                                            <i class="icon-base ti tabler-building-community icon-md me-2 text-muted"></i>
+                                            {{ $society->name }}
+                                        </span>
                                         <span class="fw-medium">{{ $society->service_providers_count }}</span>
                                     </li>
                                 @endforeach
@@ -784,6 +809,8 @@
                 </div>
             </div>
         @endif
+
+
     </div>
 
 @endsection
@@ -791,5 +818,6 @@
 
 @endsection
 @section('page-js')
-    <script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script>
+    {{-- <script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script> --}}
+    @include('admin.dashboard.script')
 @endsection

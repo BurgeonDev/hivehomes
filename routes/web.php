@@ -38,10 +38,6 @@ Route::post('/contact', [HomeController::class, 'contactStore'])->name('contact.
 
 // Frontend Posts (Authenticated)
 Route::middleware('auth')->group(function () {
-    // Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
-    // Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
-    // Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
-    // Route::get('/posts/{id}', [PostController::class, 'show'])->name('posts.show');
     Route::resource('posts', PostController::class);
 
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
@@ -51,8 +47,8 @@ Route::middleware('auth')->group(function () {
 });
 
 // Authenticated Dashboard
-// Route::middleware(['auth', 'verified'])->get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/dashboard/json', [DashboardController::class, 'projectsJson'])->name('dashboard.projectsJson');
 
 
 // Profile

@@ -23,23 +23,19 @@ class DashboardController extends Controller
             ? fn($q) => $q
             : fn($q) => $q->where('society_id', $societyId);
 
+        // Basic counts
         $usersCount = User::when(!$isSuper, $queryScope)->count();
         $societiesCount = Society::count();
         $totalProducts = Product::when(!$isSuper, $queryScope)->count();
-        $totalServiceProviders = ServiceProvider::when(!$isSuper, $queryScope)->count();
-        $approvedProviders = ServiceProvider::where('is_approved', true)->when(!$isSuper, $queryScope)->count();
-        $pendingProviders = ServiceProvider::where('is_approved', false)->when(!$isSuper, $queryScope)->count();
-        $avgApprovalTime = ServiceProvider::where('is_approved', true)
-            ->when(!$isSuper, $queryScope)
-            ->select(DB::raw('AVG(DATEDIFF(updated_at, created_at)) as avg_days'))
-            ->value('avg_days') ?? 0;
 
+        // Dates
         $startDate = Carbon::now()->startOfMonth()->toDateString();
         $endDate = Carbon::now()->toDateString();
         $daysInMonth = Carbon::now()->daysInMonth;
         $prevMonthStart = Carbon::now()->subMonth()->startOfMonth()->toDateString();
         $prevMonthEnd = Carbon::now()->subMonth()->endOfMonth()->toDateString();
 
+        // Posts by status (this month & previous month)
         $postsByStatus = Post::select('status', DB::raw('count(*) as total'))
             ->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
             ->when(!$isSuper, $queryScope)
@@ -54,19 +50,39 @@ class DashboardController extends Controller
 
         $approvedChange = ($prevPostsByStatus['approved'] ?? 0) > 0
             ? round((($postsByStatus['approved'] ?? 0) - ($prevPostsByStatus['approved'] ?? 0)) / ($prevPostsByStatus['approved'] ?? 1) * 100, 1)
-            : 0;
+            : (($postsByStatus['approved'] ?? 0) > 0 ? 100 : 0);
+
         $pendingChange = ($prevPostsByStatus['pending'] ?? 0) > 0
             ? round((($postsByStatus['pending'] ?? 0) - ($prevPostsByStatus['pending'] ?? 0)) / ($prevPostsByStatus['pending'] ?? 1) * 100, 1)
-            : 0;
+            : (($postsByStatus['pending'] ?? 0) > 0 ? 100 : 0);
+
         $rejectedChange = ($prevPostsByStatus['rejected'] ?? 0) > 0
             ? round((($postsByStatus['rejected'] ?? 0) - ($prevPostsByStatus['rejected'] ?? 0)) / ($prevPostsByStatus['rejected'] ?? 1) * 100, 1)
-            : 0;
+            : (($postsByStatus['rejected'] ?? 0) > 0 ? 100 : 0);
 
+        // Products by condition (this scope)
         $productsByCondition = Product::select('condition', DB::raw('count(*) as total'))
             ->when(!$isSuper, $queryScope)
             ->groupBy('condition')
             ->pluck('total', 'condition');
 
+        // Previous month products by condition (for % change)
+        $prevProductsByCondition = Product::select('condition', DB::raw('count(*) as total'))
+            ->when(!$isSuper, $queryScope)
+            ->whereBetween('created_at', [$prevMonthStart . ' 00:00:00', $prevMonthEnd . ' 23:59:59'])
+            ->groupBy('condition')
+            ->pluck('total', 'condition');
+
+        // Build products condition change map
+        $productsConditionChange = [];
+        foreach ($productsByCondition as $cond => $count) {
+            $prev = $prevProductsByCondition[$cond] ?? 0;
+            $productsConditionChange[$cond] = $prev > 0
+                ? round((($count - $prev) / $prev) * 100, 1)
+                : ($count > 0 ? 100 : 0);
+        }
+
+        // Daily posts series for current month
         $dailyQuery = DB::table('posts')
             ->when(!$isSuper, fn($q) => $q->where('posts.society_id', $societyId))
             ->whereBetween('posts.created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
@@ -87,8 +103,10 @@ class DashboardController extends Controller
         $totalThisMonth = array_sum($series);
         $avgPerDay = $daysInMonth > 0 ? round($totalThisMonth / $daysInMonth, 2) : 0;
 
+        // Weekly posts (this week & previous week)
         $weekStart = Carbon::now()->startOfWeek()->toDateString();
         $weekEnd = Carbon::now()->endOfWeek()->toDateString();
+
         $weeklyPosts = [];
         $weeklyLabels = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
         for ($i = 0; $i < 7; $i++) {
@@ -100,13 +118,23 @@ class DashboardController extends Controller
 
         $prevWeekStart = Carbon::now()->subWeek()->startOfWeek()->toDateString();
         $prevWeekEnd = Carbon::now()->subWeek()->endOfWeek()->toDateString();
+
         $prevWeeklyPosts = Post::whereBetween('created_at', [$prevWeekStart . ' 00:00:00', $prevWeekEnd . ' 23:59:59'])
             ->when(!$isSuper, $queryScope)
             ->count();
-        $weeklyChange = $prevWeeklyPosts > 0 ? round(($totalWeeklyPosts - $prevWeeklyPosts) / $prevWeeklyPosts * 100, 1) : 0;
+
+        // weekly absolute and percent change for posts
+        $weeklyChangeAbsolute = $totalWeeklyPosts - $prevWeeklyPosts;
+        $weeklyChangePercent = $prevWeeklyPosts > 0
+            ? round((($totalWeeklyPosts - $prevWeeklyPosts) / $prevWeeklyPosts) * 100, 1)
+            : ($totalWeeklyPosts > 0 ? 100 : 0);
+
+        // keep backward compatibility with existing $weeklyChange usage (was percent)
+        $weeklyChange = $weeklyChangePercent;
         $weeklyChangeClass = $weeklyChange >= 0 ? 'success' : 'danger';
         $weeklyChangeIcon = $weeklyChange >= 0 ? 'up' : 'down';
 
+        // Total posts, approval & completion
         $totalPosts = Post::when(!$isSuper, $queryScope)->count();
         $approvedPosts = Post::where('status', 'approved')->when(!$isSuper, $queryScope)->count();
         $completionRate = $totalPosts > 0 ? round($approvedPosts / $totalPosts * 100) : 0;
@@ -122,6 +150,7 @@ class DashboardController extends Controller
             ->select(DB::raw('AVG(DATEDIFF(updated_at, created_at)) as avg_days'))
             ->value('avg_days') ?? 0;
 
+        // Monthly series (last 8 months)
         $monthlyPosts = [];
         $monthlyProducts = [];
         $monthlyLabels = [];
@@ -136,6 +165,7 @@ class DashboardController extends Controller
             $monthlyLabels[] = $month->format('M');
         }
 
+        // Users metrics (monthly)
         $totalUsers = $usersCount;
         $newUsersThisMonth = User::whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
             ->when(!$isSuper, $queryScope)
@@ -144,6 +174,7 @@ class DashboardController extends Controller
         $usersChange = $usersPrevTotal > 0 ? round(($newUsersThisMonth / $usersPrevTotal) * 100, 1) : 0;
         $usersChangeClass = $usersChange >= 0 ? 'success' : 'danger';
 
+        // New products this month and percentages
         $newPosts = $newPostsThisMonth;
         $newProducts = Product::whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])->when(!$isSuper, $queryScope)->count();
         $totalActivitiesThisMonth = $newPosts + $newProducts;
@@ -158,6 +189,60 @@ class DashboardController extends Controller
 
         $productsNew = $productsByCondition['new'] ?? 0;
         $productsUsed = $productsByCondition['used'] ?? 0;
+
+        // ===== Service Providers KPIs =====
+        $totalServiceProviders = ServiceProvider::when(!$isSuper, $queryScope)->count();
+
+        // Current month approved & pending
+        $approvedProviders = ServiceProvider::where('is_approved', 1)
+            ->when(!$isSuper, $queryScope)
+            ->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
+            ->count();
+
+        $pendingProviders = ServiceProvider::where('is_approved', 0)
+            ->when(!$isSuper, $queryScope)
+            ->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
+            ->count();
+
+        // Previous month approved & pending
+        $prevApproved = ServiceProvider::where('is_approved', 1)
+            ->when(!$isSuper, $queryScope)
+            ->whereBetween('created_at', [$prevMonthStart . ' 00:00:00', $prevMonthEnd . ' 23:59:59'])
+            ->count();
+
+        $prevPending = ServiceProvider::where('is_approved', 0)
+            ->when(!$isSuper, $queryScope)
+            ->whereBetween('created_at', [$prevMonthStart . ' 00:00:00', $prevMonthEnd . ' 23:59:59'])
+            ->count();
+
+        // Percentage changes for providers
+        $approvedProvidersChange = $prevApproved > 0
+            ? round((($approvedProviders - $prevApproved) / $prevApproved) * 100, 1)
+            : ($approvedProviders > 0 ? 100 : 0);
+
+        $pendingProvidersChange = $prevPending > 0
+            ? round((($pendingProviders - $prevPending) / $prevPending) * 100, 1)
+            : ($pendingProviders > 0 ? 100 : 0);
+
+        // Average approval time (days)
+        $avgApprovalTime = ServiceProvider::where('is_approved', 1)
+            ->when(!$isSuper, $queryScope)
+            ->avg(DB::raw('DATEDIFF(updated_at, created_at)')) ?? 0;
+        $avgApprovalTime = round($avgApprovalTime, 1);
+
+        // Products weekly comparison (this week vs previous week) — named to match Blade
+        $thisWeekProducts = Product::when(!$isSuper, $queryScope)
+            ->whereBetween('created_at', [$weekStart . ' 00:00:00', $weekEnd . ' 23:59:59'])
+            ->count();
+
+        $prevWeekProducts = Product::when(!$isSuper, $queryScope)
+            ->whereBetween('created_at', [$prevWeekStart . ' 00:00:00', $prevWeekEnd . ' 23:59:59'])
+            ->count();
+
+        $usersChangeAbsolute = $thisWeekProducts - $prevWeekProducts;
+        $usersChangePercent = $prevWeekProducts > 0
+            ? round((($thisWeekProducts - $prevWeekProducts) / $prevWeekProducts) * 100, 1)
+            : ($thisWeekProducts > 0 ? 100 : 0);
 
         // Additional Society KPIs for Super Admin
         $topSocietiesMembers = collect();
@@ -198,6 +283,7 @@ class DashboardController extends Controller
             'societiesCount',
             'postsByStatus',
             'productsByCondition',
+            'productsConditionChange',
             'series',
             'labels',
             'totalThisMonth',
@@ -206,6 +292,8 @@ class DashboardController extends Controller
             'weeklyLabels',
             'totalWeeklyPosts',
             'weeklyChange',
+            'weeklyChangeAbsolute',
+            'weeklyChangePercent',
             'weeklyChangeClass',
             'weeklyChangeIcon',
             'completionRate',
@@ -237,6 +325,8 @@ class DashboardController extends Controller
             'totalServiceProviders',
             'approvedProviders',
             'pendingProviders',
+            'approvedProvidersChange',
+            'pendingProvidersChange',
             'avgApprovalTime',
             'approvalRate',
             'isSuper',
@@ -252,9 +342,13 @@ class DashboardController extends Controller
             'providersSeries',
             'avgMembersPerSociety',
             'avgProductsPerSociety',
-            'avgProvidersPerSociety'
+            'avgProvidersPerSociety',
+            'usersChangeAbsolute',
+            'usersChangePercent'
         ));
     }
+
+
 
     public function projectsJson(Request $request)
     {
