@@ -231,7 +231,7 @@ class ProductController extends Controller
             return back()->withErrors(['images' => $errors])->withInput();
         }
 
-        return back()->with('success', 'Product added.');
+        return back()->with('success', 'Product added, Waiting for approval.');
     }
 
     public function update(Request $request, Product $product)
