@@ -278,7 +278,7 @@ class DashboardController extends Controller
             $avgProductsPerSociety = $societiesCount > 0 ? round($totalProducts / $societiesCount, 2) : 0;
             $avgProvidersPerSociety = $societiesCount > 0 ? round($totalServiceProviders / $societiesCount, 2) : 0;
         }
-        $growth = DashboardService::growthData(12, $societyId);
+        $growth = DashboardService::growthDataRange(12, $societyId);
         return view('admin.dashboard', compact(
             'usersCount',
             'growth',
@@ -380,5 +380,14 @@ class DashboardController extends Controller
             });
 
         return response()->json(['data' => $posts]);
+    }
+    public function growthAjax(Request $request)
+    {
+        $range = $request->query('range', '12m'); // default
+        $user = $request->user();
+        $societyId = ($user && $user->hasRole('society_admin')) ? $user->society_id : null;
+
+        $data = DashboardService::growthDataRange($range, $societyId);
+        return response()->json($data);
     }
 }

@@ -49,6 +49,7 @@ Route::middleware('auth')->group(function () {
 // Authenticated Dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/dashboard/json', [DashboardController::class, 'projectsJson'])->name('dashboard.projectsJson');
+Route::get('/dashboard/growth', [DashboardController::class, 'growthAjax'])->name('dashboard.growth');
 
 
 // Profile

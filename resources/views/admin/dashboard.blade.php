@@ -309,7 +309,7 @@
                 </div>
             </div>
             <!--/ Weekly Posts Reports -->
-            <!-- keep your original card HTML exactly as you had -->
+
             <!-- Line Area Chart (keeps design equal) -->
             <div class="col-12">
                 <div class="card">
@@ -324,20 +324,19 @@
                                 <i class="icon-base ti tabler-calendar"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a href="javascript:void(0);"
-                                        class="dropdown-item d-flex align-items-center">Today</a></li>
-                                <li><a href="javascript:void(0);"
-                                        class="dropdown-item d-flex align-items-center">Yesterday</a></li>
-                                <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Last 7
-                                        Days</a></li>
-                                <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Last 30
-                                        Days</a></li>
+                                <li><a href="#" class="dropdown-item range-btn" data-range="today">Today</a></li>
+                                <li><a href="#" class="dropdown-item range-btn"
+                                        data-range="yesterday">Yesterday</a></li>
+                                <li><a href="#" class="dropdown-item range-btn" data-range="7d">Last 7 Days</a>
+                                </li>
+                                <li><a href="#" class="dropdown-item range-btn" data-range="30d">Last 30 Days</a>
+                                </li>
                                 <li>
                                     <hr class="dropdown-divider" />
                                 </li>
-                                <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Current
+                                <li><a href="#" class="dropdown-item range-btn" data-range="current_month">Current
                                         Month</a></li>
-                                <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Last
+                                <li><a href="#" class="dropdown-item range-btn" data-range="last_month">Last
                                         Month</a></li>
                             </ul>
                         </div>

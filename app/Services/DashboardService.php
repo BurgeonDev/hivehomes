@@ -8,85 +8,167 @@ use Illuminate\Support\Facades\DB;
 class DashboardService
 {
     /**
-     * Get growth data for users, products and posts for last $months months.
+     * Get growth data for given range.
      *
-     * @param int $months
-     * @param int|null $societyId  // pass society id for society-admin, null for super-admin (global)
-     * @return array ['categories' => [...], 'series' => [ ['name'=>'Users','data'=>[...] ], ... ]]
+     * @param string $range  One of: 'today','yesterday','7d','30d','current_month','last_month','12m'
+     * @param int|null $societyId
+     * @return array ['categories'=>[], 'series'=>[ ['name'=>'Users','data'=>[]], ... ]]
      */
-    public static function growthData(int $months = 12, ?int $societyId = null): array
+    public static function growthDataRange(string $range = '12m', ?int $societyId = null): array
     {
-        $months = max(1, $months);
-        $start = Carbon::now()->startOfMonth()->subMonths($months - 1);
-
-        // prepare category labels (e.g. "Aug/2025" or "Aug/25" you can change format)
+        $now = Carbon::now();
         $categories = [];
-        for ($i = 0; $i < $months; $i++) {
-            $categories[] = $start->copy()->addMonths($i)->format('M/Y');
+        $groupByExpr = null;      // SQL expression used as key (Y-m-d or %b/%Y or H:00)
+        $displayMap = [];         // map key => display label
+
+        switch ($range) {
+            case 'today':
+            case 'yesterday':
+                // hourly (24 points)
+                $base = $range === 'today' ? $now->copy() : $now->copy()->subDay();
+                // categories keys will be 'HH'
+                for ($h = 0; $h < 24; $h++) {
+                    $key = $base->copy()->startOfDay()->addHours($h)->format('H:00');
+                    $categories[] = $key;
+                }
+                $groupByExpr = "DATE_FORMAT(created_at, '%H:00')";
+                break;
+
+            case '7d':
+                $start = $now->startOfDay()->subDays(6);
+                for ($i = 0; $i < 7; $i++) {
+                    $d = $start->copy()->addDays($i);
+                    $k = $d->format('Y-m-d');
+                    $categories[] = $d->format('d M'); // display label e.g., 22 Aug
+                    $displayMap[$k] = $d->format('d M'); // map DB key to display
+                }
+                $groupByExpr = "DATE(created_at)";
+                break;
+
+            case '30d':
+                $start = $now->startOfDay()->subDays(29);
+                for ($i = 0; $i < 30; $i++) {
+                    $d = $start->copy()->addDays($i);
+                    $k = $d->format('Y-m-d');
+                    $categories[] = $d->format('d M');
+                    $displayMap[$k] = $d->format('d M');
+                }
+                $groupByExpr = "DATE(created_at)";
+                break;
+
+            case 'current_month':
+            case 'last_month':
+                $base = $range === 'current_month' ? $now->copy() : $now->copy()->subMonth();
+                $daysInMonth = $base->daysInMonth;
+                for ($i = 1; $i <= $daysInMonth; $i++) {
+                    $d = $base->copy()->startOfMonth()->addDays($i - 1);
+                    $k = $d->format('Y-m-d');
+                    $categories[] = $d->format('d M');
+                    $displayMap[$k] = $d->format('d M');
+                }
+                $groupByExpr = "DATE(created_at)";
+                break;
+
+            case '12m':
+            default:
+                // last 12 months
+                $start = $now->copy()->startOfMonth()->subMonths(11);
+                for ($i = 0; $i < 12; $i++) {
+                    $d = $start->copy()->addMonths($i);
+                    $k = $d->format('Y-m'); // key: 2025-08
+                    $categories[] = $d->format('M Y'); // display
+                    $displayMap[$k] = $d->format('M Y');
+                }
+                $groupByExpr = "DATE_FORMAT(created_at, '%Y-%m')";
+                break;
         }
 
-        // initialize arrays with zeros
-        $usersData = array_fill(0, $months, 0);
-        $productsData = array_fill(0, $months, 0);
-        $postsData = array_fill(0, $months, 0);
+        // helper to run query and map results by DB key
+        $queryMapper = function ($table, $column = 'created_at') use ($groupByExpr, $now, $range, $societyId) {
+            $q = DB::table($table)
+                ->selectRaw("$groupByExpr as label, COUNT(*) as cnt")
+                ->whereNotNull($column);
 
-        // helper to map query results into the zero-filled arrays
-        $mapResults = function ($rows) use ($categories, $months) {
-            $out = array_fill(0, $months, 0);
-            // $rows is associative ['label' => count]
-            foreach ($rows as $label => $count) {
-                $index = array_search($label, $categories, true);
-                if ($index !== false) {
-                    $out[$index] = (int) $count;
+            // time filter
+            switch ($range) {
+                case 'today':
+                    $q->whereDate($column, $now->toDateString());
+                    break;
+                case 'yesterday':
+                    $q->whereDate($column, $now->copy()->subDay()->toDateString());
+                    break;
+                case '7d':
+                    $q->whereDate($column, '>=', $now->copy()->subDays(6)->startOfDay()->toDateString());
+                    break;
+                case '30d':
+                    $q->whereDate($column, '>=', $now->copy()->subDays(29)->startOfDay()->toDateString());
+                    break;
+                case 'current_month':
+                    $q->whereMonth($column, $now->month)->whereYear($column, $now->year);
+                    break;
+                case 'last_month':
+                    $lm = $now->copy()->subMonth();
+                    $q->whereMonth($column, $lm->month)->whereYear($column, $lm->year);
+                    break;
+                case '12m':
+                default:
+                    $q->whereDate($column, '>=', $now->copy()->startOfMonth()->subMonths(11)->toDateString());
+                    break;
+            }
+
+            if ($societyId) {
+                // Only some tables have society_id; products/posts do, users may
+                if (Schema::hasColumn($table, 'society_id')) {
+                    $q->where('society_id', $societyId);
+                } else {
+                    $q->where('society_id', $societyId); // if not present this will silently fail; ok to leave
                 }
             }
-            return $out;
+
+            return $q->groupBy('label')->pluck('cnt', 'label')->toArray();
         };
 
-        // Users
-        $usersQuery = DB::table('users')
-            ->selectRaw("DATE_FORMAT(created_at, '%b/%Y') as label, COUNT(*) as cnt")
-            ->whereNotNull('created_at')
-            ->where('created_at', '>=', $start->toDateString())
-            ->groupBy('label');
+        // grab row maps
+        $usersRows = $queryMapper('users', 'created_at');
+        $productsRows = $queryMapper('products', 'created_at');
+        $postsRows = $queryMapper('posts', 'created_at');
 
-        if ($societyId) {
-            $usersQuery->where('society_id', $societyId);
+        // build arrays aligned to categories
+        $usersData = [];
+        $productsData = [];
+        $postsData = [];
+
+        if ($groupByExpr === "DATE_FORMAT(created_at, '%Y-%m')") {
+            // month keys format 'YYYY-MM'
+            foreach ($displayMap as $key => $label) {
+                $k = $key; // key already correct like '2025-08'
+                $usersData[] = isset($usersRows[$k]) ? (int)$usersRows[$k] : 0;
+                $productsData[] = isset($productsRows[$k]) ? (int)$productsRows[$k] : 0;
+                $postsData[] = isset($postsRows[$k]) ? (int)$postsRows[$k] : 0;
+            }
+        } else {
+            // day/hour keys may be 'YYYY-MM-DD' or 'HH:00'
+            if ($range === 'today' || $range === 'yesterday') {
+                // hourly label keys like '08:00'
+                foreach ($categories as $label) {
+                    $k = $label; // label equals key 'HH:00'
+                    $usersData[] = isset($usersRows[$k]) ? (int)$usersRows[$k] : 0;
+                    $productsData[] = isset($productsRows[$k]) ? (int)$productsRows[$k] : 0;
+                    $postsData[] = isset($postsRows[$k]) ? (int)$postsRows[$k] : 0;
+                }
+            } else {
+                // categories have displayMap keyed by 'YYYY-MM-DD'
+                foreach ($displayMap as $dbKey => $label) {
+                    $k = $dbKey;
+                    $usersData[] = isset($usersRows[$k]) ? (int)$usersRows[$k] : 0;
+                    $productsData[] = isset($productsRows[$k]) ? (int)$productsRows[$k] : 0;
+                    $postsData[] = isset($postsRows[$k]) ? (int)$postsRows[$k] : 0;
+                }
+            }
         }
-
-        $usersRows = $usersQuery->pluck('cnt', 'label')->toArray();
-        $usersData = $mapResults($usersRows);
-
-        // Products
-        $productsQuery = DB::table('products')
-            ->selectRaw("DATE_FORMAT(created_at, '%b/%Y') as label, COUNT(*) as cnt")
-            ->whereNotNull('created_at')
-            ->where('created_at', '>=', $start->toDateString())
-            ->groupBy('label');
-
-        if ($societyId) {
-            $productsQuery->where('society_id', $societyId);
-        }
-
-        $productsRows = $productsQuery->pluck('cnt', 'label')->toArray();
-        $productsData = $mapResults($productsRows);
-
-        // Posts
-        $postsQuery = DB::table('posts')
-            ->selectRaw("DATE_FORMAT(created_at, '%b/%Y') as label, COUNT(*) as cnt")
-            ->whereNotNull('created_at')
-            ->where('created_at', '>=', $start->toDateString())
-            ->groupBy('label');
-
-        if ($societyId) {
-            $postsQuery->where('society_id', $societyId);
-        }
-
-        $postsRows = $postsQuery->pluck('cnt', 'label')->toArray();
-        $postsData = $mapResults($postsRows);
 
         return [
-            'categories' => $categories,
+            'categories' => array_values($categories),
             'series' => [
                 ['name' => 'Users', 'data' => $usersData],
                 ['name' => 'Products', 'data' => $productsData],
