@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\ServiceProvider;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -175,6 +176,28 @@ class DashboardService
                 ['name' => 'Products', 'data' => $productsData],
                 ['name' => 'Posts', 'data' => $postsData],
             ],
+        ];
+    }
+    public function serviceProviderStats()
+    {
+        $user = auth()->user();
+
+        $query = ServiceProvider::query()
+            ->join('service_provider_types', 'service_providers.type_id', '=', 'service_provider_types.id')
+            ->selectRaw('service_provider_types.name as type, COUNT(service_providers.id) as total')
+            ->groupBy('service_provider_types.name');
+
+        if ($user->hasRole('SocietyAdmin')) {
+            // Only filter by society for society admins
+            $query->where('service_providers.society_id', $user->society_id);
+        }
+
+
+        $stats = $query->get();
+
+        return [
+            'labels' => $stats->pluck('type')->toArray(),
+            'series' => $stats->pluck('total')->toArray(),
         ];
     }
 }

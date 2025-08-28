@@ -50,6 +50,9 @@ Route::middleware('auth')->group(function () {
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/dashboard/json', [DashboardController::class, 'projectsJson'])->name('dashboard.projectsJson');
 Route::get('/dashboard/growth', [DashboardController::class, 'growthAjax'])->name('dashboard.growth');
+Route::get('/dashboard/service-providers-stats', [DashboardController::class, 'serviceProvidersAjax'])
+    ->name('dashboard.service-providers-stats');
+
 
 
 // Profile

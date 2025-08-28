@@ -309,9 +309,22 @@
                 </div>
             </div>
             <!--/ Weekly Posts Reports -->
+            <!-- radial chart-->
+            <div class="col-md-6 col-12">
+                <div class="card">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <h5 class="mb-0 card-title">Service Providers</h5>
+
+                    </div>
+                    <div class="card-body">
+                        <div id="radialBarChart"></div>
+                    </div>
+                </div>
+            </div>
+
 
             <!-- Line Area Chart (keeps design equal) -->
-            <div class="col-12">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
                         <div>
@@ -355,7 +368,7 @@
             <!--/ Post Tracker -->
 
             <!-- Posts by Status -->
-            <div class="order-1 col-xxl-4 col-md-6 order-xl-0">
+            <div class="order-1 col-xxl-3 col-md-6 order-xl-0">
                 <div class="card h-100">
                     <div class="card-header d-flex justify-content-between">
                         <div class="mb-0 card-title">
@@ -436,7 +449,7 @@
             <!--/ Posts by Status -->
 
             <!-- Total Posts & Products -->
-            <div class="order-2 col-12 col-md-6 col-xxl-4 order-xl-0">
+            <div class="order-2 col-12 col-md-6 col-xxl-3 order-xl-0">
                 <div class="card h-100">
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
@@ -513,7 +526,7 @@
 
 
             <!-- Service Providers Overview -->
-            <div class="col-xxl-4 col-md-6">
+            <div class="col-xxl-3 col-md-6">
                 <div class="card h-100">
                     <div class="card-header d-flex justify-content-between">
                         <div class="mb-0 card-title">
@@ -595,7 +608,7 @@
 
 
             <!-- Product Conditions -->
-            <div class="col-xxl-4 col-md-6 col-12">
+            <div class="col-xxl-3 col-md-6 col-12">
                 <div class="card h-100">
                     <div class="card-header d-flex justify-content-between">
                         <div class="mb-0 card-title">
@@ -813,5 +826,6 @@
 @section('page-js')
     {{-- <script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script> --}}
     @include('admin.dashboard.script')
+    @include('admin.dashboard.radial-chart')
     @include('admin.dashboard.line-chart')
 @endsection

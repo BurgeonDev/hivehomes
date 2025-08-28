@@ -8,11 +8,20 @@
     const labelColor = typeof labelColor !== 'undefined' ? labelColor : '#6b6f82';
     const borderColor = typeof borderColor !== 'undefined' ? borderColor : '#e9ecef';
     const chartColors = typeof chartColors !== 'undefined' ? chartColors : {
-        area: {
-            series1: '#0d6efd',
-            series2: '#20c997',
-            series3: '#ffc107'
-        }
+        const chartColors = typeof chartColors !== 'undefined' ? chartColors : {
+            area: {
+                series1: '#0d6efd',
+                series2: '#20c997',
+                series3: '#ffc107'
+            },
+            donut: {
+                series1: '#0d6efd',
+                series2: '#20c997',
+                series3: '#ffc107',
+                series4: '#dc3545' // extra color for safety
+            }
+        };
+
     };
 
     (function() {

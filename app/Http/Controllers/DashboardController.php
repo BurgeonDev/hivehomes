@@ -390,4 +390,10 @@ class DashboardController extends Controller
         $data = DashboardService::growthDataRange($range, $societyId);
         return response()->json($data);
     }
+    public function serviceProvidersAjax(Request $request)
+    {
+        $user = $request->user();
+        $data = (new DashboardService)->serviceProviderStats();
+        return $data; // already returns JSON
+    }
 }
