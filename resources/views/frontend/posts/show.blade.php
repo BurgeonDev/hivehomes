@@ -3,9 +3,6 @@
 
 @php
     use Illuminate\Support\Str;
-    // Simple reading time estimate (200 wpm)
-    $plainBody = strip_tags($post->body ?? '');
-    $words = str_word_count($plainBody);
     $commentsCount = $post->comments()->count();
 @endphp
 

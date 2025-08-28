@@ -5,6 +5,10 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/quill/typography.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/highlight/highlight.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/quill/katex.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/quill/editor.css') }}" />
 @endsection
 
 @section('content')
@@ -138,6 +142,7 @@
                         <tr>
                             <th>#</th>
                             <th>Title</th>
+                            <th>Content</th>
                             <th>Category</th>
                             <th>Society</th>
                             <th>Author</th>
@@ -158,6 +163,9 @@
                                         @endif
                                         <span>{{ $post->title }}</span>
                                     </a>
+                                </td>
+                                <td>
+                                    {!! $post->body !!}
                                 </td>
                                 <td>{{ $post->category->name ?? '-' }}</td>
 
@@ -224,11 +232,40 @@
                             <input type="text" name="title" id="post-title" class="form-control" required>
                         </div>
 
-                        <!-- Body -->
+                        <!-- Body (replace the textarea block with this) -->
                         <div class="mb-3">
                             <label class="form-label">Content</label>
-                            <textarea name="body" id="post-body" class="form-control" rows="5" required></textarea>
+
+                            <!-- Quill toolbar -->
+                            <div id="post-toolbar" class="mb-2">
+                                <span class="ql-formats">
+                                    <select class="ql-header">
+                                        <option selected></option>
+                                        <option value="1"></option>
+                                        <option value="2"></option>
+                                    </select>
+                                    <button class="ql-bold"></button>
+                                    <button class="ql-italic"></button>
+                                    <button class="ql-underline"></button>
+                                    <button class="ql-strike"></button>
+                                    <button class="ql-code-block"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-list" value="ordered"></button>
+                                    <button class="ql-list" value="bullet"></button>
+                                    <button class="ql-blockquote"></button>
+                                    <button class="ql-link"></button>
+                                    <button class="ql-image"></button>
+                                </span>
+                            </div>
+
+                            <!-- Quill editor -->
+                            <div id="post-editor" style="min-height: 200px; background:#fff;"></div>
+
+                            <!-- Hidden input submitted to server -->
+                            <input type="hidden" name="body" id="post-body" required>
                         </div>
+
 
 
                         <!-- Current Image Preview -->
@@ -279,6 +316,9 @@
     <script src="{{ asset('assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/quill/katex.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/highlight/highlight.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/quill/quill.js') }}"></script>
 @endsection
 
 @section('page-js')
@@ -288,7 +328,9 @@
             $('#postFormMethod').val('PUT');
             $('#post-id').val(post.id);
             $('#post-title').val(post.title);
-            $('#post-body').val(post.body);
+            // set quill content instead of textarea value:
+            window.setPostEditorContent(post.body || '');
+
             $('#post-category').val(post.category_id);
 
             // show current image if exists
@@ -308,15 +350,22 @@
             new bootstrap.Offcanvas($('#offcanvasAddPost')).show();
         }
 
+        // Reset editor when offcanvas is hidden (for Add/New)
         $('#offcanvasAddPost').on('hidden.bs.offcanvas', function() {
             // reset form
             $('#postForm').attr('action', '{{ route('admin.posts.store') }}');
             $('#postFormMethod').val('POST');
-            $('#post-title,#post-body,#post-id').val('');
+            $('#post-title,#post-id').val('');
             $('#current-image-wrapper').hide();
             $('#offcanvasTitle').text('Add Post');
+
+            // clear editor
+            if (window.setPostEditorContent) window.setPostEditorContent('');
+            // reset category
+            $('#post-category').val('');
         });
     </script>
+
     <script>
         document.getElementById('postForm').addEventListener('submit', function(e) {
             const input = document.querySelector('input[name="image"]');
@@ -339,4 +388,46 @@
             }
         });
     </script>
+    <script>
+        (function() {
+            if (typeof Quill === 'undefined') return;
+            if (!window.postQuill) {
+                window.postQuill = new Quill('#post-editor', {
+                    modules: {
+                        toolbar: '#post-toolbar'
+                    },
+                    theme: 'snow'
+                });
+            }
+
+            const quill = window.postQuill;
+            const hiddenInput = document.getElementById('post-body');
+            const form = document.getElementById('postForm');
+
+            function updateHidden() {
+                hiddenInput.value = quill.root.innerHTML;
+            }
+            quill.on('text-change', updateHidden);
+            updateHidden();
+            form.addEventListener('submit', function(e) {
+                updateHidden();
+                if (quill.getText().trim().length === 0) {
+                    e.preventDefault();
+                    alert('Content is required');
+                }
+            });
+            window.setPostEditorContent = function(html) {
+                if (!html) {
+                    quill.setContents([{
+                        insert: '\n'
+                    }]);
+                } else {
+                    quill.clipboard.dangerouslyPasteHTML(html);
+                }
+                updateHidden();
+            };
+
+        })();
+    </script>
+
 @endsection

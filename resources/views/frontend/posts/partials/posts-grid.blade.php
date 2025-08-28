@@ -72,6 +72,7 @@
                                 <i class="menu-icon icon-base ti tabler-eye me-1"></i> View Post
                             </a>
                         </div>
+
                         <div class="col-2 d-flex justify-content-end align-items-center like-button-wrapper">
                             @php $liked = in_array($post->id, $likedPostIds); @endphp
                             <button
@@ -79,12 +80,24 @@
                                 data-post-id="{{ $post->id }}" aria-pressed="{{ $liked ? 'true' : 'false' }}">
                                 <i class="ti tabler-heart fs-5"></i>
                             </button>
-
                         </div>
+
+                        {{-- 👇 Add this if the logged-in user owns the post --}}
+                        @if (auth()->id() === $post->user_id)
+                            <div class="mt-2">
+                                <button class="btn btn-sm btn-outline-warning w-100" data-bs-toggle="modal"
+                                    data-bs-target="#editPostModal-{{ $post->id }}">
+                                    <i class="ti tabler-edit me-1"></i> Edit
+                                </button>
+                            </div>
+                        @endif
+
                     </div>
                 </div>
 
             </article>
+            @include('frontend.posts.partials.edit-post', ['post' => $post, 'categories' => $categories])
+
         </div>
     @empty
         <div class="col-12">

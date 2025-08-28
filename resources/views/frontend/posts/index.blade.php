@@ -5,6 +5,10 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/app-academy.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/select2/select2.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/plyr/plyr.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/quill/typography.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/highlight/highlight.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/quill/katex.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/quill/editor.css') }}" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
     <style>
@@ -164,11 +168,16 @@
     </div>
 
 @endsection
-
-@section('page-js')
+@section('vendor-js')
+    <script src="{{ asset('assets/vendor/libs/quill/katex.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/highlight/highlight.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/quill/quill.js') }}"></script>
     <script src="{{ asset('assets/js/app-academy-course.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/select2/select2.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/plyr/plyr.js') }}"></script>
+@endsection
+@section('page-js')
+
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -267,10 +276,6 @@
                     fetchPosts(buildParamsFromForm());
                 }
             });
-
-            // (optional) trigger initial AJAX load if you want to always load via AJAX
-            // const initialParams = buildParamsFromForm();
-            // fetchPosts(initialParams);
         });
     </script>
     <Script>
@@ -326,5 +331,46 @@
                 });
         });
     </Script>
+    <script>
+        (function() {
+            if (typeof Quill === 'undefined') return;
+            if (!window.postQuill) {
+                window.postQuill = new Quill('#post-editor', {
+                    modules: {
+                        toolbar: '#post-toolbar'
+                    },
+                    theme: 'snow'
+                });
+            }
+
+            const quill = window.postQuill;
+            const hiddenInput = document.getElementById('post-body');
+            const form = document.getElementById('postForm');
+
+            function updateHidden() {
+                hiddenInput.value = quill.root.innerHTML;
+            }
+            quill.on('text-change', updateHidden);
+            updateHidden();
+            form.addEventListener('submit', function(e) {
+                updateHidden();
+                if (quill.getText().trim().length === 0) {
+                    e.preventDefault();
+                    alert('Content is required');
+                }
+            });
+            window.setPostEditorContent = function(html) {
+                if (!html) {
+                    quill.setContents([{
+                        insert: '\n'
+                    }]);
+                } else {
+                    quill.clipboard.dangerouslyPasteHTML(html);
+                }
+                updateHidden();
+            };
+
+        })();
+    </script>
 
 @endsection

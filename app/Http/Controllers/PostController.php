@@ -115,6 +115,40 @@ class PostController extends Controller
 
         return redirect()->route('posts.index')->with('success', 'Post submitted for review.');
     }
+    public function update(Request $request, Post $post)
+    {
+        // Make sure only the owner (or super admin) can update
+        if (auth()->id() !== $post->user_id && !auth()->user()->hasRole('super_admin')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // Validate input
+        $request->validate([
+            'title'       => 'required|string|max:255',
+            'body'        => 'required|string',
+            'image'       => 'nullable|image',
+            'category_id' => 'required|exists:categories,id',
+        ]);
+
+        // Update fields
+        $post->title       = $request->title;
+        $post->body        = $request->body;
+        $post->category_id = $request->category_id;
+
+        // Reset status to pending when updated (so admins re-approve)
+        if (!auth()->user()->hasRole('super_admin')) {
+            $post->status = 'pending';
+        }
+
+        // Handle image
+        if ($request->hasFile('image')) {
+            $post->image = $request->file('image')->store('posts', 'public');
+        }
+
+        $post->save();
+
+        return redirect()->route('posts.index')->with('success', 'Post updated successfully.');
+    }
 
     public function show($id)
     {

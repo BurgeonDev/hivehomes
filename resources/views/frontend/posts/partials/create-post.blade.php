@@ -15,11 +15,38 @@
                         <input type="text" id="title" name="title" class="form-control" required>
                     </div>
 
-                    {{-- Content --}}
                     <div class="col-md-12">
-                        <label class="form-label" for="content">Content</label>
-                        <textarea id="body" name="body" rows="4" class="form-control" required></textarea>
+                        <label class="form-label">Content</label>
+
+                        <!-- Quill toolbar -->
+                        <div id="post-toolbar" class="mb-2">
+                            <span class="ql-formats">
+                                <select class="ql-header">
+                                    <option selected></option>
+                                    <option value="1"></option>
+                                    <option value="2"></option>
+                                </select>
+                                <button class="ql-bold"></button>
+                                <button class="ql-italic"></button>
+                                <button class="ql-underline"></button>
+                                <button class="ql-strike"></button>
+                                <button class="ql-code-block"></button>
+                            </span>
+                            <span class="ql-formats">
+                                <button class="ql-list" value="ordered"></button>
+                                <button class="ql-list" value="bullet"></button>
+                                <button class="ql-blockquote"></button>
+                                <button class="ql-link"></button>
+                            </span>
+                        </div>
+
+                        <!-- Quill editor -->
+                        <div id="post-editor" style="min-height: 200px; background:#fff;"></div>
+
+                        <!-- Hidden input submitted to server -->
+                        <input type="hidden" name="body" id="post-body" required>
                     </div>
+
 
                     {{-- Category --}}
                     <div class="col-md-6">

@@ -38,10 +38,12 @@ Route::post('/contact', [HomeController::class, 'contactStore'])->name('contact.
 
 // Frontend Posts (Authenticated)
 Route::middleware('auth')->group(function () {
-    Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
-    Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
-    Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
-    Route::get('/posts/{id}', [PostController::class, 'show'])->name('posts.show');
+    // Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+    // Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
+    // Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+    // Route::get('/posts/{id}', [PostController::class, 'show'])->name('posts.show');
+    Route::resource('posts', PostController::class);
+
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::post('posts/{post}/like', [PostController::class, 'toggle'])
         ->middleware('auth')
