@@ -21,21 +21,29 @@ class ServiceProviderController extends Controller
 
         $allSocieties = $isSuperAdmin ? Society::all() : collect();
 
+        // Base query
         $query = ServiceProvider::query();
 
         if ($isSuperAdmin) {
+            // Super admin can filter by society_id
             if ($request->filled('society_id')) {
                 $query->where('society_id', $request->input('society_id'));
             }
+            // Counts for ALL societies (unfiltered)
+            $countQuery = ServiceProvider::query();
         } else {
+            // Normal user → only their society
             $query->where('society_id', $request->user()->society_id);
+
+            // Counts also only for their society
+            $countQuery = ServiceProvider::where('society_id', $request->user()->society_id);
         }
 
-        // Clone base query for counts
-        $activeCount     = (clone $query)->where('is_active', true)->count();
-        $inactiveCount   = (clone $query)->where('is_active', false)->count();
-        $approvedCount   = (clone $query)->where('is_approved', true)->count();
-        $unapprovedCount = (clone $query)->where('is_approved', false)->count();
+        // Counts
+        $activeCount     = (clone $countQuery)->where('is_active', true)->count();
+        $inactiveCount   = (clone $countQuery)->where('is_active', false)->count();
+        $approvedCount   = (clone $countQuery)->where('is_approved', true)->count();
+        $unapprovedCount = (clone $countQuery)->where('is_approved', false)->count();
 
         $providers = $query->orderBy('created_at', 'desc')->get();
         $types     = ServiceProviderType::all();
@@ -50,6 +58,7 @@ class ServiceProviderController extends Controller
             'unapprovedCount'
         ));
     }
+
 
 
 

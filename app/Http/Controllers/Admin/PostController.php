@@ -21,11 +21,23 @@ class PostController extends Controller
     {
         $user = auth()->user();
 
-        $posts = Post::with('user', 'society', 'category')->latest()->get();
-        $categories = Category::all();
-        $societies = $user->hasRole('super_admin') ? Society::all() : collect();
+        $isSuperAdmin = $user->hasRole('super_admin');
 
-        if ($user->hasRole('super_admin')) {
+        // Base query for posts
+        $postQuery = Post::with(['user', 'society', 'category'])->latest();
+
+        if (! $isSuperAdmin) {
+            // Restrict normal users to their society
+            $postQuery->where('society_id', $user->society_id);
+        }
+
+        $posts = $postQuery->get();
+
+        $categories = Category::all();
+        $societies  = $isSuperAdmin ? Society::all() : collect();
+
+        // Counts
+        if ($isSuperAdmin) {
             $approvedCount = Post::where('status', 'approved')->count();
             $pendingCount  = Post::where('status', 'pending')->count();
             $rejectedCount = Post::where('status', 'rejected')->count();
@@ -58,6 +70,7 @@ class PostController extends Controller
             'expiredCount'
         ));
     }
+
 
 
     public function store(StorePostRequest $request)
