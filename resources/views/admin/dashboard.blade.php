@@ -255,7 +255,8 @@
                                 <small class="text-body">Posts this week compared to last week</small>
                             </div>
                             <div class="col-12 col-md-7 ps-xl-8">
-                                <div id="weeklyEarningReports"></div>
+                                <div id="weeklyPostsReports"></div>
+
                             </div>
                         </div>
                         <div class="p-5 mt-5 border rounded">
@@ -332,28 +333,7 @@
                             <h5 class="mb-0 card-title">Last updates</h5>
                             <p class="my-0 card-subtitle">Commercial networks</p>
                         </div>
-                        <div class="dropdown">
-                            <button type="button" class="px-0 btn dropdown-toggle" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                <i class="icon-base ti tabler-calendar"></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a href="#" class="dropdown-item range-btn" data-range="today">Today</a></li>
-                                <li><a href="#" class="dropdown-item range-btn"
-                                        data-range="yesterday">Yesterday</a></li>
-                                <li><a href="#" class="dropdown-item range-btn" data-range="7d">Last 7 Days</a>
-                                </li>
-                                <li><a href="#" class="dropdown-item range-btn" data-range="30d">Last 30 Days</a>
-                                </li>
-                                <li>
-                                    <hr class="dropdown-divider" />
-                                </li>
-                                <li><a href="#" class="dropdown-item range-btn" data-range="current_month">Current
-                                        Month</a></li>
-                                <li><a href="#" class="dropdown-item range-btn" data-range="last_month">Last
-                                        Month</a></li>
-                            </ul>
-                        </div>
+
                     </div>
                     <div class="card-body">
                         <!-- keep id the same as before — script will find this or fallback to #lineChart -->

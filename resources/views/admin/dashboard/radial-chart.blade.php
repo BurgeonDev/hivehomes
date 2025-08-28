@@ -200,3 +200,83 @@
         }
     });
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const weeklyPostsReportsEl = document.querySelector('#weeklyPostsReports'); // ✅ fixed ID
+
+        if (weeklyPostsReportsEl) {
+            const labelColor = config.colors.textMuted;
+            const fontFamily = config.fontFamily;
+
+            const weeklyPosts = @json($weeklyPosts);
+            const weeklyLabels = @json($weeklyLabels);
+
+            const weeklyPostsReportsConfig = {
+                chart: {
+                    height: 161,
+                    parentHeightOffset: 0,
+                    type: 'bar',
+                    toolbar: {
+                        show: false
+                    }
+                },
+                plotOptions: {
+                    bar: {
+                        barHeight: '60%',
+                        columnWidth: '38%',
+                        borderRadius: 4,
+                        distributed: true
+                    }
+                },
+                grid: {
+                    show: false
+                },
+                colors: weeklyPosts.map((_, idx) =>
+                    idx === new Date().getDay() - 1 ?
+                    config.colors.primary :
+                    config.colors_label.primary
+                ),
+                dataLabels: {
+                    enabled: false
+                },
+                series: [{
+                    name: 'Posts',
+                    data: weeklyPosts
+                }],
+                legend: {
+                    show: false
+                },
+                xaxis: {
+                    categories: weeklyLabels,
+                    labels: {
+                        style: {
+                            colors: labelColor,
+                            fontSize: '13px',
+                            fontFamily
+                        }
+                    },
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false
+                    }
+                },
+                yaxis: {
+                    labels: {
+                        show: false
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                    y: {
+                        formatter: val => val + ' posts'
+                    }
+                }
+            };
+
+            const weeklyPostsReports = new ApexCharts(weeklyPostsReportsEl, weeklyPostsReportsConfig);
+            weeklyPostsReports.render();
+        }
+    });
+</script>
