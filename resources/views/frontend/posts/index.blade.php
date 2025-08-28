@@ -12,38 +12,209 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
     <style>
-        /* small visual tweaks (unchanged) */
-        .post-card {
-            border-radius: .5rem;
-            transition: box-shadow .3s ease;
+        /**
+         * Minimal product-style imports for posts
+         * - Only includes the product-card/image/badge/footer styles used by posts
+         * - Keeps post-specific styles for excerpt, author-chip, like button
+         *
+         * Replace the current <style> in your posts page with this block.
+         */
+
+        /* === Product card base (minimal) === */
+        #postsContainer .product-card {
+            border-radius: .75rem;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(12, 20, 40, 0.06);
+            transition: box-shadow .28s ease, transform .18s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
-        .post-card:hover {
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        #postsContainer .product-card:hover {
+            box-shadow: 0 12px 40px rgba(12, 20, 40, 0.09);
+            transform: translateY(-2px);
         }
 
-        .post-card .card-body {
-            min-height: 220px;
+        /* Ensure card-body/footer padding matches products */
+        #postsContainer .product-card .card-body {
+            padding: .9rem;
         }
 
-        .post-card .excerpt {
-            color: #6c757d;
+        #postsContainer .product-card .card-footer {
+            background: transparent;
+            border-top: 1px dashed rgba(0, 0, 0, 0.04);
+            padding: .55rem .9rem;
         }
 
-        .post-card .card-footer {
-            padding: .75rem 1rem;
+        /* === Image wrap & media (same heights as products) === */
+        #postsContainer .product-image-wrap {
+            position: relative;
+            overflow: hidden;
+            height: 180px;
+            background: #f8f9fa;
         }
 
-        .kpi-card {
-            min-height: 92px;
-            border-radius: .5rem;
-            padding: 1rem;
+        #postsContainer .product-media,
+        #postsContainer .post-img {
+            height: 180px;
+            width: 100%;
+            object-fit: cover;
+            display: block;
         }
 
-        .bg-label-primary {
-            background-color: #f0f9ff !important;
+        /* small fallback when no image */
+        #postsContainer .no-image-placeholder {
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            background: linear-gradient(135deg, #adb5bd, #6c757d);
+        }
+
+        /* === Badges (category / featured) === */
+        #postsContainer .product-cat-badge {
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            z-index: 5;
+            font-size: .78rem;
+            padding: .35rem .6rem;
+            border-radius: 999px;
+            box-shadow: 0 6px 18px rgba(12, 20, 40, 0.08);
+        }
+
+        #postsContainer .product-featured-badge {
+            position: absolute;
+            right: 12px;
+            top: 12px;
+            z-index: 5;
+            font-size: .75rem;
+            padding: .28rem .45rem;
+            border-radius: 999px;
+            box-shadow: 0 6px 18px rgba(12, 20, 40, 0.08);
+        }
+
+        /* === Title / meta shared styles === */
+        #postsContainer .product-title {
+            font-weight: 600;
+            font-size: 1rem;
+            line-height: 1.1;
+            margin-bottom: 0;
+        }
+
+        #postsContainer .product-title a {
+            display: block;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        #postsContainer .meta-pill {
+            font-size: .78rem;
+            padding: .28rem .6rem;
+            border-radius: 999px;
+            display: inline-block;
+            margin-right: .4rem;
+        }
+
+        #postsContainer .small-muted {
+            color: #6b7280;
+            font-size: .85rem;
+        }
+
+        /* === Post-specific styles === */
+        /* Keep the post-card wrapper class in case it's used elsewhere */
+        #postsContainer .post-card {
+            /* already covered by #postsContainer .product-card */
+        }
+
+        #postsContainer .excerpt {
+            color: #6b7280;
+            font-size: .92rem;
+            margin-bottom: .5rem;
+            line-height: 1.35;
+        }
+
+        /* author chip */
+        #postsContainer .author-chip {
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+        }
+
+        #postsContainer .author-chip img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* bottom meta row inside card-body for posts */
+        #postsContainer .post-meta {
+            gap: .6rem;
+            align-items: center;
+            font-size: .9rem;
+            color: #6b7280;
+        }
+
+        /* Like button (visual only) */
+        #postsContainer .like-button {
+            border-radius: 999px;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color .18s ease, color .18s ease, transform .12s ease;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            background: transparent;
+            color: #6b7280;
+        }
+
+        #postsContainer .like-button:hover {
+            transform: translateY(-1px);
+        }
+
+        #postsContainer .like-button.liked,
+        #postsContainer .like-button.liked i {
+            color: #dc3545 !important;
+            border-color: rgba(220, 53, 69, 0.12);
+            background: rgba(220, 53, 69, 0.04);
+        }
+
+        /* Footer buttons spacing in posts (match product buttons) */
+        #postsContainer .post-card .card-footer .btn {
+            height: 36px;
+            padding: .25rem .75rem;
+            font-size: .88rem;
+            border-radius: .45rem;
+        }
+
+        /* === Responsive adjustments === */
+        @media (max-width: 767.98px) {
+
+            #postsContainer .product-image-wrap,
+            #postsContainer .product-media,
+            #postsContainer .post-img,
+            #postsContainer .no-image-placeholder {
+                height: 140px;
+            }
+
+            #postsContainer .product-card,
+            #postsContainer .post-card {
+                border-radius: .6rem;
+            }
+
+            #postsContainer .product-title {
+                font-size: .97rem;
+            }
         }
     </style>
+
 @endsection
 
 @section('content')
