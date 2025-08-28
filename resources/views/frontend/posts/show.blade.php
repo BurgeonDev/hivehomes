@@ -144,8 +144,10 @@
                                     </div>
 
                                     <div class="ms-auto">
-                                        <a href="mailto:{{ $post->user->email }}"
-                                            class="btn btn-sm btn-outline-primary">Contact author</a>
+                                        <button type="button" class="btn btn-sm btn-primary w-100" data-bs-toggle="modal"
+                                            data-bs-target="#contactModal">
+                                            Contact
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -288,8 +290,10 @@
                                 <div class="mt-3">
                                     <a href="{{ route('posts.index', ['author' => $post->user->id]) }}"
                                         class="mb-2 btn btn-sm btn-outline-primary w-100">More by author</a>
-                                    <a href="mailto:{{ $post->user->email }}"
-                                        class="btn btn-sm btn-primary w-100">Contact</a>
+                                    <button type="button" class="btn btn-sm btn-primary w-100" data-bs-toggle="modal"
+                                        data-bs-target="#contactModal">
+                                        Contact
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -338,6 +342,34 @@
 
 
                     </div> {{-- sticky --}}
+                </div>
+            </div>
+        </div>
+        <!-- Contact Modal -->
+        <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="contactModalLabel">Author Contact Info</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <ul class="mb-0 list-unstyled">
+                            <li><strong>Name:</strong> {{ $post->user->name }}</li>
+                            <li><strong>Email:</strong> {{ $post->user->email }}</li>
+                            <li><strong>Phone:</strong> {{ $post->user->phone ?? 'Not provided' }}</li>
+                            <li><strong>Society:</strong> {{ optional($post->society)->name ?? '—' }}</li>
+                        </ul>
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+
                 </div>
             </div>
         </div>
