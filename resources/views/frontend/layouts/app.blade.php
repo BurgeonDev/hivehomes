@@ -54,12 +54,14 @@
             height: 60px;
             bottom: 20px;
             right: 20px;
-            background-color: #25d366;
-            color: #fff;
+            background-color: #ffffff;
+            /* White background */
+            color: #25d366;
+            /* WhatsApp green */
             border-radius: 50%;
             text-align: center;
             font-size: 28px;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
             z-index: 1000;
             display: flex;
             align-items: center;
@@ -69,8 +71,10 @@
 
         .whatsapp-float:hover {
             transform: scale(1.1);
-            background-color: #20b955;
-            color: #fff;
+            background-color: #f1f1f1;
+            /* Light gray hover */
+            color: #20b955;
+            /* Darker green icon */
         }
     </style>
 </head>
@@ -84,7 +88,7 @@
     <!-- Sections:Start -->
     <!-- Floating WhatsApp Button -->
     <a href="https://wa.me/923425304093" target="_blank" class="whatsapp-float">
-        <i class="icon-base ti tabler-brand-whatsapp"></i>
+        <i class="icon-base ti tabler-brand-whatsapp icon-xl"></i>
     </a>
 
 
