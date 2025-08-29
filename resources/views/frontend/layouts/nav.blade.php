@@ -10,7 +10,7 @@
                     <i class="align-middle icon-base ti tabler-menu-2 icon-lg text-heading fw-medium"></i>
                 </button>
                 <!-- Mobile menu toggle: End-->
-                <a href="landing-page.html" class="app-brand-link">
+                <a href="{{ route('home') }}" class="app-brand-link">
                     <span class="app-brand-logo demo">
                         <span class="text-primary">
                             <svg width="32" height="22" viewBox="0 0 32 22" fill="none"

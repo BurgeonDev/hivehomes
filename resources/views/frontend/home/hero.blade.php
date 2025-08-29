@@ -12,9 +12,16 @@
                      A modern platform for connected communities — enabling smooth communication,
                      local commerce, and effortless access to trusted services.
                  </p>
-                 <a href="{{ route('register') }}" class="px-5 btn btn-primary btn-lg">
-                     Join Your Society Now
-                 </a>
+                 @if (auth()->check())
+                     <a href="{{ route('posts.index') }}" class="px-5 btn btn-primary btn-lg">
+                         Explore My Society Updates
+                     </a>
+                 @else
+                     <a href="{{ route('register') }}" class="px-5 btn btn-primary btn-lg">
+                         Join Your Society Now
+                     </a>
+                 @endif
+
              </div>
 
              <!-- Features: Start -->
