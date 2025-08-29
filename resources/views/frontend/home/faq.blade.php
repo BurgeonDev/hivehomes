@@ -93,6 +93,24 @@
                             </div>
                         </div>
                     </div>
+                    <!-- FAQ 5 -->
+                    <div class="card accordion-item">
+                        <h2 class="accordion-header" id="headingFive">
+                            <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
+                                data-bs-target="#accordionFive" aria-expanded="false" aria-controls="accordionFive">
+                                <i class="icon-base ti tabler-user-check me-2"></i>
+                                How are members verified on this platform?
+                            </button>
+                        </h2>
+                        <div id="accordionFive" class="accordion-collapse collapse" aria-labelledby="headingFive"
+                            data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                Admin of a society verifies members of his/her society using means like confirming
+                                from another member in the surrounding neighbourhood, or whatever method
+                                he/she prefers.
+                            </div>
+                        </div>
+                    </div>
 
 
                 </div>
