@@ -298,17 +298,35 @@
                             </div>
                         </div>
 
-                        {{-- Quick stats / CTA --}}
+                        {{-- Quick Info Card --}}
                         <div class="mb-3 shadow-sm card">
                             <div class="card-body">
                                 <h6 class="mb-2">Quick Info</h6>
                                 <ul class="mb-0 list-unstyled small">
-                                    <li><strong>Published:</strong> {{ optional($post->created_at)->format('F j, Y') }}
+                                    <li class="mb-2 d-flex justify-content-between align-items-center">
+                                        <strong>Published:</strong>
+                                        <span class="badge bg-label-secondary">
+                                            {{ optional($post->created_at)->format('F j, Y') ?? 'N/A' }}
+                                        </span>
                                     </li>
-                                    <li><strong>Category:</strong> {{ $post->category->name ?? '—' }}</li>
+                                    <li class="mb-2 d-flex justify-content-between align-items-center">
+                                        <strong>Category:</strong>
+                                        <span class="badge bg-label-info text-capitalize">
+                                            {{ $post->category->name ?? '—' }}
+                                        </span>
+                                    </li>
+                                    <li class="d-flex justify-content-between align-items-center">
+                                        <strong>Status:</strong>
+                                        <span
+                                            class="badge {{ $post->status === 'approved' ? 'bg-label-success' : 'bg-label-warning' }}">
+                                            {{ ucfirst($post->status ?? 'Pending') }}
+                                        </span>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
+
+
 
                         {{-- Related posts --}}
                         @php

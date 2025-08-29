@@ -25,7 +25,7 @@
                                     {{-- Featured small badge (top-right) --}}
                                     @if ($product->is_featured)
                                         <span
-                                            class="badge bg-label-warning text-dark product-featured-badge">Featured</span>
+                                            class="badge bg-label-danger text-dark product-featured-badge">Featured</span>
                                     @endif
                                 </div>
                             </a>

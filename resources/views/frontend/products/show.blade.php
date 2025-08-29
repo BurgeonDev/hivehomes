@@ -73,7 +73,7 @@
                                     {{ optional($product->created_at)->format('F j, Y') }}</small>
 
                                 @if ($product->is_featured && $product->featured_until && $product->featured_until->isFuture())
-                                    <span class="badge bg-label-warning text-capitalize ms-3">Featured</span>
+                                    <span class="badge bg-label-danger text-capitalize ms-3">Featured</span>
                                 @endif
 
                                 <span class="badge bg-label-primary text-capitalize ms-auto">
@@ -262,45 +262,37 @@
                             </div>
                         </div>
 
-                        {{-- Quick info --}}
+                        {{-- Quick Info Card --}}
                         <div class="mb-3 shadow-sm card">
                             <div class="card-body">
-                                <h6 class="mb-3">Quick Info</h6>
-                                <div class="row g-2 small">
-
-                                    <div class="col-6">
-                                        <div
-                                            class="p-2 rounded bg-label-primary d-flex justify-content-between align-items-center">
-                                            <small class="text-muted">Posted</small>
-                                            <strong>{{ optional($product->created_at)->format('F j, Y') }}</strong>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-6">
-                                        <div
-                                            class="p-2 rounded bg-label-info d-flex justify-content-between align-items-center">
-                                            <small class="text-muted">Category</small>
-                                            <strong>{{ $product->category->name ?? '—' }}</strong>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-6">
-                                        <div
-                                            class="p-2 rounded bg-label-success d-flex justify-content-between align-items-center">
-                                            <small class="text-muted">Quantity</small>
-                                            <strong>{{ $product->quantity }}</strong>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-6">
-                                        <div
-                                            class="p-2 rounded bg-label-warning d-flex justify-content-between align-items-center">
-                                            <small class="text-muted">Negotiable</small>
-                                            <strong>{{ $product->is_negotiable ? 'Yes' : 'No' }}</strong>
-                                        </div>
-                                    </div>
-
-                                </div>
+                                <h6 class="mb-2">Quick Info</h6>
+                                <ul class="mb-0 list-unstyled small">
+                                    <li class="mb-2 d-flex justify-content-between align-items-center">
+                                        <strong>Posted:</strong>
+                                        <span class="badge bg-label-secondary">
+                                            {{ optional($product->created_at)->format('F j, Y') ?? 'N/A' }}
+                                        </span>
+                                    </li>
+                                    <li class="mb-2 d-flex justify-content-between align-items-center">
+                                        <strong>Category:</strong>
+                                        <span class="badge bg-label-info text-capitalize">
+                                            {{ $product->category->name ?? '—' }}
+                                        </span>
+                                    </li>
+                                    <li class="mb-2 d-flex justify-content-between align-items-center">
+                                        <strong>Quantity:</strong>
+                                        <span class="badge bg-label-success">
+                                            {{ $product->quantity }}
+                                        </span>
+                                    </li>
+                                    <li class="d-flex justify-content-between align-items-center">
+                                        <strong>Negotiable:</strong>
+                                        <span
+                                            class="badge {{ $product->is_negotiable ? 'bg-label-primary' : 'bg-label-danger' }}">
+                                            {{ $product->is_negotiable ? 'Yes' : 'No' }}
+                                        </span>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
 
