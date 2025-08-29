@@ -1,10 +1,5 @@
 @extends('auth.layouts.app')
 @section('title', 'Register')
-@section('vendor-css')
-@endsection
-@section('page-css')
-@endsection
-
 
 @section('content')
     <div class="container-xxl">
@@ -163,11 +158,8 @@
             </div>
         </div>
     </div>
-
-
-@section('vendor-js')
-
 @endsection
+
 @section('page-js')
 
     <script>
