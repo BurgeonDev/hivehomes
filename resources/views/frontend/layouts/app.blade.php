@@ -47,6 +47,31 @@
 
             /* dark gray text */
         }
+
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 20px;
+            right: 20px;
+            background-color: #25d366;
+            color: #fff;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 28px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            background-color: #20b955;
+            color: #fff;
+        }
     </style>
 </head>
 
@@ -57,6 +82,12 @@
     @include('frontend.layouts.nav')
     <!-- Navbar: End -->
     <!-- Sections:Start -->
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/923425304093" target="_blank" class="whatsapp-float">
+        <i class="icon-base ti tabler-brand-whatsapp"></i>
+    </a>
+
+
 
     @yield('content')
 
