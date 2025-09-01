@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ServiceProviderReview extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'service_provider_id',
@@ -16,17 +17,11 @@ class ServiceProviderReview extends Model
         'rating',
     ];
 
-    /**
-     * The service provider being reviewed.
-     */
     public function provider()
     {
         return $this->belongsTo(ServiceProvider::class, 'service_provider_id');
     }
 
-    /**
-     * The user who left this review.
-     */
     public function user()
     {
         return $this->belongsTo(User::class);
