@@ -241,21 +241,27 @@
 
             {{-- Delete Account --}}
             <div class="tab-pane fade" id="delete">
-                <div class="border shadow-sm card ">
+                <div class="border shadow-sm card">
+                    <h5 class="card-header text-danger">
+                        <i class="icon-base ti tabler-trash me-1"></i>
+                        Delete Account
+                    </h5>
                     <div class="card-body">
-                        <h5 class="mb-4 card-title text-danger">
-                            <i class="icon-base ti tabler-trash me-1"></i>
-                            Delete Account
-                        </h5>
+                        {{-- Warning message --}}
+                        <div class="mb-0 mb-4 col-12">
+                            <div class="alert alert-warning">
+                                <h5 class="mb-1 alert-heading">Are you sure you want to delete your account?</h5>
+                                <p class="mb-0">Once you delete your account, there is no going back. <br>
+                                    All your <strong>posts, products, and associated data</strong> will be lost.</p>
+                            </div>
+                        </div>
+
+                        {{-- Delete form --}}
                         <form id="deleteAccountForm" method="POST" action="{{ route('profile.destroy') }}">
                             @csrf
                             @method('delete')
 
-                            <p class="mb-3 text-muted">
-                                Permanently delete your account and <strong>all associated data (posts, products,
-                                    etc.)</strong>.
-                            </p>
-
+                            {{-- Confirm password --}}
                             <div class="mb-3">
                                 <label class="form-label">Confirm Password</label>
                                 <input type="password" name="password"
@@ -265,17 +271,33 @@
                                 @enderror
                             </div>
 
+                            {{-- Checkbox confirmation --}}
+                            <div class="my-3 form-check">
+                                <input class="form-check-input" type="checkbox" id="accountActivation">
+                                <label class="form-check-label" for="accountActivation">
+                                    I confirm my account deactivation
+                                </label>
+                            </div>
+
+                            {{-- Delete button --}}
                             <div class="text-end">
-                                <button type="button" class="btn btn-danger" id="deleteAccountBtn">
+                                <button type="submit" id="deleteAccountBtn" class="btn btn-danger" disabled>
                                     <i class="icon-base ti tabler-alert-triangle me-1"></i>
                                     Delete Account
                                 </button>
                             </div>
                         </form>
-
                     </div>
                 </div>
             </div>
+
+            {{-- Script --}}
+            <script>
+                document.getElementById('accountActivation').addEventListener('change', function() {
+                    document.getElementById('deleteAccountBtn').disabled = !this.checked;
+                });
+            </script>
+
 
         </div>
     </div>

@@ -64,34 +64,39 @@
                         </a>
                     </li>
 
-
                     @auth
-                        {{-- profucts --}}
-                        <li class="nav-item">
-                            <a class="nav-link fw-medium {{ request()->routeIs('products.*') ? 'active' : '' }}"
-                                href="{{ route('products.index') }}">
-                                Products
-                            </a>
-                        </li>
-                        {{-- Posts --}}
-                        <li class="nav-item">
-                            <a class="nav-link fw-medium {{ request()->routeIs('posts.*') ? 'active' : '' }}"
-                                href="{{ route('posts.index') }}">
-                                Posts
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link fw-medium {{ request()->routeIs('service-providers.*') ? 'active' : '' }}"
-                                href="{{ route('service-providers.index') }}">
-                                Services
-                            </a>
-                        </li>
+                        @if (auth()->user()->is_active === 'active')
+                            {{-- Products --}}
+                            <li class="nav-item">
+                                <a class="nav-link fw-medium {{ request()->routeIs('products.*') ? 'active' : '' }}"
+                                    href="{{ route('products.index') }}">
+                                    Products
+                                </a>
+                            </li>
 
+                            {{-- Posts --}}
+                            <li class="nav-item">
+                                <a class="nav-link fw-medium {{ request()->routeIs('posts.*') ? 'active' : '' }}"
+                                    href="{{ route('posts.index') }}">
+                                    Posts
+                                </a>
+                            </li>
+
+                            {{-- Services --}}
+                            <li class="nav-item">
+                                <a class="nav-link fw-medium {{ request()->routeIs('service-providers.*') ? 'active' : '' }}"
+                                    href="{{ route('service-providers.index') }}">
+                                    Services
+                                </a>
+                            </li>
+                        @endif
                         {{-- Profile --}}
                         <li class="nav-item">
                             <a class="nav-link fw-medium" href="{{ route('profile.show') }}">Profile</a>
                         </li>
+
                     @endauth
+
 
                     @php
                         $user = auth()->user();
