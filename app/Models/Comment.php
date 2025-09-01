@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Comment extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    // Fillable fields for mass assignment
     protected $fillable = [
         'post_id',
         'user_id',
@@ -17,17 +17,11 @@ class Comment extends Model
         'rating',
     ];
 
-    /**
-     * Get the user who made the comment.
-     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get the post that this comment belongs to.
-     */
     public function post()
     {
         return $this->belongsTo(Post::class);
