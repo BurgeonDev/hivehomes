@@ -1,5 +1,5 @@
 <?php
-// app/Models/Category.php
+// app/Models/Category.php or post category model
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
