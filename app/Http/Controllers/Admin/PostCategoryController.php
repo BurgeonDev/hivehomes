@@ -41,7 +41,14 @@ class PostCategoryController extends Controller
 
     public function destroy(Category $post_category)
     {
+        if ($post_category->posts()->exists()) {
+            return redirect()->back()
+                ->with('error', 'Category cannot be deleted — it contains posts.');
+        }
+
         $post_category->delete();
-        return redirect()->route('admin.post-categories.index')->with('success', 'Category deleted successfully.');
+
+        return redirect()->route('admin.post-categories.index')
+            ->with('success', 'Category deleted successfully.');
     }
 }

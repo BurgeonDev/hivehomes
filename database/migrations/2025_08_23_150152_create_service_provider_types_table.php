@@ -12,6 +12,7 @@ return new class extends Migration {
         Schema::create('service_provider_types', function (Blueprint $table) {
             $table->id();
             $table->string('name'); // e.g., Plumber, Electrician
+            $table->softDeletes();
             $table->timestamps();
         });
     }

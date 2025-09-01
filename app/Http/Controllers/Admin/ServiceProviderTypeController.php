@@ -39,7 +39,11 @@ class ServiceProviderTypeController extends Controller
 
     public function destroy(ServiceProviderType $type)
     {
+        if ($type->providers()->exists()) {
+            return back()->with('error', 'Cannot delete this type — providers are using it.');
+        }
+
         $type->delete();
-        return back()->with('success', 'Type deleted.');
+        return back()->with('success', 'Service-Proivder Type deleted.');
     }
 }
