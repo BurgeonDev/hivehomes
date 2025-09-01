@@ -247,9 +247,15 @@
                             <i class="icon-base ti tabler-trash me-1"></i>
                             Delete Account
                         </h5>
-                        <form method="POST" action="{{ route('profile.destroy') }}">
-                            @csrf @method('delete')
-                            <p class="mb-3 text-muted">Permanently delete your account and all associated data.</p>
+                        <form id="deleteAccountForm" method="POST" action="{{ route('profile.destroy') }}">
+                            @csrf
+                            @method('delete')
+
+                            <p class="mb-3 text-muted">
+                                Permanently delete your account and <strong>all associated data (posts, products,
+                                    etc.)</strong>.
+                            </p>
+
                             <div class="mb-3">
                                 <label class="form-label">Confirm Password</label>
                                 <input type="password" name="password"
@@ -258,13 +264,15 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
+
                             <div class="text-end">
-                                <button class="btn btn-danger" onclick="return confirm('Are you sure?')">
+                                <button type="button" class="btn btn-danger" id="deleteAccountBtn">
                                     <i class="icon-base ti tabler-alert-triangle me-1"></i>
                                     Delete Account
                                 </button>
                             </div>
                         </form>
+
                     </div>
                 </div>
             </div>
@@ -317,4 +325,23 @@
             }
         });
     </script>
+    <script>
+        document.getElementById('deleteAccountBtn').addEventListener('click', function(e) {
+            Swal.fire({
+                title: 'Are you sure?',
+                html: "Deleting your account will also remove <b>all your posts, products, and related data</b>. <br><br>This action cannot be undone.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, delete my account',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('deleteAccountForm').submit();
+                }
+            });
+        });
+    </script>
+
 @endsection

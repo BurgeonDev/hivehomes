@@ -32,6 +32,8 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/swiper/swiper.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/front-page-landing.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/notyf/notyf.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/animate-css/animate.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.css') }}">
     <!-- Vendors CSS -->
     @yield('vendor-css')
     <!-- Page CSS -->
@@ -112,6 +114,8 @@
     <script src="{{ asset('assets/js/front-page-landing.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/notyf/notyf.js') }}"></script>
     <script src="{{ asset('assets/js/ui-toasts.js') }}"></script>
+    <script src="{{ asset('assets/js/extended-ui-sweetalert2.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.js') }}"></script>
     <!-- Vendors JS -->
     @yield('vendor-js')
     <!-- Page JS -->
