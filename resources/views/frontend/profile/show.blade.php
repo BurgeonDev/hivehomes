@@ -131,74 +131,139 @@
         <div class="tab-content">
             {{-- Edit Profile --}}
             <div class="tab-pane fade show active" id="profile">
-                <div class="border-0 shadow-sm card">
-                    <div class="card-body">
-                        <h5 class="mb-4 card-title"><i class="icon-base ti tabler-edit me-1"></i> Edit Profile</h5>
+                <div class="row">
+                    {{-- Right side: User details card --}}
+                    <div class="col-md-4">
+                        <div class="mb-4 shadow-sm card">
+                            <div class="card-body">
+                                <p class="mb-0 text-uppercase text-body-secondary small">About</p>
+                                <ul class="py-1 my-3 list-unstyled">
+                                    <li class="mb-3 d-flex align-items-center">
+                                        <i class="icon-base ti tabler-user icon-lg"></i>
+                                        <span class="mx-2 fw-medium">Full Name:</span>
+                                        <span>{{ $user->name }}</span>
+                                    </li>
+                                    <li class="mb-3 d-flex align-items-center">
+                                        <i class="icon-base ti tabler-check icon-lg"></i>
+                                        <span class="mx-2 fw-medium">Status:</span>
+                                        <span>{{ ucfirst($user->is_active) }}</span>
+                                    </li>
+                                    <li class="mb-3 d-flex align-items-center">
+                                        <i class="icon-base ti tabler-mail icon-lg"></i>
+                                        <span class="mx-2 fw-medium">Email:</span>
+                                        <span>{{ $user->email }}</span>
+                                    </li>
+                                    <li class="mb-3 d-flex align-items-center">
+                                        <i class="icon-base ti tabler-phone-call icon-lg"></i>
+                                        <span class="mx-2 fw-medium">Phone:</span>
+                                        <span>{{ $user->phone ?? 'N/A' }}</span>
+                                    </li>
+                                    <li class="mb-3 d-flex align-items-center">
+                                        <i class="icon-base ti tabler-flag icon-lg"></i>
+                                        <span class="mx-2 fw-medium">Society:</span>
+                                        <span>{{ $user->society->name ?? 'N/A' }}</span>
+                                    </li>
+                                </ul>
 
-                        <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
-                            @csrf @method('patch')
+                                <p class="mb-0 text-uppercase text-body-secondary small">Products</p>
+                                <ul class="py-1 my-3 list-unstyled">
+                                    @forelse ($user->products as $product)
+                                        <li class="mb-2">{{ $product->title }}</li>
+                                    @empty
+                                        <li class="text-muted">No products yet.</li>
+                                    @endforelse
+                                </ul>
 
-                            <div class="mb-4 text-center">
-                                <div style="max-width: 420px; margin: 0 auto;">
-                                    <!-- FilePond input -->
-                                    <input type="file" name="profile_pic" id="profile_pic" accept="image/*" />
-                                </div>
-                                @error('profile_pic')
-                                    <div class="mt-1 text-danger small">{{ $message }}</div>
-                                @enderror
+                                <p class="mb-0 text-uppercase text-body-secondary small">Posts</p>
+                                <ul class="py-1 my-3 list-unstyled">
+                                    @forelse ($user->posts as $post)
+                                        <li class="mb-2">{{ $post->title }}</li>
+                                    @empty
+                                        <li class="text-muted">No posts yet.</li>
+                                    @endforelse
+                                </ul>
                             </div>
-
-                            <div class="row gx-3">
-                                {{-- Name --}}
-                                <div class="mb-3 col-md-6">
-                                    <label class="form-label">Name</label>
-                                    <input type="text" name="name"
-                                        class="form-control @error('name') is-invalid @enderror"
-                                        value="{{ old('name', $user->name) }}" required>
-                                    @error('name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                {{-- Email --}}
-                                <div class="mb-3 col-md-6">
-                                    <label class="form-label">Email</label>
-                                    <input type="email" name="email"
-                                        class="form-control @error('email') is-invalid @enderror"
-                                        value="{{ old('email', $user->email) }}" required>
-                                    @error('email')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                {{-- Phone --}}
-                                <div class="mb-3 col-md-6">
-                                    <label class="form-label">Phone</label>
-                                    <input type="text" name="phone"
-                                        class="form-control @error('phone') is-invalid @enderror"
-                                        value="{{ old('phone', $user->phone) }}">
-                                    @error('phone')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                {{-- Society --}}
-                                <div class="mb-3 col-md-6">
-                                    <label class="form-label">Society</label>
-                                    <input type="text" class="form-control" value="{{ $user->society->name ?? 'N/A' }}"
-                                        disabled>
-                                </div>
-                            </div>
-
-                            <div class="text-end">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="icon-base ti tabler-device-floppy me-1"></i>
-                                    Save Changes
-                                </button>
-                            </div>
-                        </form>
+                        </div>
                     </div>
+                    {{-- Left side: Edit Profile --}}
+                    <div class="col-md-8">
+                        <div class="tab-pane fade show active" id="profile">
+                            <div class="border-0 shadow-sm card">
+                                <div class="card-body">
+                                    <h5 class="mb-4 card-title">
+                                        <i class="icon-base ti tabler-edit me-1"></i> Edit Profile
+                                    </h5>
+
+                                    <form method="POST" action="{{ route('profile.update') }}"
+                                        enctype="multipart/form-data">
+                                        @csrf @method('patch')
+
+                                        <div class="mb-4 text-center">
+                                            <div style="max-width: 420px; margin: 0 auto;">
+                                                <input type="file" name="profile_pic" id="profile_pic"
+                                                    accept="image/*" />
+                                            </div>
+                                            @error('profile_pic')
+                                                <div class="mt-1 text-danger small">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+                                        <div class="row gx-3">
+                                            {{-- Name --}}
+                                            <div class="mb-3 col-md-6">
+                                                <label class="form-label">Name</label>
+                                                <input type="text" name="name"
+                                                    class="form-control @error('name') is-invalid @enderror"
+                                                    value="{{ old('name', $user->name) }}" required>
+                                                @error('name')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+
+                                            {{-- Email --}}
+                                            <div class="mb-3 col-md-6">
+                                                <label class="form-label">Email</label>
+                                                <input type="email" name="email"
+                                                    class="form-control @error('email') is-invalid @enderror"
+                                                    value="{{ old('email', $user->email) }}" required>
+                                                @error('email')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+
+                                            {{-- Phone --}}
+                                            <div class="mb-3 col-md-6">
+                                                <label class="form-label">Phone</label>
+                                                <input type="text" name="phone"
+                                                    class="form-control @error('phone') is-invalid @enderror"
+                                                    value="{{ old('phone', $user->phone) }}">
+                                                @error('phone')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+
+                                            {{-- Society --}}
+                                            <div class="mb-3 col-md-6">
+                                                <label class="form-label">Society</label>
+                                                <input type="text" class="form-control"
+                                                    value="{{ $user->society->name ?? 'N/A' }}" disabled>
+                                            </div>
+                                        </div>
+
+                                        <div class="text-end">
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="icon-base ti tabler-device-floppy me-1"></i> Save Changes
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                 </div>
+
             </div>
 
             {{-- Change Password --}}

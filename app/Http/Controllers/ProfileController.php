@@ -33,13 +33,14 @@ class ProfileController extends Controller
     public function show(Request $request): View|RedirectResponse
     {
         try {
-            return view('frontend.profile.show', [
-                'user' => $request->user(),
-            ]);
+            $user = $request->user()->load(['products', 'posts']); // eager load
+
+            return view('frontend.profile.show', compact('user'));
         } catch (Exception $e) {
             return Redirect::back()->with('error', 'Failed to load profile view.');
         }
     }
+
 
     /**
      * Update the user's profile information.
