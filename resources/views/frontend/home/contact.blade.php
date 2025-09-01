@@ -64,10 +64,17 @@
                                           placeholder="john" />
                                   </div>
                                   <div class="col-md-6">
+                                      <label class="form-label">Phone</label>
+                                      <input type="text" class="form-control" name="phone" required
+                                          placeholder="+92-333-1342525" />
+                                  </div>
+                                  <div class="col-md-12">
                                       <label class="form-label">Email</label>
                                       <input type="email" class="form-control" name="email" required
                                           placeholder="johndoe@gmail.com" />
                                   </div>
+
+
                                   <div class="col-12">
                                       <label class="form-label">Message</label>
                                       <textarea class="form-control" name="message" required rows="7" placeholder="Write a message"></textarea>

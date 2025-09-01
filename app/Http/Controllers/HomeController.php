@@ -15,13 +15,14 @@ class HomeController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email',
+            'phone' => 'required|string|max:20',
             'message' => 'required|string',
         ]);
 
         // Store contact message
-        $contact = Contact::create($request->only('name', 'email', 'message'));
+        $contact = Contact::create($request->only('name', 'email', 'phone', 'message'));
 
-        // Notify super admin (or you can loop through all admins if needed)
+        // Notify super admin
         $adminUser = User::role('super_admin')->first();
         if ($adminUser) {
             $adminUser->notify(new NewContactMessage($contact));
@@ -29,6 +30,7 @@ class HomeController extends Controller
 
         return back()->with('success', 'Your message has been sent successfully!');
     }
+
     public function show($id)
     {
         $post = Post::with(['user', 'society'])->findOrFail($id);

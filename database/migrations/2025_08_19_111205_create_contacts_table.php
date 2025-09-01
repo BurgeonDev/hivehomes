@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('contacts', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('phone', 20)->nullable();
             $table->string('email');
             $table->text('message');
-            $table->text('admin_reply')->nullable(); // admin reply
-            $table->boolean('is_seen')->default(false); // mark if admin has seen it
+            $table->text('admin_reply')->nullable();
+            $table->boolean('is_seen')->default(false);
             $table->timestamps();
         });
     }

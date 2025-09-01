@@ -32,6 +32,7 @@
                         <tr>
                             <th>#</th>
                             <th>Name</th>
+                            <th>Phone</th>
                             <th>Email</th>
                             <th>Message</th>
                             <th>Status</th>
@@ -43,6 +44,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $contact->name }}</td>
+                                <td>{{ $contact->phone }}</td>
                                 <td>{{ $contact->email }}</td>
                                 <td>{{ Str::limit($contact->message, 50) }}</td>
                                 <td>
