@@ -115,6 +115,13 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
+
+        // Check roles before deleting
+        if ($user->hasRole('super_admin') || $user->hasRole('society_admin')) {
+            return redirect()->route('users.index')
+                ->with('error', 'You cannot delete a Super Admin or Society Admin.');
+        }
+
         $user->delete();
 
         return redirect()->route('users.index')->with('success', 'User deleted successfully.');

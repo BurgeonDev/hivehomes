@@ -142,13 +142,18 @@
                                         onclick="editUser({{ $user }}, '{{ $user->roles->first()->name ?? '' }}')">
                                         <i class="icon-base ti tabler-edit"></i>
                                     </button>
-                                    <form method="POST" action="{{ route('users.destroy', $user) }}"
-                                        class="delete-form d-inline">
-                                        @csrf @method('DELETE')
-                                        <button class="btn btn-sm badge bg-label-danger show-confirm"> <i
-                                                class="icon-base ti tabler-trash"></i></button>
-                                    </form>
+
+                                    @if (!($user->hasRole('super_admin') || $user->hasRole('society_admin')))
+                                        <form method="POST" action="{{ route('users.destroy', $user) }}"
+                                            class="delete-form d-inline">
+                                            @csrf @method('DELETE')
+                                            <button class="btn btn-sm badge bg-label-danger show-confirm">
+                                                <i class="icon-base ti tabler-trash"></i>
+                                            </button>
+                                        </form>
+                                    @endif
                                 </td>
+
                             </tr>
                         @endforeach
                     </tbody>
