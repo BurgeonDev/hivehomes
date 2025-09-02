@@ -14,16 +14,46 @@ class UserDashboardController extends Controller
     {
         $user = Auth::user();
 
-        // eager load related data used in the view
+        // eager load related data used in the view (including roles)
         $user->load([
+            'roles',
             'society',
             'posts.comments.user',
-            // if your Post model has a many-to-many likes relation name different than 'likedByUsers'
-            // adjust the relation name accordingly
             'posts.likedByUsers',
             'products',
-            'comments', // if user has comments()
+            'comments',
         ]);
+
+        // -------------------------
+        // Resolve a friendly role name for the view
+        // -------------------------
+        $roleName = null;
+
+        // If using Spatie, getRoleNames() returns a Collection of role names
+        try {
+            if (method_exists($user, 'getRoleNames')) {
+                $roleName = $user->getRoleNames()->first();
+            }
+        } catch (\Throwable $e) {
+            // ignore and fall back to relation below
+        }
+
+        // fallback: use loaded relation (avoids extra query if already eager-loaded)
+        if (!$roleName && $user->relationLoaded('roles')) {
+            $roleName = $user->roles->pluck('name')->first();
+        }
+
+        // final fallback: attempt to query the relation
+        if (!$roleName) {
+            try {
+                $roleName = $user->roles()->pluck('name')->first();
+            } catch (\Throwable $e) {
+                // ignore
+            }
+        }
+
+        // expose a simple property for the blade to use (keeps your blade unchanged)
+        $user->role = $roleName ?? 'Member';
 
         // expose a friendly status attribute for the view (view expects $user->status)
         $user->status = isset($user->is_active) ? ucfirst($user->is_active) : 'Unknown';
@@ -63,17 +93,17 @@ class UserDashboardController extends Controller
         $posts = $user->posts()->latest()->paginate(9)->withQueryString();
 
         // Service reviews: attempt multiple strategies with safe fallback.
-        // Schema shows `service_provider_reviews` table. We try:
-        // 1) Eloquent model App\Models\ServiceProviderReview with relationship to serviceProvider
-        // 2) Raw join between service_provider_reviews and service_providers where service_providers.user_id = current user
-        // If neither is available, provide an empty LengthAwarePaginator so the view can call ->count() and ->links().
         $serviceReviews = null;
         try {
             if (class_exists(\App\Models\ServiceProviderReview::class)) {
                 // assumes ServiceProviderReview has relationship 'serviceProvider' pointing to service_providers table
-                $serviceReviews = \App\Models\ServiceProviderReview::whereHas('serviceProvider', function ($q) use ($user) {
+                $serviceReviews = \App\Models\ServiceProviderReview::whereHas('provider', function ($q) use ($user) {
                     $q->where('user_id', $user->id);
-                })->latest()->paginate(8)->withQueryString();
+                })
+                    ->with(['provider', 'user']) // eager load for blade
+                    ->latest()
+                    ->paginate(8)
+                    ->withQueryString();
             } else {
                 // fallback to query builder join (if service_providers table exists)
                 $query = DB::table('service_provider_reviews')

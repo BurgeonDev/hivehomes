@@ -56,4 +56,8 @@ class ServiceProvider extends Model
     {
         return $this->belongsTo(ServiceProviderType::class, 'type_id');
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
