@@ -39,7 +39,11 @@
         <!-- Real customers reviews: End -->
 
         <!-- Our great team: Start -->
-        {{-- @include('frontend.home.team') --}}
+        @auth
+            @if (auth()->user()->is_active === 'active')
+                @include('frontend.home.team')
+            @endif
+        @endauth
         <!-- Our great team: End -->
 
         <!-- Pricing plans: Start -->
