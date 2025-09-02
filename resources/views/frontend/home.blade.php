@@ -4,6 +4,16 @@
 
 @endsection
 @section('page-css')
+    <style>
+        .no-image-placeholder {
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            background: linear-gradient(135deg, #adb5bd, #6c757d);
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -21,7 +31,11 @@
 
 
         <!-- Real customers reviews: Start -->
-        {{-- @include('frontend.home.customers') --}}
+        @auth
+            @if (auth()->user()->is_active === 'active')
+                @include('frontend.home.customers')
+            @endif
+        @endauth
         <!-- Real customers reviews: End -->
 
         <!-- Our great team: Start -->
