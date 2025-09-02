@@ -14,7 +14,8 @@ use App\Http\Controllers\{
     UserController,
     ServiceProviderController,
     ProductController,
-    DashboardController
+    DashboardController,
+    UserDashboardController
 };
 use App\Http\Controllers\Admin\{
     ContactController,
@@ -77,6 +78,7 @@ Route::middleware('auth')->group(function () {
     // Roles users data
     Route::get('roles/users/data', [RoleController::class, 'usersData'])->name('roles.users.data');
     Route::patch('/societies/{society}/status', [SocietyController::class, 'updateStatus'])->name('societies.update-status');
+    Route::get('/user/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
 });
 
 // Admin Backend

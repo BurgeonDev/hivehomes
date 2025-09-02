@@ -94,6 +94,9 @@
                         <li class="nav-item">
                             <a class="nav-link fw-medium" href="{{ route('profile.show') }}">Profile</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link fw-medium" href="{{ route('user.dashboard') }}">Dashboard</a>
+                        </li>
 
                     @endauth
 
