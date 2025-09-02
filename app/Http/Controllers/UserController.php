@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
+use App\Models\Country;
 use App\Models\Society;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -16,15 +18,18 @@ class UserController extends Controller
         $user = auth()->user();
 
         if ($user->hasRole('super_admin')) {
-            $users = User::with('roles', 'society')->get();
+            $users = User::with('roles', 'society.city.state.country')->get();
 
             $activeUsersCount = User::where('is_active', 'active')->count();
             $inactiveUsersCount = User::where('is_active', 'inactive')->count();
 
             $roles = Role::all();
             $societies = Society::all();
+
+            $countries = Country::all();
+            $cities = City::all();
         } else {
-            $users = User::with('roles', 'society')
+            $users = User::with('roles', 'society.city.state.country')
                 ->where('society_id', $user->society_id)
                 ->get();
 
@@ -37,17 +42,25 @@ class UserController extends Controller
                 ->count();
 
             $roles = Role::where('name', 'member')->get();
-            $societies = collect(); // empty for non-superadmin
+            $societies = collect();
+
+            $countries = Country::where('id', $user->country_id)->get();
+            $cities = City::where('country_id', $user->country_id)->get();
         }
+
 
         return view('admin.users.index', compact(
             'users',
             'roles',
             'societies',
             'activeUsersCount',
-            'inactiveUsersCount'
+            'inactiveUsersCount',
+            'countries',
+            'cities',
+
         ));
     }
+
 
     public function store(Request $request)
     {

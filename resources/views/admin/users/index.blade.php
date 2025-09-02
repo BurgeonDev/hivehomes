@@ -19,20 +19,18 @@
         <div class="mb-6 row g-6">
             <div class="col-sm-6 col-xl-6">
                 <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-start justify-content-between">
-                            <div class="content-left">
-                                <span class="text-heading">Active Users</span>
-                                <div class="my-1 d-flex align-items-center">
-                                    <h4 class="mb-0 me-2">{{ $activeUsersCount }}</h4>
-                                </div>
-                                <small class="mb-0">Currently active members</small>
+                    <div class="card-body d-flex align-items-start justify-content-between">
+                        <div class="content-left">
+                            <span class="text-heading">Active Users</span>
+                            <div class="my-1 d-flex align-items-center">
+                                <h4 class="mb-0 me-2">{{ $activeUsersCount }}</h4>
                             </div>
-                            <div class="avatar">
-                                <span class="rounded avatar-initial bg-label-success">
-                                    <i class="icon-base ti tabler-user-check icon-26px"></i>
-                                </span>
-                            </div>
+                            <small class="mb-0">Currently active members</small>
+                        </div>
+                        <div class="avatar">
+                            <span class="rounded avatar-initial bg-label-success">
+                                <i class="icon-base ti tabler-user-check icon-26px"></i>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -40,26 +38,23 @@
 
             <div class="col-sm-6 col-xl-6">
                 <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-start justify-content-between">
-                            <div class="content-left">
-                                <span class="text-heading">Inactive Users</span>
-                                <div class="my-1 d-flex align-items-center">
-                                    <h4 class="mb-0 me-2">{{ $inactiveUsersCount }}</h4>
-                                </div>
-                                <small class="mb-0">Currently inactive members</small>
+                    <div class="card-body d-flex align-items-start justify-content-between">
+                        <div class="content-left">
+                            <span class="text-heading">Inactive Users</span>
+                            <div class="my-1 d-flex align-items-center">
+                                <h4 class="mb-0 me-2">{{ $inactiveUsersCount }}</h4>
                             </div>
-                            <div class="avatar">
-                                <span class="rounded avatar-initial bg-label-danger">
-                                    <i class="icon-base ti tabler-user-off icon-26px"></i>
-                                </span>
-                            </div>
+                            <small class="mb-0">Currently inactive members</small>
+                        </div>
+                        <div class="avatar">
+                            <span class="rounded avatar-initial bg-label-danger">
+                                <i class="icon-base ti tabler-user-off icon-26px"></i>
+                            </span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
 
         <div class="card">
             <!-- Card Header -->
@@ -69,27 +64,11 @@
                 </div>
                 <div class="col-md-auto ms-auto">
                     <div class="flex-wrap mb-0 dt-buttons btn-group">
-                        <div class="btn-group">
-                            <button class="btn btn-label-primary dropdown-toggle me-4" type="button" id="exportDropdown"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                <span class="gap-2 d-flex align-items-center">
-                                    <i class="icon-base ti tabler-upload icon-xs me-sm-1"></i>
-                                    <span class="d-none d-sm-inline-block">Export</span>
-                                </span>
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="exportDropdown">
-                                <li><a class="dropdown-item" href="#" id="export-csv">CSV</a></li>
-                                <li><a class="dropdown-item" href="#" id="export-excel">Excel</a></li>
-                                <li><a class="dropdown-item" href="#" id="export-pdf">PDF</a></li>
-                                <li><a class="dropdown-item" href="#" id="export-print">Print</a></li>
-                            </ul>
-                        </div>
                         <button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser"
                             type="button">
                             <i class="icon-base ti tabler-plus icon-sm"></i>
                             <span class="d-none d-sm-inline-block">Add User</span>
                         </button>
-
                     </div>
                 </div>
             </div>
@@ -133,7 +112,7 @@
                                 </td>
                                 <td>
                                     <span
-                                        class="badge {{ $user->is_active === 'active' ? 'badge bg-label-success' : 'badge bg-label-danger' }}">
+                                        class="badge {{ $user->is_active === 'active' ? 'bg-label-success' : 'bg-label-danger' }}">
                                         {{ ucfirst($user->is_active) }}
                                     </span>
                                 </td>
@@ -153,18 +132,17 @@
                                         </form>
                                     @endif
                                 </td>
-
                             </tr>
                         @endforeach
                     </tbody>
-
                 </table>
             </div>
 
         </div>
     </div>
+
     <!-- Offcanvas Add/Edit User -->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddUser" aria-labelledby="offcanvasAddUserLabel">
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddUser">
         <div class="offcanvas-header border-bottom">
             <h5 id="offcanvasAddUserLabel" class="offcanvas-title">Add User</h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
@@ -176,21 +154,22 @@
                 <input type="hidden" id="user-id" name="user_id">
 
                 <div class="mb-3">
-                    <label class="form-label" for="user-name">Full Name</label>
+                    <label class="form-label">Full Name</label>
                     <input type="text" class="form-control" id="user-name" name="name" required>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label" for="user-email">Email</label>
+                    <label class="form-label">Email</label>
                     <input type="email" class="form-control" id="user-email" name="email" required>
                 </div>
+
                 <div class="mb-3">
-                    <label class="form-label" for="user-phone">Phone</label>
+                    <label class="form-label">Phone</label>
                     <input type="text" class="form-control" id="user-phone" name="phone">
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label" for="user-status">Status</label>
+                    <label class="form-label">Status</label>
                     <select name="is_active" id="user-status" class="form-select">
                         <option value="active">Active</option>
                         <option value="inactive">Inactive</option>
@@ -205,23 +184,46 @@
                             style="width:60px;height:60px;object-fit:cover;">
                     </div>
                 </div>
+
                 @role('super_admin')
+                    <!-- Country / State / City / Society -->
                     <div class="mb-3">
-                        <label class="form-label" for="user-society">Society</label>
-                        <select name="society_id" id="user-society" class="form-select" required>
-                            <option value="">— Select Society —</option>
-                            @foreach ($societies as $society)
-                                <option value="{{ $society->id }}">{{ $society->name }}</option>
+                        <label class="form-label">Country</label>
+                        <select name="country_id" id="country" class="form-select" required>
+                            <option value="">— Select Country —</option>
+                            @foreach ($countries as $country)
+                                <option value="{{ $country->id }}">{{ $country->name }}</option>
                             @endforeach
                         </select>
                     </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">State</label>
+                        <select name="state_id" id="state" class="form-select" required>
+                            <option value="">— Select State —</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">City</label>
+                        <select name="city_id" id="city" class="form-select" required>
+                            <option value="">— Select City —</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Society</label>
+                        <select name="society_id" id="society" class="form-select" required>
+                            <option value="">— Select Society —</option>
+                        </select>
+                    </div>
                 @else
-                    {{-- Society Admin / Member: hidden, auto-assigned --}}
                     <input type="hidden" name="society_id" value="{{ auth()->user()->society_id }}">
                 @endrole
+
                 @role('super_admin')
                     <div class="mb-3">
-                        <label class="form-label" for="user-role">Role</label>
+                        <label class="form-label">Role</label>
                         <select class="form-select" id="user-role" name="role" required>
                             <option value="">— Select Role —</option>
                             @foreach ($roles as $role)
@@ -233,9 +235,8 @@
                     <input type="hidden" name="role" value="member">
                 @endrole
 
-
                 <div class="mb-3" id="passwordField">
-                    <label class="form-label" for="user-password">Password</label>
+                    <label class="form-label">Password</label>
                     <input type="password" class="form-control" id="user-password" name="password" required>
                 </div>
 
@@ -244,7 +245,6 @@
             </form>
         </div>
     </div>
-
 @endsection
 
 @section('vendor-js')
@@ -276,6 +276,42 @@
                 $('#current-pic-wrapper').hide();
             }
 
+            // Load location hierarchy
+            if (user.society) {
+                let cityId = user.society.city_id;
+                let stateId = user.society.city.state_id;
+                let countryId = user.society.city.state.country_id;
+
+                $('#country').val(countryId).trigger('change');
+
+                $.get('/get-states-by-country/' + countryId, function(states) {
+                    let options = '<option value="">Select State</option>';
+                    states.forEach(state => {
+                        options +=
+                            `<option value="${state.id}" ${state.id == stateId ? 'selected' : ''}>${state.name}</option>`;
+                    });
+                    $('#state').html(options);
+
+                    $.get('/get-cities-by-state/' + stateId, function(cities) {
+                        let options = '<option value="">Select City</option>';
+                        cities.forEach(city => {
+                            options +=
+                                `<option value="${city.id}" ${city.id == cityId ? 'selected' : ''}>${city.name}</option>`;
+                        });
+                        $('#city').html(options);
+
+                        $.get('/get-societies-by-city/' + cityId, function(societies) {
+                            let options = '<option value="">Select Society</option>';
+                            societies.forEach(society => {
+                                options +=
+                                    `<option value="${society.id}" ${society.id == user.society_id ? 'selected' : ''}>${society.name}</option>`;
+                            });
+                            $('#society').html(options);
+                        });
+                    });
+                });
+            }
+
             $('#offcanvasAddUserLabel').text('Edit User');
             new bootstrap.Offcanvas($('#offcanvasAddUser')).show();
         }
@@ -284,12 +320,62 @@
             $('#userForm').attr('action', userStoreUrl);
             $('#userFormMethod').val('POST');
             $('#user-id,#user-name,#user-email,#user-phone').val('');
-            $('#user-status,#user-role').val('');
+            $('#user-status,#user-role,#country,#state,#city,#society').val('');
             $('#user-password').val('').attr('required', true).closest('#passwordField').show();
             $('#current-pic-wrapper').hide();
             $('#offcanvasAddUserLabel').text('Add User');
         });
+
+        // Dynamic dropdowns
+        $(document).ready(function() {
+            $('#country').on('change', function() {
+                let countryId = $(this).val();
+                $('#state').html('<option value="">Loading...</option>');
+                $('#city').html('<option value="">Select City</option>');
+                $('#society').html('<option value="">Select Society</option>');
+
+                if (countryId) {
+                    $.get('/get-states-by-country/' + countryId, function(data) {
+                        let options = '<option value="">Select State</option>';
+                        data.forEach(state => {
+                            options += `<option value="${state.id}">${state.name}</option>`;
+                        });
+                        $('#state').html(options);
+                    });
+                }
+            });
+
+            $('#state').on('change', function() {
+                let stateId = $(this).val();
+                $('#city').html('<option value="">Loading...</option>');
+                $('#society').html('<option value="">Select Society</option>');
+
+                if (stateId) {
+                    $.get('/get-cities-by-state/' + stateId, function(data) {
+                        let options = '<option value="">Select City</option>';
+                        data.forEach(city => {
+                            options += `<option value="${city.id}">${city.name}</option>`;
+                        });
+                        $('#city').html(options);
+                    });
+                }
+            });
+
+            $('#city').on('change', function() {
+                let cityId = $(this).val();
+                $('#society').html('<option value="">Loading...</option>');
+
+                if (cityId) {
+                    $.get('/get-societies-by-city/' + cityId, function(data) {
+                        let options = '<option value="">Select Society</option>';
+                        data.forEach(society => {
+                            options +=
+                                `<option value="${society.id}">${society.name}</option>`;
+                        });
+                        $('#society').html(options);
+                    });
+                }
+            });
+        });
     </script>
-
-
 @endsection
