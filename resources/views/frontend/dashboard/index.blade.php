@@ -398,53 +398,55 @@
                                             <hr class="my-4">
 
                                             {{-- ====== ENGAGEMENT SECTION ====== --}}
-                                            <div>
-                                                <div class="mb-3 d-flex align-items-center justify-content-between">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="p-2 text-white me-3 rounded-circle bg-label-secondary d-flex align-items-center justify-content-center"
-                                                            style="width:44px;height:44px;">
-                                                            <i class="icon-base ti tabler-message-circle"></i>
+                                            <!--    <div>
+                                                    <div class="mb-3 d-flex align-items-center justify-content-between">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="p-2 text-white me-3 rounded-circle bg-label-secondary d-flex align-items-center justify-content-center"
+                                                                style="width:44px;height:44px;">
+                                                                <i class="icon-base ti tabler-message-circle"></i>
+                                                            </div>
+                                                            <div>
+                                                                <h5 class="mb-0">Engagement</h5>
+                                                                <small class="text-muted">Comments, likes and community
+                                                                    pulse</small>
+                                                            </div>
                                                         </div>
-                                                        <div>
-                                                            <h5 class="mb-0">Engagement</h5>
-                                                            <small class="text-muted">Comments, likes and community
-                                                                pulse</small>
-                                                        </div>
+
                                                     </div>
 
+                                                    <div class="row gy-3">
+                                                        <div class="col-md-3 col-6">
+                                                            <div
+                                                                class="p-3 bg-white shadow-sm d-flex align-items-center rounded-3">
+                                                                <div class="p-2 rounded me-3 badge bg-label-secondary">
+                                                                    <i class="icon-base ti tabler-message-circle icon-lg"></i>
+                                                                </div>
+                                                                <div class="card-info">
+                                                                    <h5 class="mb-0">{{ $counts['comments'] ?? 0 }}</h5>
+                                                                    <small class="text-muted">Comments</small>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 col-6">
+                                                            <div
+                                                                class="p-3 bg-white shadow-sm d-flex align-items-center rounded-3">
+                                                                <div class="p-2 rounded me-3 badge bg-label-primary">
+                                                                    <i class="icon-base ti tabler-thumb-up icon-lg"></i>
+                                                                </div>
+                                                                <div class="card-info">
+                                                                    <h5 class="mb-0">{{ $counts['likes_received'] ?? 0 }}
+                                                                    </h5>
+                                                                    <small class="text-muted">Likes Received</small>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        {{-- add more engagement KPIs here if needed --}}
+                                                    </div>
                                                 </div>
+                                            -->
 
-                                                <div class="row gy-3">
-                                                    <div class="col-md-3 col-6">
-                                                        <div
-                                                            class="p-3 bg-white shadow-sm d-flex align-items-center rounded-3">
-                                                            <div class="p-2 rounded me-3 badge bg-label-secondary">
-                                                                <i class="icon-base ti tabler-message-circle icon-lg"></i>
-                                                            </div>
-                                                            <div class="card-info">
-                                                                <h5 class="mb-0">{{ $counts['comments'] ?? 0 }}</h5>
-                                                                <small class="text-muted">Comments</small>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-md-3 col-6">
-                                                        <div
-                                                            class="p-3 bg-white shadow-sm d-flex align-items-center rounded-3">
-                                                            <div class="p-2 rounded me-3 badge bg-label-primary">
-                                                                <i class="icon-base ti tabler-thumb-up icon-lg"></i>
-                                                            </div>
-                                                            <div class="card-info">
-                                                                <h5 class="mb-0">{{ $counts['likes_received'] ?? 0 }}
-                                                                </h5>
-                                                                <small class="text-muted">Likes Received</small>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    {{-- add more engagement KPIs here if needed --}}
-                                                </div>
-                                            </div>
 
                                         </div> <!-- w-100 -->
                                     </div> <!-- card-body -->
