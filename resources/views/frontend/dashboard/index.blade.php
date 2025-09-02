@@ -636,26 +636,36 @@
                                 <h5 class="mb-3">Service Reviews</h5>
 
                                 @if ($serviceReviews->count())
-                                    <div class="list-group">
+                                    <div class="row g-3">
                                         @foreach ($serviceReviews as $review)
-                                            <div class="list-group-item d-flex justify-content-between">
-                                                <div>
-                                                    {{-- Show the comment text --}}
-                                                    <strong>{{ Str::limit($review->comment, 40) }}</strong>
+                                            <div class="col-md-6">
+                                                <div class="shadow-sm card h-100 rounded-4">
+                                                    <div class="card-body">
+                                                        {{-- Provider link --}}
+                                                        <h6 class="mb-2">
+                                                            <a href="{{ route('service-providers.show', $review->provider->id) }}"
+                                                                class="text-decoration-none fw-bold">
+                                                                {{ $review->provider->name }}
+                                                            </a>
+                                                        </h6>
 
-                                                    <div class="small text-muted">
-                                                        By {{ $review->user->name ?? 'Anonymous' }} —
-                                                        {{ $review->created_at->diffForHumans() }}
-                                                    </div>
+                                                        {{-- Star Rating --}}
+                                                        <div class="mb-2 text-warning">
+                                                            @for ($i = 1; $i <= 5; $i++)
+                                                                <i
+                                                                    class="icon-base ti tabler-star{{ $i <= $review->rating ? '' : '-off' }}"></i>
+                                                            @endfor
+                                                            <small class="text-muted">({{ $review->rating }}/5)</small>
+                                                        </div>
 
-                                                    <p class="mt-1 mb-0 small">
-                                                        {{ Str::limit($review->comment, 140) }}
-                                                    </p>
-                                                </div>
+                                                        {{-- Comment --}}
+                                                        <p class="mb-2">{{ Str::limit($review->comment, 140) }}</p>
 
-                                                <div class="text-end">
-                                                    <div class="mb-1">Rating:
-                                                        <strong>{{ $review->rating ?? '—' }}/5</strong>
+                                                        {{-- Reviewer Info --}}
+                                                        <div class="small text-muted">
+                                                            By <strong>{{ $review->user->name ?? 'Anonymous' }}</strong>
+                                                            • {{ $review->created_at->diffForHumans() }}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -670,6 +680,7 @@
                                 @endif
                             </div>
                         </div>
+
 
                     </div>
                     <!-- END Tab Content -->
