@@ -117,52 +117,71 @@
                 @endif
             </div>
 
+
             <!-- Features: Start -->
             <div class="mt-5 text-center row g-4">
+
+                <!-- Posts -->
                 <div class="col-md-4">
-                    <div class="bg-transparent border-0 rounded-4 card h-100 feature-card">
-                        <div class="card-body">
-                            <div class="mb-3 text-primary feature-icon">
-                                <i class="mb-2 icon-base ti tabler-brand-slack icon-xl"></i>
+                    <a href="{{ route('posts.index') }}" class="text-decoration-none text-dark">
+                        <div class="bg-transparent border-0 rounded-4 card h-100 feature-card">
+                            <div class="card-body">
+                                <div class="mb-3 text-primary feature-icon">
+                                    <i class="mb-2 icon-base ti tabler-brand-slack icon-xl"></i>
+                                </div>
+                                <h5 class="fw-bold">Community Updates</h5>
+                                <p class="text-muted">
+                                    Stay in the loop with notices, events, emergencies, and announcements — all in one
+                                    place.
+                                </p>
+                                <span class="text-primary fw-bold">Go to Posts →</span>
                             </div>
-                            <h5 class="fw-bold">Community Updates</h5>
-                            <p class="text-muted">
-                                Stay in the loop with notices, events, emergencies, and announcements — all in one
-                                place.
-                            </p>
                         </div>
-                    </div>
+                    </a>
                 </div>
+
+                <!-- Products -->
                 <div class="col-md-4">
-                    <div class="bg-transparent border-0 rounded-4 card h-100 feature-card">
-                        <div class="card-body">
-                            <div class="mb-3 text-success feature-icon">
-                                <i class="icon-base ti tabler-shopping-cart fs-1 icon-xl"></i>
+                    <a href="{{ route('products.index') }}" class="text-decoration-none text-dark">
+                        <div class="bg-transparent border-0 rounded-4 card h-100 feature-card">
+                            <div class="card-body">
+                                <div class="mb-3 text-success feature-icon">
+                                    <i class="icon-base ti tabler-shopping-cart fs-1 icon-xl"></i>
+                                </div>
+                                <h5 class="fw-bold">Buy & Sell Locally</h5>
+                                <p class="text-muted">
+                                    Discover a built-in marketplace for members to sell used items or find great local
+                                    deals.
+                                </p>
+                                <span class="text-success fw-bold">Go to Products →</span>
                             </div>
-                            <h5 class="fw-bold">Buy & Sell Locally</h5>
-                            <p class="text-muted">
-                                Discover a built-in marketplace for members to sell used items or find great local
-                                deals.
-                            </p>
                         </div>
-                    </div>
+                    </a>
                 </div>
+
+                <!-- Service Providers -->
                 <div class="col-md-4">
-                    <div class="bg-transparent border-0 rounded-4 card h-100 feature-card">
-                        <div class="card-body">
-                            <div class="mb-3 text-warning feature-icon">
-                                <i class="icon-base ti tabler-users fs-1 icon-xl"></i>
+                    <a href="{{ route('service-providers.index') }}" class="text-decoration-none text-dark">
+                        <div class="bg-transparent border-0 rounded-4 card h-100 feature-card">
+                            <div class="card-body">
+                                <div class="mb-3 text-warning feature-icon">
+                                    <i class="icon-base ti tabler-users fs-1 icon-xl"></i>
+                                </div>
+                                <h5 class="fw-bold">Find Trusted Help</h5>
+                                <p class="text-muted">
+                                    Need a plumber, electrician, or tutor? Browse a list of verified service providers
+                                    in your area.
+                                </p>
+                                <span class="text-warning fw-bold">Go to Services →</span>
                             </div>
-                            <h5 class="fw-bold">Find Trusted Help</h5>
-                            <p class="text-muted">
-                                Need a plumber, electrician, or tutor? Access a list of verified professionals from your
-                                area.
-                            </p>
                         </div>
-                    </div>
+                    </a>
                 </div>
+
             </div>
             <!-- Features: End -->
+
+
 
         </div>
     </div>
