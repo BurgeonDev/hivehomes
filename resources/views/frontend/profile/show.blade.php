@@ -33,6 +33,12 @@
             font-size: 0.85rem;
             color: #d63384;
         }
+
+        .hover-text-primary:hover {
+            color: #0d6efd;
+            /* Bootstrap primary color, adjust as needed */
+            transition: color 0.2s ease-in-out;
+        }
     </style>
 @endsection
 
@@ -166,24 +172,42 @@
                                         <span>{{ $user->society->name ?? 'N/A' }}</span>
                                     </li>
                                 </ul>
+                                <!-- Products Section -->
+                                <div class="mb-4">
+                                    <p class="mb-2 text-uppercase text-body-secondary small fw-bold">Products</p>
+                                    <ul class="py-2 list-unstyled">
+                                        @forelse ($user->products as $product)
+                                            <li class="mb-2">
+                                                <a href="{{ route('products.show', $product->id) }}"
+                                                    class="text-decoration-none text-dark hover-text-primary"
+                                                    title="{{ $product->title }}">
+                                                    {{ Str::limit($product->title, 50) }}
+                                                </a>
+                                            </li>
+                                        @empty
+                                            <li class="text-muted small">No products yet.</li>
+                                        @endforelse
+                                    </ul>
+                                </div>
 
-                                <p class="mb-0 text-uppercase text-body-secondary small">Products</p>
-                                <ul class="py-1 my-3 list-unstyled">
-                                    @forelse ($user->products as $product)
-                                        <li class="mb-2">{{ $product->title }}</li>
-                                    @empty
-                                        <li class="text-muted">No products yet.</li>
-                                    @endforelse
-                                </ul>
+                                <!-- Posts Section -->
+                                <div class="mb-4">
+                                    <p class="mb-2 text-uppercase text-body-secondary small fw-bold">Posts</p>
+                                    <ul class="py-2 list-unstyled">
+                                        @forelse ($user->posts as $post)
+                                            <li class="mb-2">
+                                                <a href="{{ route('posts.show', $post->id) }}"
+                                                    class="text-decoration-none text-dark hover-text-primary"
+                                                    title="{{ $post->title }}">
+                                                    {{ Str::limit($post->title, 50) }}
+                                                </a>
+                                            </li>
+                                        @empty
+                                            <li class="text-muted small">No posts yet.</li>
+                                        @endforelse
+                                    </ul>
+                                </div>
 
-                                <p class="mb-0 text-uppercase text-body-secondary small">Posts</p>
-                                <ul class="py-1 my-3 list-unstyled">
-                                    @forelse ($user->posts as $post)
-                                        <li class="mb-2">{{ $post->title }}</li>
-                                    @empty
-                                        <li class="text-muted">No posts yet.</li>
-                                    @endforelse
-                                </ul>
                             </div>
                         </div>
                     </div>
