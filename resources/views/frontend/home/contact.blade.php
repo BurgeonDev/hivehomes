@@ -66,7 +66,7 @@
                                   <div class="col-md-6">
                                       <label class="form-label">Phone</label>
                                       <input type="text" class="form-control" name="phone" required
-                                          placeholder="+92-333-1342525" />
+                                          placeholder="+92-312-1234567" />
                                   </div>
                                   <div class="col-md-12">
                                       <label class="form-label">Email</label>
