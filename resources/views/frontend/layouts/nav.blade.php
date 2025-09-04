@@ -50,20 +50,7 @@
                             Home
                         </a>
                     </li>
-                    {{-- FAQ --}}
-                    <li class="nav-item">
-                        <a class="nav-link fw-medium {{ request()->is('faq') ? 'active' : '' }}"
-                            href="{{ route('faq') }}"> FAQ
-                        </a>
-                    </li>
 
-                    {{-- Contact Us --}}
-                    <li class="nav-item">
-                        <a class="nav-link fw-medium {{ request()->is('contact-us') ? 'active' : '' }}"
-                            href="{{ route('contact') }}">
-                            Contact Us
-                        </a>
-                    </li>
 
                     @auth
                         @if (auth()->user()->is_active === 'active')
@@ -106,9 +93,17 @@
                         $user = auth()->user();
                     @endphp
 
-
-
-
+                    <li class="nav-item">
+                        <a class="nav-link fw-medium {{ request()->is('faq') ? 'active' : '' }}"
+                            href="{{ route('faq') }}"> FAQ
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-medium {{ request()->is('contact-us') ? 'active' : '' }}"
+                            href="{{ route('contact') }}">
+                            Contact Us
+                        </a>
+                    </li>
                 </ul>
             </div>
 
