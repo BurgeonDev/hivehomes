@@ -166,6 +166,7 @@
                 <div class="mb-3">
                     <label class="form-label">Phone</label>
                     <input type="text" class="form-control" id="user-phone" name="phone">
+
                 </div>
 
                 <div class="mb-3">
@@ -236,7 +237,7 @@
                 @endrole
 
                 <div class="mb-3" id="passwordField">
-                    <label class="form-label">Password</label>
+                    <label class="form-label">Password(At least 6 characters)</label>
                     <input type="password" class="form-control" id="user-password" name="password" required>
                 </div>
 
