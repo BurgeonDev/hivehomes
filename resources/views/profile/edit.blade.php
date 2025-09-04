@@ -157,7 +157,7 @@
 
 
             {{-- 3) Delete Account --}}
-            <div class="col-12 col-md-6">
+            {{-- <div class="col-12 col-md-6">
                 <div class="card border-danger">
                     <div class="card-body">
                         <h5 class="mb-4 card-title text-danger">Delete Account</h5>
@@ -186,7 +186,7 @@
                         </form>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
         </div>
     </div>
