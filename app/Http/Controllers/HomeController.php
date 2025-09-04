@@ -7,6 +7,7 @@ use App\Models\Contact;
 use App\Models\Post;
 use App\Models\User;
 use App\Notifications\NewContactMessage;
+use Illuminate\Support\Facades\Mail;
 
 class HomeController extends Controller
 {
@@ -19,14 +20,15 @@ class HomeController extends Controller
             'message' => 'required|string',
         ]);
 
-        // Store contact message
+        // Save to DB
         $contact = Contact::create($request->only('name', 'email', 'phone', 'message'));
 
-        // Notify super admin
-        $adminUser = User::role('super_admin')->first();
-        if ($adminUser) {
-            $adminUser->notify(new NewContactMessage($contact));
-        }
+        // Send email to domain inbox (from .env MAIL_FROM_ADDRESS)
+        Mail::raw($contact->message, function ($msg) use ($contact) {
+            $msg->to(config('mail.from.address')) // uses MAIL_FROM_ADDRESS from .env
+                ->subject('New Contact Message from ' . $contact->name)
+                ->from(config('mail.from.address'), config('mail.from.name'));
+        });
 
         return back()->with('success', 'Your message has been sent successfully!');
     }
