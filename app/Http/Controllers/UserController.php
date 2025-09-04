@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\Society;
+use App\Models\State;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
@@ -45,7 +46,8 @@ class UserController extends Controller
             $societies = collect();
 
             $countries = Country::where('id', $user->country_id)->get();
-            $cities = City::where('country_id', $user->country_id)->get();
+            $states = State::where('id', $user->country_id)->get();
+            $cities = City::where('state_id', $user->state_id)->get();
         }
 
 
