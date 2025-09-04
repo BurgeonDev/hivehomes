@@ -50,7 +50,6 @@ class UserController extends Controller
             $cities = City::where('state_id', $user->state_id)->get();
         }
 
-
         return view('admin.users.index', compact(
             'users',
             'roles',
@@ -59,19 +58,17 @@ class UserController extends Controller
             'inactiveUsersCount',
             'countries',
             'cities',
-
         ));
     }
-
 
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email',
-            'password' => 'required|min:6',
-            'role'     => 'required',
-            'phone'    => 'nullable|string|max:20',
+            'name'        => 'required|string|max:255',
+            'email'       => 'required|email|unique:users,email',
+            'password'    => 'required|min:6',
+            'role'        => 'required',
+            'phone'       => 'nullable|string|max:20|unique:users,phone',
             'profile_pic' => 'nullable|image|max:2048',
             'is_active'   => 'required|in:active,inactive',
             'society_id'  => 'required|exists:societies,id',
@@ -82,25 +79,26 @@ class UserController extends Controller
                 ->store('users', 'public');
         }
 
-        $data['password']   = Hash::make($data['password']);
+        $data['password'] = Hash::make($data['password']);
         $user = User::create($data);
         $user->assignRole($data['role']);
 
         return redirect()->route('users.index')
             ->with('success', 'User created successfully.');
     }
+
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
 
         $data = $request->validate([
-            'name'         => 'required|string|max:255',
-            'email'        => 'required|email|unique:users,email,' . $id,
-            'password'     => 'nullable|min:6|confirmed',
-            'role'         => 'required',
-            'phone'        => 'nullable|string|max:20',
-            'profile_pic'  => 'nullable|image|max:2048',
-            'is_active'       => 'required|in:active,inactive',
+            'name'        => 'required|string|max:255',
+            'email'       => 'required|email|unique:users,email,' . $id,
+            'password'    => 'nullable|min:6|confirmed',
+            'role'        => 'required',
+            'phone'       => 'nullable|string|max:20|unique:users,phone,' . $id,
+            'profile_pic' => 'nullable|image|max:2048',
+            'is_active'   => 'required|in:active,inactive',
             'society_id'  => 'required|exists:societies,id',
         ]);
 
@@ -124,8 +122,6 @@ class UserController extends Controller
         return redirect()->route('users.index')
             ->with('success', 'User updated successfully.');
     }
-
-
 
     public function destroy($id)
     {
