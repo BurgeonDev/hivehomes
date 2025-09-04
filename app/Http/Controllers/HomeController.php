@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NewContactMessageMail;
 use Illuminate\Http\Request;
 use App\Models\Contact;
 use App\Models\Post;
@@ -23,14 +24,10 @@ class HomeController extends Controller
         // Save to DB
         $contact = Contact::create($request->only('name', 'email', 'phone', 'message'));
 
-        // Send email to domain inbox (from .env MAIL_FROM_ADDRESS)
-        Mail::raw($contact->message, function ($msg) use ($contact) {
-            $msg->to(config('mail.from.address')) // uses MAIL_FROM_ADDRESS from .env
-                ->subject('New Contact Message from ' . $contact->name)
-                ->from(config('mail.from.address'), config('mail.from.name'));
-        });
+        // Queue the email instead of sending directly
+        Mail::queue(new NewContactMessageMail($contact));
 
-        return back()->with('success', 'Your message has been sent successfully!');
+        return back()->with('success', 'Your message has been queued for sending!');
     }
 
     public function show($id)
