@@ -91,33 +91,41 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        $data = $request->validate([
+        $rules = [
             'name'        => 'required|string|max:255',
             'email'       => 'required|email|unique:users,email,' . $id,
             'password'    => 'nullable|min:6|confirmed',
-            'role'        => 'required',
             'phone'       => 'nullable|string|max:20|unique:users,phone,' . $id,
             'profile_pic' => 'nullable|image|max:2048',
             'is_active'   => 'required|in:active,inactive',
             'society_id'  => 'required|exists:societies,id',
-        ]);
+        ];
+
+        // Only super admin can assign roles
+        if (auth()->user()->hasRole('super_admin')) {
+            $rules['role'] = 'required';
+        }
+
+        $data = $request->validate($rules);
 
         if (! empty($data['password'])) {
             $user->password = Hash::make($data['password']);
         }
-        // remove password fields so 'fill' won’t try to set them
         unset($data['password'], $data['password_confirmation']);
 
         if ($request->hasFile('profile_pic')) {
             if ($user->profile_pic) {
                 Storage::disk('public')->delete($user->profile_pic);
             }
-            $data['profile_pic'] = $request->file('profile_pic')
-                ->store('users', 'public');
+            $data['profile_pic'] = $request->file('profile_pic')->store('users', 'public');
         }
 
         $user->fill($data)->save();
-        $user->syncRoles([$data['role']]);
+
+        // Only update roles if super_admin provided a role
+        if (isset($data['role'])) {
+            $user->syncRoles([$data['role']]);
+        }
 
         return redirect()->route('users.index')
             ->with('success', 'User updated successfully.');
