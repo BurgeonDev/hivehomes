@@ -30,7 +30,8 @@
                             </svg>
                         </span>
                     </span>
-                    <span class="app-brand-text demo menu-text fw-bold ms-2 ps-1">HiveHomes</span>
+                    <span class="app-brand-text demo menu-text fw-bold ms-2 ps-1 d-none d-md-inline">HiveHomes</span>
+
                 </a>
             </div>
             <!-- Menu logo wrapper: End -->
@@ -105,11 +106,7 @@
                         $user = auth()->user();
                     @endphp
 
-                    @if ($user && ($user->hasRole('society_admin') || $user->hasRole('super_admin')))
-                        <li class="nav-item">
-                            <a class="nav-link fw-medium" href="{{ route('dashboard') }}">Admin</a>
-                        </li>
-                    @endif
+
 
 
                 </ul>
@@ -119,7 +116,6 @@
             <!-- Menu wrapper: End -->
             <!-- Toolbar: Start -->
             <ul class="flex-row navbar-nav align-items-center ms-auto">
-
                 <!-- navbar button: Start -->
                 @guest
                     <li>
@@ -129,6 +125,16 @@
                         </a>
                     </li>
                 @else
+                    {{-- Admin Button --}}
+                    @if (auth()->user()->hasRole('society_admin') || auth()->user()->hasRole('super_admin'))
+                        <li class="me-1">
+                            <a href="{{ route('dashboard') }}" class="btn btn-primary">
+                                <span class="tf-icons icon-base ti tabler-settings scaleX-n1-rtl me-md-1"></span>
+                                <span class="d-none d-md-block">Admin</span>
+                            </a>
+                        </li>
+                    @endif
+
                     {{-- Logout Button --}}
                     <li>
                         <form method="POST" action="{{ route('logout') }}">
@@ -141,8 +147,8 @@
                     </li>
                 @endguest
                 <!-- navbar button: End -->
-
             </ul>
+
 
             <!-- Toolbar: End -->
         </div>

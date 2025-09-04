@@ -134,7 +134,7 @@
                                     Stay in the loop with notices, events, emergencies, and announcements — all in one
                                     place.
                                 </p>
-                                <span class="text-primary fw-bold">Go to Posts →</span>
+                                <span class="text-primary fw-bold">Add / View Posts →</span>
                             </div>
                         </div>
                     </a>
@@ -153,7 +153,7 @@
                                     Discover a built-in marketplace for members to sell used items or find great local
                                     deals.
                                 </p>
-                                <span class="text-success fw-bold">Go to Products →</span>
+                                <span class="text-success fw-bold">Add / View Products →</span>
                             </div>
                         </div>
                     </a>
@@ -172,7 +172,8 @@
                                     Need a plumber, electrician, or tutor? Browse a list of verified service providers
                                     in your area.
                                 </p>
-                                <span class="text-warning fw-bold">Go to Services →</span>
+                                <span class="text-warning fw-bold">Add / View Services →</span>
+
                             </div>
                         </div>
                     </a>
