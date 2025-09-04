@@ -10,6 +10,7 @@
               </span>
               together
           </h4>
+
           <p class="mb-12 text-center pb-md-4">Any question or remark? just write us a message</p>
           <div class="row g-6">
               <div class="col-lg-5">
@@ -54,6 +55,7 @@
                   <div class="card h-100">
                       <div class="card-body">
                           <h4 class="mb-2">Send a message</h4>
+                          <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
                           <form method="POST" action="{{ route('contact.store') }}">
                               @csrf
@@ -80,8 +82,16 @@
                                       <textarea class="form-control" name="message" required rows="7" placeholder="Write a message"></textarea>
                                   </div>
                                   <div class="col-12">
+                                      <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
+                                      @error('captcha')
+                                          <span class="text-danger">{{ $message }}</span>
+                                      @enderror
+                                  </div>
+                                  <div class="col-12">
                                       <button type="submit" class="btn btn-primary">Send inquiry</button>
                                   </div>
+
+
                               </div>
                           </form>
 
