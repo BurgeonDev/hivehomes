@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ContactReplyMail;
 use Illuminate\Http\Request;
 use App\Models\Contact;
 use Illuminate\Support\Facades\Log;
@@ -25,17 +26,10 @@ class ContactController extends Controller
         $adminReply = $request->admin_reply;
 
         try {
-            // send reply email to the user
-            Mail::send([], [], function ($message) use ($contact, $adminReply) {
-                $message->to($contact->email)
-                    ->subject('Reply from ' . config('app.name'))
-                    ->from(config('mail.from.address'), config('mail.from.name'))
-                    ->replyTo(config('mail.from.address'), config('mail.from.name'))
-                    ->html($adminReply); // ✅ correct method for HTML body
-
-                // Optional: BCC to your domain inbox so you see a copy
-                $message->bcc(config('mail.from.address'));
-            });
+            // Queue the email instead of sending immediately
+            Mail::to($contact->email)
+                ->bcc(config('mail.from.address'))
+                ->queue(new ContactReplyMail($contact, $adminReply));
 
             // Save reply in DB
             $contact->update([
@@ -43,10 +37,10 @@ class ContactController extends Controller
                 'is_seen' => true,
             ]);
 
-            return back()->with('success', 'Reply sent successfully.');
+            return back()->with('success', 'Reply has been queued to send.');
         } catch (\Throwable $e) {
-            Log::error('Failed to send contact reply: ' . $e->getMessage());
-            return back()->with('error', 'Reply could not be sent — check mail settings or logs.');
+            Log::error('Failed to queue contact reply: ' . $e->getMessage());
+            return back()->with('error', 'Reply could not be queued — check mail settings or logs.');
         }
     }
 }
