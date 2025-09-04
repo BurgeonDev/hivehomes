@@ -128,7 +128,7 @@
             </div>
 
             <div class="p-3 card-datatable table-responsive">
-                <table class="table datatables-basic table-striped">
+                <table class="table datatables-basic ">
                     <thead>
                         <tr>
                             <th>#</th>

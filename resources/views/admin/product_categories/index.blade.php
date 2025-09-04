@@ -50,12 +50,12 @@
 
             <!-- DataTable -->
             <div class="p-3 card-datatable table-responsive">
-                <table class="table datatables-basic table-striped">
+                <table class="table datatables-basic ">
                     <thead>
                         <tr>
                             <th style="width:60px">#</th>
                             <th>Name</th>
-                            <th>Slug</th>
+                            {{-- <th>Slug</th> --}}
                             <th>Description</th>
                             <th style="width:160px" class="text-end">Actions</th>
                         </tr>
@@ -65,7 +65,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $cat->name }}</td>
-                                <td>{{ $cat->slug }}</td>
+                                {{-- <td>{{ $cat->slug }}</td> --}}
                                 <td class="text-truncate" style="max-width:420px;">
                                     {{ \Illuminate\Support\Str::limit($cat->description, 120) }}
                                 </td>
