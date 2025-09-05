@@ -397,55 +397,92 @@
 
                                             <hr class="my-4">
 
-                                            {{-- ====== ENGAGEMENT SECTION ====== --}}
-                                            <!--    <div>
-                                                    <div class="mb-3 d-flex align-items-center justify-content-between">
-                                                        <div class="d-flex align-items-center">
-                                                            <div class="p-2 text-white me-3 rounded-circle bg-label-secondary d-flex align-items-center justify-content-center"
-                                                                style="width:44px;height:44px;">
-                                                                <i class="icon-base ti tabler-message-circle"></i>
-                                                            </div>
-                                                            <div>
-                                                                <h5 class="mb-0">Engagement</h5>
-                                                                <small class="text-muted">Comments, likes and community
-                                                                    pulse</small>
-                                                            </div>
+                                            {{-- ====== SERVICES BY USER SECTION ====== --}}
+                                            <div>
+                                                <div class="mb-3 d-flex align-items-center justify-content-between">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="p-2 text-white me-3 rounded-circle bg-label-secondary d-flex align-items-center justify-content-center"
+                                                            style="width:44px;height:44px;">
+                                                            <i class="icon-base ti tabler-briefcase"></i>
                                                         </div>
-
+                                                        <div>
+                                                            <h5 class="mb-0">Services by You</h5>
+                                                            <small class="text-muted">Overview of services you’ve
+                                                                added</small>
+                                                        </div>
                                                     </div>
-
-                                                    <div class="row gy-3">
-                                                        <div class="col-md-3 col-6">
-                                                            <div
-                                                                class="p-3 bg-white shadow-sm d-flex align-items-center rounded-3">
-                                                                <div class="p-2 rounded me-3 badge bg-label-secondary">
-                                                                    <i class="icon-base ti tabler-message-circle icon-lg"></i>
-                                                                </div>
-                                                                <div class="card-info">
-                                                                    <h5 class="mb-0">{{ $counts['comments'] ?? 0 }}</h5>
-                                                                    <small class="text-muted">Comments</small>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-md-3 col-6">
-                                                            <div
-                                                                class="p-3 bg-white shadow-sm d-flex align-items-center rounded-3">
-                                                                <div class="p-2 rounded me-3 badge bg-label-primary">
-                                                                    <i class="icon-base ti tabler-thumb-up icon-lg"></i>
-                                                                </div>
-                                                                <div class="card-info">
-                                                                    <h5 class="mb-0">{{ $counts['likes_received'] ?? 0 }}
-                                                                    </h5>
-                                                                    <small class="text-muted">Likes Received</small>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        {{-- add more engagement KPIs here if needed --}}
+                                                    <div>
+                                                        <a href="{{ route('service-providers.index') }}"
+                                                            class="btn btn-sm btn-outline-secondary">View Service
+                                                            Providers</a>
                                                     </div>
                                                 </div>
-                                            -->
+
+                                                <div class="row gy-3">
+                                                    {{-- Total Services Added --}}
+                                                    <div class="col-md-3 col-6">
+                                                        <div
+                                                            class="p-3 bg-white shadow-sm d-flex align-items-center rounded-3">
+                                                            <div class="p-2 rounded me-3 badge bg-label-primary">
+                                                                <i class="icon-base ti tabler-plus icon-lg"></i>
+                                                            </div>
+                                                            <div class="card-info">
+                                                                <h5 class="mb-0">{{ $user->serviceProviders->count() }}
+                                                                </h5>
+                                                                <small class="text-muted">Total Added</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- Approved Services --}}
+                                                    <div class="col-md-3 col-6">
+                                                        <div
+                                                            class="p-3 bg-white shadow-sm d-flex align-items-center rounded-3">
+                                                            <div class="p-2 rounded me-3 badge bg-label-success">
+                                                                <i class="icon-base ti tabler-check icon-lg"></i>
+                                                            </div>
+                                                            <div class="card-info">
+                                                                <h5 class="mb-0">
+                                                                    {{ $user->serviceProviders()->where('is_approved', true)->count() }}
+                                                                </h5>
+                                                                <small class="text-muted">Approved</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- Pending Services --}}
+                                                    <div class="col-md-3 col-6">
+                                                        <div
+                                                            class="p-3 bg-white shadow-sm d-flex align-items-center rounded-3">
+                                                            <div class="p-2 rounded me-3 badge bg-label-warning">
+                                                                <i class="icon-base ti tabler-clock icon-lg"></i>
+                                                            </div>
+                                                            <div class="card-info">
+                                                                <h5 class="mb-0">
+                                                                    {{ $user->serviceProviders()->where('is_approved', false)->count() }}
+                                                                </h5>
+                                                                <small class="text-muted">Pending</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- Reviews on User’s Services --}}
+                                                    <div class="col-md-3 col-6">
+                                                        <div
+                                                            class="p-3 bg-white shadow-sm d-flex align-items-center rounded-3">
+                                                            <div class="p-2 rounded me-3 badge bg-label-info">
+                                                                <i class="icon-base ti tabler-star icon-lg"></i>
+                                                            </div>
+                                                            <div class="card-info">
+                                                                <h5 class="mb-0">
+                                                                    {{ \App\Models\ServiceProviderReview::whereIn('service_provider_id', $user->serviceProviders->pluck('id'))->count() }}
+                                                                </h5>
+                                                                <small class="text-muted">Total Reviews</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
 
 
                                         </div> <!-- w-100 -->
