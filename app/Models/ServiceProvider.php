@@ -23,6 +23,7 @@ class ServiceProvider extends Model
         'profile_image',
         'is_approved',
         'is_active',
+        'created_by',
     ];
 
     /**
@@ -59,5 +60,9 @@ class ServiceProvider extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

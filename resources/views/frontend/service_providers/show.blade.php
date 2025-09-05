@@ -169,11 +169,17 @@
                                             {{ optional($provider->created_at)->format('F j, Y') ?? 'N/A' }}
                                         </span>
                                     </li>
-                                    <li class="d-flex justify-content-between align-items-center">
+                                    <li class="mb-2 d-flex justify-content-between align-items-center">
                                         <strong>Status:</strong>
                                         <span
                                             class="badge {{ $provider->is_active ? 'bg-label-success' : 'bg-label-danger' }}">
                                             {{ $provider->is_active ? 'Active' : 'Inactive' }}
+                                        </span>
+                                    </li>
+                                    <li class="d-flex justify-content-between align-items-center">
+                                        <strong> Added by:</strong>
+                                        <span class="badge bg-label-dribbble">
+                                            {{ $provider->creator->name ?? 'Unknown' }}
                                         </span>
                                     </li>
                                 </ul>

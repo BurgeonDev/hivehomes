@@ -64,6 +64,7 @@
                     <p class="mb-3 small text-muted">{{ Str::limit($provider->bio, 80) }}</p>
 
                     {{-- Contact Info --}}
+                    {{-- Contact Info --}}
                     <ul class="mb-0 list-unstyled small">
                         @if ($provider->phone)
                             <li><i class="menu-icon icon-base ti tabler-phone me-1"></i>{{ $provider->phone }}</li>
@@ -72,6 +73,14 @@
                             <li><i class="menu-icon icon-base ti tabler-mail me-1"></i>{{ $provider->email }}</li>
                         @endif
                     </ul>
+
+                    {{-- Creator Info --}}
+                    <div class="mt-2 small text-muted">
+                        <i class="menu-icon icon-base ti tabler-user me-1"></i>
+                        <span>Added by:</span>
+                        <span class="fw-semibold text-dark">{{ $provider->creator->name ?? 'Unknown' }}</span>
+                    </div>
+
                 </div>
 
                 {{-- Footer --}}

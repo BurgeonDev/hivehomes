@@ -18,7 +18,7 @@ class ServiceProviderController extends Controller
         $user = $request->user();
 
         $query = ServiceProvider::where('is_approved', true)
-            ->with('society', 'type')
+            ->with('society', 'type', 'creator')
             ->withCount('reviews')
             ->withAvg('reviews', 'rating'); // adds reviews_avg_rating
 
@@ -209,7 +209,7 @@ class ServiceProviderController extends Controller
             $path = $request->file('profile_image')->store('service_providers', 'public');
             $data['profile_image'] = $path;  // store relative path only
         }
-
+        $data['created_by'] = $request->user()->id;
         ServiceProvider::create($data);
 
         return redirect()

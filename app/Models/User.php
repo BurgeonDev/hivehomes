@@ -89,4 +89,8 @@ class User extends Authenticatable
         return $this->belongsToMany(Post::class, 'post_user_likes')
             ->withTimestamps();
     }
+    public function serviceProviders()
+    {
+        return $this->hasMany(ServiceProvider::class, 'created_by');
+    }
 }
