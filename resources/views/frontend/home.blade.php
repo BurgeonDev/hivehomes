@@ -33,7 +33,7 @@
         <!-- Real customers reviews: Start -->
         @auth
             @if (auth()->user()->is_active === 'active')
-                @include('frontend.home.customers')
+                @include('frontend.home.products')
             @endif
         @endauth
         <!-- Real customers reviews: End -->
@@ -45,11 +45,13 @@
             @endif
         @endauth
         <!-- Our great team: End -->
-
-        <!-- Pricing plans: Start -->
-        {{-- @include('frontend.home.pricing') --}}
-        <!-- Pricing plans: End -->
-
+        @auth
+            @if (auth()->user()->is_active === 'active')
+                <!-- Pricing plans: Start -->
+                @include('frontend.home.services')
+                <!-- Pricing plans: End -->
+            @endif
+        @endauth
 
 
         <!-- FAQ: Start -->
