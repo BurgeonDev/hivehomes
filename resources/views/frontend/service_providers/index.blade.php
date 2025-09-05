@@ -177,12 +177,23 @@
                             <h5 class="mb-1">Service Providers</h5>
                             <small class="text-muted">Browse approved providers</small>
                         </div>
-                        <div class="text-center shadow-sm kpi-card bg-label-success">
-                            <div class="small text-muted">Total Providers</div>
-                            <div class="mb-0 h3">{{ number_format($totalProviders) }}</div>
+                        <div class="gap-2 d-flex align-items-center">
+                            <button type="button" class="btn btn-label-primary waves-effect">
+                                Total Providers
+                                <span
+                                    class="text-white badge bg-primary badge-center ms-1">{{ number_format($totalProviders) }}</span>
+                            </button>
+
+                            <!-- Add Provider Button -->
+                            <button class="btn btn-primary rounded-pill" data-bs-toggle="modal"
+                                data-bs-target="#serviceProviderModal">
+                                Add Service Provider
+                            </button>
+                            @include('frontend.service_providers.partials.modal')
                         </div>
                     </div>
                 </div>
+
 
                 {{-- Providers List (AJAX) --}}
                 <div id="providersContainer">

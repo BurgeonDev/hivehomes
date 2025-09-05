@@ -70,11 +70,11 @@
                                 </a>
                             </li>
 
-                            {{-- Services --}}
+                            {{-- Service Providers --}}
                             <li class="nav-item">
                                 <a class="nav-link fw-medium {{ request()->routeIs('service-providers.*') ? 'active' : '' }}"
                                     href="{{ route('service-providers.index') }}">
-                                    Services
+                                    Service Providers
                                 </a>
                             </li>
                         @endif

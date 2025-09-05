@@ -13,8 +13,8 @@
                         <a href="{{ route('home') }}" class="text-decoration-none text-primary">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('service-providers.index') }}"
-                            class="text-decoration-none text-dark">Providers</a>
+                        <a href="{{ route('service-providers.index') }}" class="text-decoration-none text-dark">Service
+                            Providers</a>
                     </li>
                     <li class="breadcrumb-item active text-dark" aria-current="page">{{ Str::limit($provider->name, 40) }}
                     </li>
