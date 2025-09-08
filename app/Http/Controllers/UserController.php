@@ -154,9 +154,12 @@ class UserController extends Controller
     }
     public function toggleStatus(User $user)
     {
-        // prevent changing status of permanent roles
+        // 🚫 prevent permanent roles
         if ($user->hasRole('super_admin') || $user->hasRole('society_admin')) {
-            return response()->json(['error' => 'Cannot change status of Super Admin or Society Admin'], 403);
+            return response()->json([
+                'success' => false,
+                'message' => 'Super Admin and Society Admin cannot be deactivated.'
+            ], 403);
         }
 
         $user->is_active = $user->is_active === 'active' ? 'inactive' : 'active';
@@ -165,7 +168,7 @@ class UserController extends Controller
         return response()->json([
             'success' => true,
             'status' => $user->is_active,
-            'user_id' => $user->id,
+            'message' => "User status changed to {$user->is_active}."
         ]);
     }
 }

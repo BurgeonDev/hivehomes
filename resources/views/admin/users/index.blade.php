@@ -111,13 +111,17 @@
                                     @endforeach
                                 </td>
                                 <td>
-                                    <button
-                                        class="btn btn-sm toggle-status
-        {{ $user->is_active === 'active' ? 'btn-success' : 'btn-danger' }}"
-                                        data-id="{{ $user->id }}">
-                                        {{ ucfirst($user->is_active) }}
-                                    </button>
+                                    <label class="switch switch-sm me-0">
+                                        <input type="checkbox" class="switch-input user-status-toggle"
+                                            data-user-id="{{ $user->id }}"
+                                            {{ $user->is_active === 'active' ? 'checked' : '' }}>
+                                        <span class="switch-toggle-slider">
+                                            <span class="switch-on"></span>
+                                            <span class="switch-off"></span>
+                                        </span>
+                                    </label>
                                 </td>
+
 
                                 <td>
                                     <button class="btn btn-sm badge bg-label-info"
@@ -384,29 +388,28 @@
         });
     </script>
     <script>
-        $(document).on('click', '.toggle-status', function() {
-            let button = $(this);
-            let userId = button.data('id');
+        $(document).on('change', '.user-status-toggle', function() {
+            const $toggle = $(this);
+            const userId = $toggle.data('user-id');
+            const newStatus = $toggle.is(':checked') ? 'active' : 'inactive';
 
             $.ajax({
-                url: `/users/${userId}/toggle-status`,
+                url: `/admin/users/${userId}/toggle-status`,
                 method: 'PATCH',
                 data: {
-                    _token: "{{ csrf_token() }}"
+                    _token: $('meta[name="csrf-token"]').attr('content')
                 },
-                success: function(response) {
-                    if (response.success) {
-                        if (response.status === 'active') {
-                            button.removeClass('btn-danger').addClass('btn-success')
-                                .text('Active');
-                        } else {
-                            button.removeClass('btn-success').addClass('btn-danger')
-                                .text('Inactive');
-                        }
+                success: function(res) {
+                    if (res.success) {
+                        notyf.success(res.message || 'Status updated successfully.');
+                    } else {
+                        notyf.error(res.message || 'Failed to update status.');
+                        $toggle.prop('checked', !$toggle.is(':checked')); // rollback UI
                     }
                 },
                 error: function(xhr) {
-                    alert(xhr.responseJSON?.error ?? 'Failed to update status.');
+                    notyf.error(xhr.responseJSON?.message || 'An error occurred.');
+                    $toggle.prop('checked', !$toggle.is(':checked')); // rollback UI
                 }
             });
         });
