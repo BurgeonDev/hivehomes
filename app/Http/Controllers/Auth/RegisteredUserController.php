@@ -71,7 +71,7 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
             'society_id' => $request->society_id,
             'phone'        => $request->phone,
-            'status' => 'inactive',
+            'is_active' => 'inactive', // boolean column instead of 'status'
         ]);
 
         // Assign default role

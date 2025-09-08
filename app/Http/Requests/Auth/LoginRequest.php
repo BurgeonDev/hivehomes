@@ -54,8 +54,8 @@ class LoginRequest extends FormRequest
 
         $user = Auth::user();
 
-        // 🚫 Block if user status is inactive
-        if ($user->status !== 'active') {
+        // 🚫 Block if user is inactive
+        if ($user->is_active !== 'active') {
             Auth::logout();
             throw ValidationException::withMessages([
                 'email' => 'Your account is inactive. Please contact Admin.',
