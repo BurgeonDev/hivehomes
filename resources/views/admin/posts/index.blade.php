@@ -155,14 +155,15 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
-                                    <a href="{{ url('/posts/' . $post->id) }}"
-                                        class="d-flex align-items-center text-decoration-none text-dark">
+                                    <a href="{{ route('posts.show', $post->id) }}"
+                                        class="d-flex align-items-center text-decoration-none text-primary">
                                         @if ($post->image)
                                             <img src="{{ asset('storage/' . $post->image) }}" class="rounded me-2"
                                                 style="width:40px;height:40px;object-fit:cover;">
                                         @endif
                                         <span>{{ $post->title }}</span>
                                     </a>
+
                                 </td>
                                 <td>
                                     {{ \Illuminate\Support\Str::limit(strip_tags($post->body), 30, '...') }}
