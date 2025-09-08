@@ -100,6 +100,8 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
     Route::patch('/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])
         ->name('users.toggleStatus');
+    Route::patch('/users/{user}/reset-password', [UserController::class, 'resetPassword'])
+        ->name('users.reset-password');
 });
 
 

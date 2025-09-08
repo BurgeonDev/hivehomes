@@ -124,6 +124,13 @@
 
 
                                 <td>
+                                    @if (auth()->user()->hasRole('super_admin') && !$user->hasRole('super_admin'))
+                                        <button class="btn btn-sm badge bg-label-warning reset-password-btn"
+                                            data-user-id="{{ $user->id }}">
+                                            <i class="icon-base ti tabler-key"></i>
+                                        </button>
+                                    @endif
+
                                     <button class="btn btn-sm badge bg-label-info"
                                         onclick="editUser({{ $user }}, '{{ $user->roles->first()->name ?? '' }}')">
                                         <i class="icon-base ti tabler-edit"></i>
@@ -410,6 +417,43 @@
                 error: function(xhr) {
                     notyf.error(xhr.responseJSON?.message || 'An error occurred.');
                     $toggle.prop('checked', !$toggle.is(':checked')); // rollback UI
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).on('click', '.reset-password-btn', function() {
+            const userId = $(this).data('user-id');
+            const newPassword = prompt("Enter new password for this user:");
+            const confirmPassword = prompt("Confirm new password:");
+
+            if (!newPassword || !confirmPassword) {
+                notyf.error("Password reset cancelled.");
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                notyf.error("Passwords do not match!");
+                return;
+            }
+
+            $.ajax({
+                url: `/admin/users/${userId}/reset-password`,
+                method: 'PATCH',
+                data: {
+                    password: newPassword,
+                    password_confirmation: confirmPassword,
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(res) {
+                    if (res.success) {
+                        notyf.success(res.message);
+                    } else {
+                        notyf.error(res.message);
+                    }
+                },
+                error: function(xhr) {
+                    notyf.error(xhr.responseJSON?.message || 'An error occurred.');
                 }
             });
         });

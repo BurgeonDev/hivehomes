@@ -171,4 +171,28 @@ class UserController extends Controller
             'message' => "User status changed to {$user->is_active}."
         ]);
     }
+
+    public function resetPassword(Request $request, User $user)
+    {
+        // Only super admin can reset
+        if (!auth()->user()->hasRole('super_admin')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Only Super Admin can reset passwords.'
+            ], 403);
+        }
+
+        $request->validate([
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+
+        $user->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Password has been reset successfully.'
+        ]);
+    }
 }
