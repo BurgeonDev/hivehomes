@@ -125,18 +125,18 @@
                     <div class="mb-4 card dashboard-card">
                         <div class="pt-5 text-center card-body">
                             <div class="d-flex align-items-center flex-column">
-                                <div class="avatar ">
-                                    @if (!empty($user->profile_pic))
-                                        <img src="{{ asset('storage/' . $user->profile_pic) }}" alt="{{ $user->name }}"
-                                            class="rounded-circle" style="width:60px; height:60px; object-fit:cover;">
-                                    @else
-                                        <span
-                                            class="avatar-initial rounded-circle bg-label-primary d-flex align-items-center justify-content-center"
-                                            style="width:60px; height:60px; font-size:20px;">
-                                            {{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}
-                                        </span>
-                                    @endif
-                                </div>
+
+                                @if (!empty($user->profile_pic))
+                                    <img src="{{ asset('storage/' . $user->profile_pic) }}" alt="{{ $user->name }}"
+                                        class="rounded-circle" style="width:60px; height:60px; object-fit:cover;">
+                                @else
+                                    <span
+                                        class="avatar-initial rounded-circle bg-label-primary d-flex align-items-center justify-content-center"
+                                        style="width:60px; height:60px; font-size:20px;">
+                                        {{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}
+                                    </span>
+                                @endif
+
 
                                 <div class="mt-2 text-center user-info">
                                     <h5 class="mb-1">{{ $user->name ?? 'User' }}</h5>
