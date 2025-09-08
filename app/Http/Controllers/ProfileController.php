@@ -19,13 +19,21 @@ class ProfileController extends Controller
     public function edit(Request $request): View|RedirectResponse
     {
         try {
+            $user = $request->user();
+
+            // 🚫 Allow only admins (super_admin or society_admin)
+            if (! $user->hasRole('super_admin') && ! $user->hasRole('society_admin')) {
+                abort(403, 'Only admins can access this page.');
+            }
+
             return view('profile.edit', [
-                'user' => $request->user(),
+                'user' => $user,
             ]);
         } catch (Exception $e) {
             return Redirect::back()->with('error', 'Failed to load profile edit page.');
         }
     }
+
 
     /**
      * Display the user's profile view.
