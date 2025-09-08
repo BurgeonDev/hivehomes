@@ -122,7 +122,7 @@
                                         <i class="icon-base ti tabler-edit"></i>
                                     </button>
 
-                                    @if (!($user->hasRole('super_admin') || $user->hasRole('society_admin')))
+                                    @if (auth()->user()->hasRole('super_admin') && !($user->hasRole('super_admin') || $user->hasRole('society_admin')))
                                         <form method="POST" action="{{ route('users.destroy', $user) }}"
                                             class="delete-form d-inline">
                                             @csrf @method('DELETE')
@@ -131,6 +131,7 @@
                                             </button>
                                         </form>
                                     @endif
+
                                 </td>
                             </tr>
                         @endforeach
