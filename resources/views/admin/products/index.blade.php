@@ -157,8 +157,12 @@
                                         <span class="text-muted">No image</span>
                                     @endif
                                 </td>
+                                <td>
+                                    <a href="{{ route('products.show', $p->id) }}" class="text-decoration-none">
+                                        {{ $p->title }}
+                                    </a>
+                                </td>
 
-                                <td>{{ $p->title }}</td>
                                 <td>{{ $p->category->name ?? '-' }}</td>
                                 <td>Rs.{{ number_format($p->price, 2) }}</td>
                                 <td>
