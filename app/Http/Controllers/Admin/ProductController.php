@@ -6,11 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\Society;
+use App\Traits\AdminRoleCheck;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
+    use AdminRoleCheck;
+
+    public function __construct()
+    {
+        $this->authorizeAdminRoles(); // 👈 both roles allowed
+    }
     public function index(Request $request)
     {
         $user = $request->user();

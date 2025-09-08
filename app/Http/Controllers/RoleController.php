@@ -2,12 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Traits\AdminRoleCheck;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
 {
+    use AdminRoleCheck;
+
+    public function __construct()
+    {
+        $this->authorizeSuperAdmin();
+    }
     /**
      * Display a listing of roles.
      */

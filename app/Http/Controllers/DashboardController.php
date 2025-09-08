@@ -8,12 +8,19 @@ use App\Models\Society;
 use App\Models\User;
 use App\Models\ServiceProvider;
 use App\Services\DashboardService;
+use App\Traits\AdminRoleCheck;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
+    use AdminRoleCheck;
+
+    public function __construct()
+    {
+        $this->authorizeAdminRoles(); // 👈 both roles allowed
+    }
     public function index()
     {
         $user = auth()->user();

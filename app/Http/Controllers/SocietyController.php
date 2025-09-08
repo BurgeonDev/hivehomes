@@ -7,10 +7,17 @@ use App\Models\City;
 use App\Models\State;
 use App\Models\Country;
 use App\Models\User;
+use App\Traits\AdminRoleCheck;
 use Illuminate\Http\Request;
 
 class SocietyController extends Controller
 {
+    use AdminRoleCheck;
+
+    public function __construct()
+    {
+        $this->authorizeSuperAdmin();
+    }
     public function index()
     {
         $societies = Society::with(['city', 'state', 'country', 'admin'])->get();

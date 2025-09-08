@@ -4,12 +4,18 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ProductCategory;
+use App\Traits\AdminRoleCheck;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class ProductCategoryController extends Controller
 {
+    use AdminRoleCheck;
 
+    public function __construct()
+    {
+        $this->authorizeSuperAdmin();
+    }
 
     /**
      * Display a listing of the resource.

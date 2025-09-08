@@ -7,6 +7,7 @@ use App\Models\Country;
 use App\Models\Society;
 use App\Models\State;
 use App\Models\User;
+use App\Traits\AdminRoleCheck;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
@@ -14,6 +15,12 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+    use AdminRoleCheck;
+
+    public function __construct()
+    {
+        $this->authorizeAdminRoles(); // 👈 both roles allowed
+    }
     public function index()
     {
         $user = auth()->user();

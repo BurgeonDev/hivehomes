@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Traits\AdminRoleCheck;
 use Illuminate\Http\Request;
 
 use App\Models\Category;
@@ -16,6 +17,12 @@ use App\Http\Requests\UpdatePostRequest;
 
 class PostController extends Controller
 {
+    use AdminRoleCheck;
+
+    public function __construct()
+    {
+        $this->authorizeAdminRoles(); // 👈 both roles allowed
+    }
 
     public function index()
     {

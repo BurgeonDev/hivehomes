@@ -4,11 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\State;
 use App\Models\Country;
+use App\Traits\AdminRoleCheck;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class StateController extends Controller
 {
+    use AdminRoleCheck;
+
+    public function __construct()
+    {
+        $this->authorizeSuperAdmin();
+    }
     /**
      * Display a listing of the states.
      */

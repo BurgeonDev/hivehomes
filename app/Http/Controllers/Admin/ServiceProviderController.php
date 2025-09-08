@@ -6,12 +6,19 @@ use App\Http\Controllers\Controller;
 use App\Models\ServiceProvider;
 use App\Models\ServiceProviderType;
 use App\Models\Society;
+use App\Traits\AdminRoleCheck;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ServiceProviderController extends Controller
 {
+    use AdminRoleCheck;
+
+    public function __construct()
+    {
+        $this->authorizeAdminRoles(); // 👈 both roles allowed
+    }
     /**
      * Display a listing of the service providers.
      */

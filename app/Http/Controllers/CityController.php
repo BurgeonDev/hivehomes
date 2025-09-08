@@ -4,10 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\City;
 use App\Models\State;
+use App\Traits\AdminRoleCheck;
 use Illuminate\Http\Request;
 
 class CityController extends Controller
 {
+    use AdminRoleCheck;
+
+    public function __construct()
+    {
+        $this->authorizeSuperAdmin();
+    }
     public function index()
     {
         $cities = City::with('state.country')->get();

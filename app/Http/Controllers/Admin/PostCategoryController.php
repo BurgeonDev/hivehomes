@@ -4,10 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Traits\AdminRoleCheck;
 use Illuminate\Http\Request;
 
 class PostCategoryController extends Controller
 {
+    use AdminRoleCheck;
+
+    public function __construct()
+    {
+        $this->authorizeSuperAdmin();
+    }
     public function index()
     {
         $categories = Category::latest()->paginate(10);

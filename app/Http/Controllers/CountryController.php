@@ -3,10 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Country;
+use App\Traits\AdminRoleCheck;
 use Illuminate\Http\Request;
 
 class CountryController extends Controller
 {
+    use AdminRoleCheck;
+
+    public function __construct()
+    {
+        $this->authorizeSuperAdmin();
+    }
     public function index()
     {
         $countries = Country::all();
