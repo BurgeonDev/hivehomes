@@ -152,4 +152,20 @@ class UserController extends Controller
 
         return redirect()->route('users.index')->with('success', 'User deleted successfully.');
     }
+    public function toggleStatus(User $user)
+    {
+        // prevent changing status of permanent roles
+        if ($user->hasRole('super_admin') || $user->hasRole('society_admin')) {
+            return response()->json(['error' => 'Cannot change status of Super Admin or Society Admin'], 403);
+        }
+
+        $user->is_active = $user->is_active === 'active' ? 'inactive' : 'active';
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'status' => $user->is_active,
+            'user_id' => $user->id,
+        ]);
+    }
 }

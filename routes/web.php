@@ -79,6 +79,8 @@ Route::middleware('auth')->group(function () {
     Route::get('roles/users/data', [RoleController::class, 'usersData'])->name('roles.users.data');
     Route::patch('/societies/{society}/status', [SocietyController::class, 'updateStatus'])->name('societies.update-status');
     Route::get('/user/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
+    Route::patch('/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])
+        ->name('users.toggleStatus');
 });
 
 // Admin Backend
@@ -98,6 +100,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('product-categories', ProductCategoryController::class)
         ->except(['show']);
 });
+
 
 
 

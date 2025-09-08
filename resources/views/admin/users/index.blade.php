@@ -111,11 +111,14 @@
                                     @endforeach
                                 </td>
                                 <td>
-                                    <span
-                                        class="badge {{ $user->is_active === 'active' ? 'bg-label-success' : 'bg-label-danger' }}">
+                                    <button
+                                        class="btn btn-sm toggle-status
+        {{ $user->is_active === 'active' ? 'btn-success' : 'btn-danger' }}"
+                                        data-id="{{ $user->id }}">
                                         {{ ucfirst($user->is_active) }}
-                                    </span>
+                                    </button>
                                 </td>
+
                                 <td>
                                     <button class="btn btn-sm badge bg-label-info"
                                         onclick="editUser({{ $user }}, '{{ $user->roles->first()->name ?? '' }}')">
@@ -376,6 +379,34 @@
                         });
                         $('#society').html(options);
                     });
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).on('click', '.toggle-status', function() {
+            let button = $(this);
+            let userId = button.data('id');
+
+            $.ajax({
+                url: `/users/${userId}/toggle-status`,
+                method: 'PATCH',
+                data: {
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    if (response.success) {
+                        if (response.status === 'active') {
+                            button.removeClass('btn-danger').addClass('btn-success')
+                                .text('Active');
+                        } else {
+                            button.removeClass('btn-success').addClass('btn-danger')
+                                .text('Inactive');
+                        }
+                    }
+                },
+                error: function(xhr) {
+                    alert(xhr.responseJSON?.error ?? 'Failed to update status.');
                 }
             });
         });
