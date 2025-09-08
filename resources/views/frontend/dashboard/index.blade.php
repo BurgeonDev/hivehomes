@@ -124,17 +124,26 @@
                 <aside class="col-lg-3">
                     <div class="mb-4 card dashboard-card">
                         <div class="pt-5 text-center card-body">
-                            <!-- Initials Avatar -->
                             <div class="d-flex align-items-center flex-column">
-                                <div class="avatar-circle" style="background: {{ $bgColor }};">
-                                    {{ $initials ?: 'U' }}
+                                <div class="avatar ">
+                                    @if (!empty($user->profile_pic))
+                                        <img src="{{ asset('storage/' . $user->profile_pic) }}" alt="{{ $user->name }}"
+                                            class="rounded-circle" style="width:60px; height:60px; object-fit:cover;">
+                                    @else
+                                        <span
+                                            class="avatar-initial rounded-circle bg-label-primary d-flex align-items-center justify-content-center"
+                                            style="width:60px; height:60px; font-size:20px;">
+                                            {{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}
+                                        </span>
+                                    @endif
                                 </div>
 
-                                <div class="user-info">
+                                <div class="mt-2 text-center user-info">
                                     <h5 class="mb-1">{{ $user->name ?? 'User' }}</h5>
                                     <span class="badge bg-label-secondary">{{ $user->role ?? 'Member' }}</span>
                                 </div>
                             </div>
+
 
                             <!-- User Details -->
                             <div class="mb-3">
@@ -151,8 +160,8 @@
                                     <li class="mb-2 d-flex justify-content-between align-items-center">
                                         <strong>Status:</strong>
                                         <span
-                                            class="badge {{ ($user->status ?? 'Active') === 'Active' ? 'bg-label-success' : 'bg-label-danger' }}">
-                                            {{ $user->status ?? 'Active' }}
+                                            class="badge {{ ($user->is_active ?? 'Active') === 'Active' ? 'bg-label-success' : 'bg-label-danger' }}">
+                                            {{ $user->is_active ?? 'Active' }}
                                         </span>
                                     </li>
                                     <li class="mb-2 d-flex justify-content-between align-items-center">
