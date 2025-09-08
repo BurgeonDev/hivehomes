@@ -29,6 +29,32 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
+    // public function store(Request $request): RedirectResponse
+    // {
+    //     $request->validate([
+    //         'name' => ['required', 'string', 'max:255'],
+    //         'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+    //         'password' => ['required', 'confirmed', Rules\Password::defaults()],
+    //         'society_id' => ['required', 'exists:societies,id'],
+    //         'phone'        => 'required|string|max:20',
+    //     ]);
+
+    //     $user = User::create([
+    //         'name' => $request->name,
+    //         'email' => $request->email,
+    //         'password' => Hash::make($request->password),
+    //         'society_id' => $request->society_id,
+    //         'phone'        => $request->phone,
+    //         'status' => 'inactive', // Assuming 'inactive' is the default status
+    //     ]);
+    //     // Assign the default role
+    //     $user->assignRole('member');
+    //     event(new Registered($user));
+
+    //     Auth::login($user);
+
+    //     return redirect(route('home', absolute: false));
+    // }
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
@@ -45,14 +71,18 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
             'society_id' => $request->society_id,
             'phone'        => $request->phone,
-            'status' => 'inactive', // Assuming 'inactive' is the default status
+            'status' => 'inactive',
         ]);
-        // Assign the default role
+
+        // Assign default role
         $user->assignRole('member');
+
         event(new Registered($user));
 
-        Auth::login($user);
+        // ❌ Don't log them in
+        // Auth::login($user);
 
-        return redirect(route('home', absolute: false));
+        // Redirect with message
+        return redirect()->route('login')->with('status', 'Registration successful! Please wait for admin approval before logging in.');
     }
 }
