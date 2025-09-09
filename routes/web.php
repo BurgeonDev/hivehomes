@@ -94,6 +94,11 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
         'service-providers/{service_provider}/toggle',
         [AdminServiceProviderController::class, 'toggle']
     )->name('service-providers.toggle');
+    Route::post(
+        'service-providers/{service_provider}/approve',
+        [AdminServiceProviderController::class, 'approve']
+    )->name('service-providers.approve');
+
     Route::resource('types', ServiceProviderTypeController::class);
     Route::resource('product-categories', ProductCategoryController::class)
         ->except(['show']);

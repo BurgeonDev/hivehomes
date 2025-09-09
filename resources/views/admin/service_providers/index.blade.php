@@ -184,42 +184,35 @@
                                 @role('super_admin')
                                     <td>{{ $sp->society->name }}</td>
                                 @endrole
+                                <!-- Approved column (switch style) -->
                                 <td>
-                                    {!! $sp->is_approved
-                                        ? '<span class="badge bg-label-success">Yes</span>'
-                                        : '<span class="badge bg-label-warning">No</span>' !!}
+                                    <label class="switch switch-sm me-0">
+                                        <input type="checkbox" class="switch-input sp-approve-toggle"
+                                            data-id="{{ $sp->id }}"
+                                            aria-label="Toggle approval for {{ $sp->name }}"
+                                            {{ $sp->is_approved ? 'checked' : '' }}>
+                                        <span class="switch-toggle-slider">
+                                            <span class="switch-on"></span>
+                                            <span class="switch-off"></span>
+                                        </span>
+                                    </label>
                                 </td>
+
+                                <!-- Status column (switch style) -->
                                 <td>
-                                    <div class="dropdown">
-                                        <button class="btn btn-sm dropdown-toggle" type="button"
-                                            id="approvedDropdown{{ $sp->id }}" data-bs-toggle="dropdown">
-                                            <span
-                                                class="badge {{ $sp->is_active ? 'bg-label-success' : 'bg-label-warning' }}">
-                                                {{ $sp->is_active ? 'Active' : 'Inactive' }}
-                                            </span>
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="approvedDropdown{{ $sp->id }}">
-                                            <li>
-                                                <form action="{{ route('admin.service-providers.toggle', $sp) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="is_active" value="1">
-                                                    <button class="dropdown-item"><span
-                                                            class="badge bg-label-success">Active</span></button>
-                                                </form>
-                                            </li>
-                                            <li>
-                                                <form action="{{ route('admin.service-providers.toggle', $sp) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="is_active" value="0">
-                                                    <button class="dropdown-item"><span
-                                                            class="badge bg-label-warning">Inactive</span></button>
-                                                </form>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                    <label class="switch switch-sm me-0">
+                                        <input type="checkbox" class="switch-input sp-status-toggle"
+                                            data-id="{{ $sp->id }}"
+                                            aria-label="Toggle active status for {{ $sp->name }}"
+                                            {{ $sp->is_active ? 'checked' : '' }}>
+                                        <span class="switch-toggle-slider">
+                                            <span class="switch-on"></span>
+                                            <span class="switch-off"></span>
+                                        </span>
+                                    </label>
                                 </td>
+
+
                                 <td>
                                     <button class="btn btn-sm badge bg-label-info"
                                         onclick='editSP(@json($sp))'> <i
@@ -378,4 +371,108 @@
             $('#sp-preview-img').attr('src', 'https://ui-avatars.com/api/?name=&background=ddd&color=555');
         });
     </script>
+    <script>
+        // Make sure <meta name="csrf-token" content="{{ csrf_token() }}"> exists in your layout
+        (function() {
+            const csrf = $('meta[name="csrf-token"]').attr('content');
+
+            function showSuccess(msg) {
+                if (typeof notyf !== 'undefined') return notyf.success(msg);
+                return alert(msg);
+            }
+
+            function showError(msg) {
+                if (typeof notyf !== 'undefined') return notyf.error(msg);
+                return alert(msg);
+            }
+
+            // Generic AJAX helper
+            function postToggle(url, payload, onSuccess, onError) {
+                return $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: Object.assign({
+                        _token: csrf
+                    }, payload),
+                    dataType: 'json'
+                }).done(function(res) {
+                    if (onSuccess) onSuccess(res);
+                }).fail(function(xhr) {
+                    if (onError) onError(xhr);
+                });
+            }
+
+            // STATUS (is_active) toggle
+            $(document).on('change', '.sp-status-toggle', function() {
+                const $toggle = $(this);
+                const id = $toggle.data('id');
+                const newVal = $toggle.is(':checked') ? 1 : 0;
+                const url = `/admin/service-providers/${id}/toggle`;
+
+                // optimistic UI: update label immediately
+                const $label = $toggle.siblings('label');
+                const prevChecked = !$toggle.is(':checked'); // used for rollback
+                $label.text(newVal ? 'Active' : 'Inactive');
+
+                // disable while request in-flight
+                $toggle.prop('disabled', true);
+
+                postToggle(url, {
+                    is_active: newVal
+                }, function(res) {
+                    $toggle.prop('disabled', false);
+                    if (res && res.success) {
+                        showSuccess(res.message || 'Status updated successfully.');
+                    } else {
+                        // rollback
+                        $toggle.prop('checked', prevChecked);
+                        $label.text(prevChecked ? 'Active' : 'Inactive');
+                        showError(res?.message || 'Failed to update status.');
+                    }
+                }, function(xhr) {
+                    $toggle.prop('disabled', false);
+                    // rollback UI
+                    $toggle.prop('checked', prevChecked);
+                    $label.text(prevChecked ? 'Active' : 'Inactive');
+                    showError(xhr.responseJSON?.message || 'An error occurred while updating status.');
+                });
+            });
+
+            // APPROVAL (is_approved) toggle
+            $(document).on('change', '.sp-approve-toggle', function() {
+                const $toggle = $(this);
+                const id = $toggle.data('id');
+                const newVal = $toggle.is(':checked') ? 1 : 0;
+                const url = `/admin/service-providers/${id}/approve`;
+
+                const $label = $toggle.siblings('label');
+                const prevChecked = !$toggle.is(':checked');
+                $label.text(newVal ? 'Approved' : 'Not Approved');
+
+                $toggle.prop('disabled', true);
+
+                postToggle(url, {
+                    is_approved: newVal
+                }, function(res) {
+                    $toggle.prop('disabled', false);
+                    if (res && res.success) {
+                        showSuccess(res.message || 'Approval status updated.');
+                    } else {
+                        $toggle.prop('checked', prevChecked);
+                        $label.text(prevChecked ? 'Approved' : 'Not Approved');
+                        showError(res?.message || 'Failed to update approval.');
+                    }
+                }, function(xhr) {
+                    $toggle.prop('disabled', false);
+                    $toggle.prop('checked', prevChecked);
+                    $label.text(prevChecked ? 'Approved' : 'Not Approved');
+                    showError(xhr.responseJSON?.message ||
+                        'An error occurred while updating approval.');
+                });
+            });
+
+        })();
+    </script>
+
+
 @endsection

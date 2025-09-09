@@ -179,15 +179,53 @@ class ServiceProviderController extends Controller
             ->route('admin.service-providers.index')
             ->with('success', 'Service Provider deleted.');
     }
+    // public function toggle(Request $request, ServiceProvider $service_provider)
+    // {
+    //     // validate the incoming value:
+    //     $data = $request->validate([
+    //         'is_active' => 'required|boolean',
+    //     ]);
+
+    //     $service_provider->update($data);
+
+    //     return back()->with('success', 'Status updated.');
+    // }
     public function toggle(Request $request, ServiceProvider $service_provider)
     {
-        // validate the incoming value:
         $data = $request->validate([
             'is_active' => 'required|boolean',
         ]);
 
         $service_provider->update($data);
 
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'id' => $service_provider->id,
+                'is_active' => (bool)$service_provider->is_active,
+            ]);
+        }
+
         return back()->with('success', 'Status updated.');
+    }
+
+    public function approve(Request $request, ServiceProvider $service_provider)
+    {
+        $data = $request->validate([
+            'is_approved' => 'required|boolean',
+        ]);
+
+
+        $service_provider->update($data);
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'id' => $service_provider->id,
+                'is_approved' => (bool)$service_provider->is_approved,
+            ]);
+        }
+
+        return back()->with('success', 'Approval status updated.');
     }
 }
