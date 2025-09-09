@@ -34,6 +34,12 @@
         fetch("{{ route('dashboard.service-providers-stats') }}")
             .then(response => response.json())
             .then(data => {
+                // Defensive: coerce series values to numbers (handles both string and numeric returns)
+                const numericSeries = (data.series || []).map(s => {
+                    const n = Number(s);
+                    return Number.isFinite(n) ? n : 0;
+                });
+
                 const radialBarChartEl = document.querySelector('#radialBarChart');
                 const radialBarChartConfig = {
                     chart: {
@@ -67,7 +73,8 @@
                                     show: true,
                                     label: 'Total Providers',
                                     formatter: function() {
-                                        return data.series.reduce((a, b) => a + b, 0);
+                                        // use numericSeries (ensures numeric addition)
+                                        return numericSeries.reduce((a, b) => a + b, 0);
                                     }
                                 }
                             }
@@ -94,7 +101,7 @@
                     stroke: {
                         lineCap: 'round'
                     },
-                    series: data.series,
+                    series: numericSeries,
                     labels: data.labels
                 };
 
@@ -102,6 +109,9 @@
                     const radialChart = new ApexCharts(radialBarChartEl, radialBarChartConfig);
                     radialChart.render();
                 }
+            })
+            .catch(err => {
+                console.error('Failed to load service provider stats', err);
             });
     });
 </script>

@@ -178,6 +178,28 @@ class DashboardService
             ],
         ];
     }
+    // public function serviceProviderStats()
+    // {
+    //     $user = auth()->user();
+
+    //     $query = ServiceProvider::query()
+    //         ->join('service_provider_types', 'service_providers.type_id', '=', 'service_provider_types.id')
+    //         ->selectRaw('service_provider_types.name as type, COUNT(service_providers.id) as total')
+    //         ->groupBy('service_provider_types.name');
+
+    //     if ($user->hasRole('SocietyAdmin')) {
+    //         // Only filter by society for society admins
+    //         $query->where('service_providers.society_id', $user->society_id);
+    //     }
+
+
+    //     $stats = $query->get();
+
+    //     return [
+    //         'labels' => $stats->pluck('type')->toArray(),
+    //         'series' => $stats->pluck('total')->toArray(),
+    //     ];
+    // }
     public function serviceProviderStats()
     {
         $user = auth()->user();
@@ -188,16 +210,20 @@ class DashboardService
             ->groupBy('service_provider_types.name');
 
         if ($user->hasRole('SocietyAdmin')) {
-            // Only filter by society for society admins
             $query->where('service_providers.society_id', $user->society_id);
         }
 
-
         $stats = $query->get();
 
-        return [
-            'labels' => $stats->pluck('type')->toArray(),
-            'series' => $stats->pluck('total')->toArray(),
-        ];
+        // Make sure totals are integers (avoid driver returning strings)
+        $labels = $stats->pluck('type')->toArray();
+        $series = $stats->pluck('total')->map(function ($t) {
+            return (int) $t;
+        })->toArray();
+
+        return response()->json([
+            'labels' => $labels,
+            'series' => $series,
+        ]);
     }
 }
