@@ -217,12 +217,17 @@
                                     <button class="btn btn-sm badge bg-label-info"
                                         onclick='editSP(@json($sp))'> <i
                                             class="icon-base ti tabler-edit"></i></button>
-                                    <form action="{{ route('admin.service-providers.destroy', $sp) }}" method="POST"
-                                        class="d-inline delete-form">
-                                        @csrf @method('DELETE')
-                                        <button class="btn btn-sm badge bg-label-danger show-confirm"> <i
-                                                class="icon-base ti tabler-trash"></i></button>
-                                    </form>
+                                    @if (auth()->user()->hasRole('super_admin'))
+                                        <form action="{{ route('admin.service-providers.destroy', $sp) }}" method="POST"
+                                            class="d-inline delete-form">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm badge bg-label-danger show-confirm">
+                                                <i class="icon-base ti tabler-trash"></i>
+                                            </button>
+                                        </form>
+                                    @endif
+
                                 </td>
                             </tr>
                         @endforeach
