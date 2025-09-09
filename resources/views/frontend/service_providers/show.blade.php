@@ -110,9 +110,23 @@
                                                 <strong>{{ $review->user->name }}</strong>
                                                 <small
                                                     class="text-muted ms-2">{{ $review->created_at->diffForHumans() }}</small>
-                                                <span class="ms-auto text-warning">
+                                                <span class="ms-auto text-warning me-2">
                                                     {!! str_repeat('<i class="menu-icon icon-base ti tabler-star-filled"></i>', $review->rating) !!}
                                                 </span>
+
+                                                {{-- Delete option for Super Admin only --}}
+                                                @if (auth()->user()->hasRole('super_admin'))
+                                                    <form action="{{ route('admin.reviews.destroy', $review->id) }}"
+                                                        method="POST" class="d-inline ms-1">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit"
+                                                            class="p-0 bg-transparent border-0 btn text-danger show-confirm"
+                                                            title="Delete Review">
+                                                            <i class="ti tabler-trash icon-20px"></i>
+                                                        </button>
+                                                    </form>
+                                                @endif
                                             </div>
                                             <p class="mb-0">{{ $review->comment }}</p>
                                         </div>
@@ -125,6 +139,7 @@
                                     </div>
                                 @endforelse
                             </div>
+
                         </div>
                     </div>
                     {{-- Review Form --}}

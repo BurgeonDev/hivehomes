@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Admin\ServiceProviderTypeController;
+use App\Models\ServiceProviderReview;
 use App\Models\ServiceProviderType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -176,6 +177,18 @@ class ServiceProviderController extends Controller
 
         return back()->with('success', 'Review submitted successfully!');
     }
+    public function destroyReview(ServiceProviderReview $review)
+    {
+        // Extra safety: only allow super admins
+        if (!auth()->user()->hasRole('super_admin')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $review->delete();
+
+        return back()->with('success', 'Review deleted successfully.');
+    }
+
     public function store(Request $request)
     {
         // 1. Base validation

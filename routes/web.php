@@ -107,6 +107,9 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
         ->name('users.toggleStatus');
     Route::patch('/users/{user}/reset-password', [UserController::class, 'resetPassword'])
         ->name('users.reset-password');
+
+    Route::delete('/reviews/{review}', [ServiceProviderController::class, 'destroyReview'])
+        ->name('reviews.destroy');
 });
 
 
