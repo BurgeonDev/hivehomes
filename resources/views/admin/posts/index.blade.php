@@ -142,10 +142,10 @@
                         <tr>
                             <th>#</th>
                             <th>Title</th>
-                            <th>Content</th>
                             <th>Category</th>
                             <th>Society</th>
                             <th>Author</th>
+                            <th>Created At</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
@@ -165,14 +165,14 @@
                                     </a>
 
                                 </td>
-                                <td>
-                                    {{ \Illuminate\Support\Str::limit(strip_tags($post->body), 30, '...') }}
-                                </td>
+
 
                                 <td>{{ $post->category->name ?? '-' }}</td>
 
                                 <td>{{ $post->society->name }}</td>
                                 <td>{{ $post->user->name }}</td>
+                                <td>{{ $post->created_at ? \Carbon\Carbon::parse($post->created_at)->format('d-m-Y') : '' }}
+                                </td>
                                 <td>
                                     <form method="POST" action="{{ route('admin.posts.changeStatus', $post) }}">
                                         @csrf
