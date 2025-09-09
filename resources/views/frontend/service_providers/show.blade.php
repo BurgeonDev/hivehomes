@@ -1,6 +1,27 @@
 @extends('frontend.layouts.app')
 @section('title', $provider->name)
+@section('page-css')
+    <style>
+        .rating-stars input {
+            display: none;
+        }
 
+        .rating-stars label {
+            cursor: pointer;
+            font-size: 2rem;
+            /* make stars bigger */
+            color: #ccc;
+            /* default gray */
+        }
+
+        .rating-stars input:checked~label i,
+        .rating-stars label:hover i,
+        .rating-stars label:hover~label i {
+            color: #ffc107;
+            /* filled yellow */
+        }
+    </style>
+@endsection
 @section('content')
     {{-- Banner / Breadcrumb --}}
     <section class="overflow-hidden section-py first-section-pt help-center-header position-relative"
@@ -117,12 +138,12 @@
                                     @csrf
                                     <div class="mb-3">
                                         <label class="form-label">Your Rating</label>
-                                        <div class="gap-1 d-flex">
-                                            @for ($i = 1; $i <= 5; $i++)
-                                                <input type="radio" class="btn-check" name="rating"
-                                                    id="star{{ $i }}" value="{{ $i }}" required>
-                                                <label class="btn btn-outline-warning" for="star{{ $i }}">
-                                                    <i class="ti tabler-star"></i> {{ $i }}
+                                        <div class="flex-row-reverse gap-1 rating-stars d-flex justify-content-end">
+                                            @for ($i = 5; $i >= 1; $i--)
+                                                <input type="radio" id="star{{ $i }}" name="rating"
+                                                    value="{{ $i }}" required>
+                                                <label for="star{{ $i }}" title="{{ $i }} stars">
+                                                    <i class="ti tabler-star icon-122px"></i>
                                                 </label>
                                             @endfor
                                         </div>
@@ -130,6 +151,7 @@
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
+
 
                                     <div class="mb-3">
                                         <label class="form-label">Your Review</label>
