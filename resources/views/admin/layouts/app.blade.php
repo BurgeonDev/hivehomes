@@ -48,10 +48,52 @@
     {{-- <script src="{{ asset('assets/vendor/js/template-customizer.js') }}"></script> --}}
     <script src="{{ asset('assets/js/config.js') }}"></script>
     <style>
-        /* Force text to be dark */
+        .notyf {
+            top: 1rem !important;
+            right: 1rem !important;
+            left: auto !important;
+            z-index: 10850 !important;
+        }
+
+        /* single toast message appearance */
         .notyf__message {
-            color: #333 !important;
-            /* dark gray text */
+            background: var(--bs-primary, #0d6efd) !important;
+            color: #fff !important;
+            border-radius: 0.5rem !important;
+            padding: 0.75rem 1rem !important;
+            box-shadow: 0 6px 18px rgba(13, 110, 253, 0.12) !important;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+
+        .notyf__icon {
+            font-size: 1.05rem;
+            margin-right: 0.6rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notyf__message.notyf__message--success,
+        .notyf__message.notyf__message--error {
+            background: var(--bs-primary, #0d6efd) !important;
+        }
+
+        .notyf__message * {
+            color: #fff !important;
+        }
+
+        /* Optional: make dismiss (x) icon white too */
+        .notyf__dismiss {
+            color: #fff !important;
+        }
+
+        @media (max-width: 576px) {
+            .notyf__message {
+                padding: 0.6rem 0.75rem !important;
+                font-size: 0.95rem;
+            }
         }
     </style>
 </head>
@@ -123,24 +165,31 @@
     <!-- Page JS -->
     @yield('page-js')
     <script>
-        // Make notyf globally accessible
+        /* init Notyf: primary background + per-type icon colors (JS fallback) */
         const notyf = new Notyf({
+            position: {
+                x: 'right',
+                y: 'top'
+            },
+            duration: 5000,
+            ripple: true,
+            dismissible: true,
             types: [{
                     type: 'success',
-                    background: '#fff',
+                    background: 'var(--bs-primary, #0d6efd)', // keep primary bg
                     icon: {
                         className: 'notyf__icon--success',
                         tagName: 'i',
-                        color: '#28a745'
+                        color: 'var(--bs-success, #198754)' // icon green
                     }
                 },
                 {
                     type: 'error',
-                    background: '#fff',
+                    background: 'var(--bs-primary, #0d6efd)',
                     icon: {
                         className: 'notyf__icon--error',
                         tagName: 'i',
-                        color: '#dc3545'
+                        color: 'var(--bs-danger, #dc3545)' // icon red
                     }
                 }
             ]
@@ -148,16 +197,16 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             @if (session('success'))
-                notyf.success("{{ session('success') }}");
+                notyf.success("{{ addslashes(session('success')) }}");
             @endif
 
             @if (session('error'))
-                notyf.error("{{ session('error') }}");
+                notyf.error("{{ addslashes(session('error')) }}");
             @endif
 
             @if ($errors->any())
                 @foreach ($errors->all() as $error)
-                    notyf.error("{{ $error }}");
+                    notyf.error("{{ addslashes($error) }}");
                 @endforeach
             @endif
         });
