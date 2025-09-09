@@ -25,7 +25,7 @@
                     <div class="card-body">
                         <div class="d-flex align-items-start justify-content-between">
                             <div class="content-left">
-                                <span class="text-heading">Approved Posts</span>
+                                <span class="text-heading">Approved Products</span>
                                 <div class="my-1 d-flex align-items-center">
                                     <h4 class="mb-0 me-2">{{ $approvedCount }}</h4>
                                 </div>
@@ -46,7 +46,7 @@
                     <div class="card-body">
                         <div class="d-flex align-items-start justify-content-between">
                             <div class="content-left">
-                                <span class="text-heading">Pending Posts</span>
+                                <span class="text-heading">Pending Products</span>
                                 <div class="my-1 d-flex align-items-center">
                                     <h4 class="mb-0 me-2">{{ $unapprovedCount }}</h4>
                                 </div>
@@ -67,11 +67,11 @@
                     <div class="card-body">
                         <div class="d-flex align-items-start justify-content-between">
                             <div class="content-left">
-                                <span class="text-heading">Rejected Posts</span>
+                                <span class="text-heading">Rejected Products</span>
                                 <div class="my-1 d-flex align-items-center">
                                     <h4 class="mb-0 me-2">{{ $rejectedCount }}</h4>
                                 </div>
-                                <small class="mb-0">Posts declined</small>
+                                <small class="mb-0">Products declined</small>
                             </div>
                             <div class="avatar">
                                 <span class="rounded avatar-initial bg-label-danger">
