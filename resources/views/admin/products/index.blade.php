@@ -138,6 +138,7 @@
                             <th>Price</th>
                             <th>Status</th>
                             <th>Seller</th>
+                            <th>Posted At</th>
                             <th class="text-end">Actions</th>
                         </tr>
                     </thead>
@@ -180,6 +181,7 @@
                                 </td>
 
                                 <td>{{ $p->seller->name }}</td>
+                                <td>{{ $p->created_at ? \Carbon\Carbon::parse($p->created_at)->format('d-m-Y') : '' }}
                                 <td class="text-end">
                                     <button class="btn btn-sm badge bg-label-info btn-edit-product"
                                         data-product='@json($p)'>
