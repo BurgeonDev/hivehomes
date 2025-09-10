@@ -128,12 +128,12 @@
 
 
                                 <td>
-                                    @if (auth()->user()->hasRole('super_admin') && !$user->hasRole('super_admin'))
-                                        <button class="btn btn-sm badge bg-label-warning reset-password-btn"
-                                            data-user-id="{{ $user->id }}">
-                                            <i class="icon-base ti tabler-key"></i>
-                                        </button>
-                                    @endif
+
+                                    <button class="btn btn-sm badge bg-label-warning reset-password-btn"
+                                        data-user-id="{{ $user->id }}">
+                                        <i class="icon-base ti tabler-key"></i>
+                                    </button>
+
 
                                     <button class="btn btn-sm badge bg-label-info"
                                         onclick="editUser({{ $user }}, '{{ $user->roles->first()->name ?? '' }}')">

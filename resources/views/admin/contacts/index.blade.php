@@ -47,8 +47,9 @@
                                 <td>{{ $contact->name }}</td>
                                 <td>{{ $contact->phone }}</td>
                                 <td>{{ $contact->email }}</td>
-                                <td>{{ $contact->created_at }}</td>
                                 <td>{{ Str::limit($contact->message, 50) }}</td>
+                                <td>{{ $contact->created_at }}</td>
+
                                 <td>
                                     @if ($contact->is_seen)
                                         <span class="badge bg-label-success">Replied</span>
