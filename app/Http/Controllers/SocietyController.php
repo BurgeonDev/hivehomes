@@ -14,12 +14,10 @@ class SocietyController extends Controller
 {
     use AdminRoleCheck;
 
-    public function __construct()
-    {
-        $this->authorizeSuperAdmin();
-    }
+
     public function index()
     {
+        $this->authorizeSuperAdmin();
         $societies = Society::with(['city', 'state', 'country', 'admin'])->get();
         $cities = City::all();
         $states = State::all();
@@ -31,6 +29,7 @@ class SocietyController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorizeSuperAdmin();
         $validated = $request->validate([
             'name' => 'required|string',
             'address' => 'nullable|string',
@@ -51,6 +50,7 @@ class SocietyController extends Controller
 
     public function update(Request $request, Society $society)
     {
+        $this->authorizeSuperAdmin();
         $validated = $request->validate([
             'name' => 'required|string',
             'address' => 'nullable|string',
@@ -76,6 +76,7 @@ class SocietyController extends Controller
 
     public function destroy(Society $society)
     {
+        $this->authorizeSuperAdmin();
         $society->delete();
 
         return redirect()->route('societies.index')->with('success', 'Society deleted.');
@@ -102,6 +103,7 @@ class SocietyController extends Controller
     // }
     public function updateStatus(Request $request, Society $society)
     {
+        $this->authorizeSuperAdmin();
         $request->validate([
             'status' => 'required|boolean'
         ]);
