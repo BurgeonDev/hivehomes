@@ -12,15 +12,13 @@ class StateController extends Controller
 {
     use AdminRoleCheck;
 
-    public function __construct()
-    {
-        $this->authorizeSuperAdmin()->except('getStatesByCountry');;
-    }
+
     /**
      * Display a listing of the states.
      */
     public function index()
     {
+        $this->authorizeSuperAdmin();
         $states = State::with('country')->latest()->get();
         return view('admin.locations.states.index', compact('states'));
     }
@@ -35,6 +33,7 @@ class StateController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorizeSuperAdmin();
         $request->validate([
             'name'       => 'required|string|max:255',
             'country_id' => 'required|exists:countries,id',
@@ -58,6 +57,7 @@ class StateController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->authorizeSuperAdmin();
         $request->validate([
             'name'       => 'required|string|max:255',
             'country_id' => 'required|exists:countries,id',
@@ -78,6 +78,7 @@ class StateController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorizeSuperAdmin();
         $state = State::findOrFail($id);
         $state->delete();
 
