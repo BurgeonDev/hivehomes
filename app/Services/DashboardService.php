@@ -178,6 +178,8 @@ class DashboardService
             ],
         ];
     }
+
+
     // public function serviceProviderStats()
     // {
     //     $user = auth()->user();
@@ -188,17 +190,21 @@ class DashboardService
     //         ->groupBy('service_provider_types.name');
 
     //     if ($user->hasRole('SocietyAdmin')) {
-    //         // Only filter by society for society admins
     //         $query->where('service_providers.society_id', $user->society_id);
     //     }
 
-
     //     $stats = $query->get();
 
-    //     return [
-    //         'labels' => $stats->pluck('type')->toArray(),
-    //         'series' => $stats->pluck('total')->toArray(),
-    //     ];
+    //     // Make sure totals are integers (avoid driver returning strings)
+    //     $labels = $stats->pluck('type')->toArray();
+    //     $series = $stats->pluck('total')->map(function ($t) {
+    //         return (int) $t;
+    //     })->toArray();
+
+    //     return response()->json([
+    //         'labels' => $labels,
+    //         'series' => $series,
+    //     ]);
     // }
     public function serviceProviderStats()
     {
@@ -210,16 +216,18 @@ class DashboardService
             ->groupBy('service_provider_types.name');
 
         if ($user->hasRole('SocietyAdmin')) {
+            // SocietyAdmin: only their society
+            $query->where('service_providers.society_id', $user->society_id);
+        } elseif (! $user->hasRole('SuperAdmin')) {
+            // Everyone else (non-superadmin) → also only their society
             $query->where('service_providers.society_id', $user->society_id);
         }
+        // SuperAdmin falls through → sees all societies (totals)
 
         $stats = $query->get();
 
-        // Make sure totals are integers (avoid driver returning strings)
         $labels = $stats->pluck('type')->toArray();
-        $series = $stats->pluck('total')->map(function ($t) {
-            return (int) $t;
-        })->toArray();
+        $series = $stats->pluck('total')->map(fn($t) => (int) $t)->toArray();
 
         return response()->json([
             'labels' => $labels,
