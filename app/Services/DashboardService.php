@@ -215,14 +215,14 @@ class DashboardService
             ->selectRaw('service_provider_types.name as type, COUNT(service_providers.id) as total')
             ->groupBy('service_provider_types.name');
 
-        if ($user->hasRole('SocietyAdmin')) {
+        if ($user->hasRole('society_admin')) {
             // SocietyAdmin: only their society
             $query->where('service_providers.society_id', $user->society_id);
-        } elseif (! $user->hasRole('SuperAdmin')) {
-            // Everyone else (non-superadmin) → also only their society
+        } elseif (! $user->hasRole('super_admin')) {
+            // Everyone else (non-super_admin) → also only their society
             $query->where('service_providers.society_id', $user->society_id);
         }
-        // SuperAdmin falls through → sees all societies (totals)
+        // Super_admin falls through → sees all societies (totals)
 
         $stats = $query->get();
 
