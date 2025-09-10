@@ -60,6 +60,7 @@
                         <tr>
                             <th>#</th>
                             <th>State Name</th>
+                            <th>Country</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -68,6 +69,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $state->name }}</td>
+                                <td>{{ $state->country->name }}</td>
                                 <td>
                                     <button class="btn btn-sm badge bg-label-info" onclick="editState({{ $state }})">
                                         <i class="icon-base ti tabler-edit"></i></button>

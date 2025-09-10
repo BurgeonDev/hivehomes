@@ -13,8 +13,10 @@ class CityController extends Controller
 
     public function __construct()
     {
-        $this->authorizeSuperAdmin();
+        // Apply admin role check only to admin methods
+        $this->authorizeSuperAdmin()->except('getCitiesByState');
     }
+
     public function index()
     {
         $cities = City::with('state.country')->get();
@@ -62,6 +64,8 @@ class CityController extends Controller
         $city->delete();
         return redirect()->route('cities.index')->with('success', 'City deleted successfully.');
     }
+
+    // Accessible to all users (no admin check)
     public function getCitiesByState($state_id)
     {
         $cities = City::where('state_id', $state_id)->get();

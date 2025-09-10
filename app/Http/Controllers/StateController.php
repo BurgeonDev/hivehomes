@@ -14,7 +14,7 @@ class StateController extends Controller
 
     public function __construct()
     {
-        $this->authorizeSuperAdmin();
+        $this->authorizeSuperAdmin()->except('getStatesByCountry');;
     }
     /**
      * Display a listing of the states.
