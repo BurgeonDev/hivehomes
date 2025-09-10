@@ -153,6 +153,7 @@
                             <th>Type</th>
                             <th>Phone</th>
                             <th>Email</th>
+                            <th>Posted By</th>
                             @role('super_admin')
                                 <th>Society</th>
                             @endrole
@@ -174,13 +175,19 @@
                                             <img src="https://ui-avatars.com/api/?name={{ urlencode($sp->name) }}&background=ddd&color=555"
                                                 class="rounded-circle me-2" width="32" height="32">
                                         @endif
-                                        <span>{{ $sp->name }}</span>
+
+                                        <a href="{{ route('service-providers.show', $sp->id) }}"
+                                            class="text-primary fw-semibold">
+                                            {{ $sp->name }}
+                                        </a>
                                     </div>
                                 </td>
+
                                 <td>{{ $sp->type->name ?? 'N/A' }}</td>
 
                                 <td>{{ $sp->phone }}</td>
                                 <td>{{ $sp->email }}</td>
+                                <td>{{ $sp->creator->name }}</td>
                                 @role('super_admin')
                                     <td>{{ $sp->society->name }}</td>
                                 @endrole
