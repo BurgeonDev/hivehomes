@@ -175,12 +175,12 @@ class UserController extends Controller
     public function resetPassword(Request $request, User $user)
     {
         // Only super admin can reset
-        if (!auth()->user()->hasRole('super_admin')) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Only Super Admin can reset passwords.'
-            ], 403);
-        }
+        // if (!auth()->user()->hasRole('super_admin')) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Only Super Admin can reset passwords.'
+        //     ], 403);
+        // }
 
         $request->validate([
             'password' => 'required|string|min:6|confirmed',
