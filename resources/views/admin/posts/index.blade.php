@@ -143,7 +143,12 @@
                             <th>#</th>
                             <th>Title</th>
                             <th>Category</th>
-                            <th>Society</th>
+                            @php
+                                $user = auth()->user();
+                            @endphp
+                            @if ($user && $user->hasRole('super_admin'))
+                                <th>Society</th>
+                            @endif
                             <th>Author</th>
                             <th>Created At</th>
                             <th>Status</th>
@@ -168,8 +173,9 @@
 
 
                                 <td>{{ $post->category->name ?? '-' }}</td>
-
-                                <td>{{ $post->society->name }}</td>
+                                @if ($user && $user->hasRole('super_admin'))
+                                    <td>{{ $post->society->name }}</td>
+                                @endif
                                 <td>{{ $post->user->name }}</td>
                                 <td>{{ $post->created_at ? \Carbon\Carbon::parse($post->created_at)->format('d-m-Y') : '' }}
                                 </td>

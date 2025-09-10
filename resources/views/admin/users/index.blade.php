@@ -83,7 +83,9 @@
                             <th>Name</th>
                             <th>Email</th>
                             <th>Phone</th>
-                            <th>Society</th>
+                            @role('super_admin')
+                                <th>Society</th>
+                            @endrole
                             <th>Roles</th>
                             <th>Active</th>
                             <th>Actions</th>
@@ -104,7 +106,9 @@
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>{{ $user->phone ?? '—' }}</td>
-                                <td>{{ $user->society->name ?? '—' }}</td>
+                                @role('super_admin')
+                                    <td>{{ $user->society->name ?? '—' }}</td>
+                                @endrole
                                 <td>
                                     @foreach ($user->roles as $role)
                                         <span class="badge bg-label-secondary">{{ $role->name }}</span>
