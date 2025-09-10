@@ -14,7 +14,7 @@ class UserDashboardController extends Controller
     {
         $user = Auth::user();
 
-        // eager load related data used in the view (including roles)
+        // eager load related data used in the view
         $user->load([
             'roles',
             'society',
@@ -22,28 +22,25 @@ class UserDashboardController extends Controller
             'posts.likedByUsers',
             'products',
             'comments',
+            'serviceProviders', // make sure relation exists in User model
         ]);
 
         // -------------------------
-        // Resolve a friendly role name for the view
+        // Friendly role name
         // -------------------------
         $roleName = null;
-
-        // If using Spatie, getRoleNames() returns a Collection of role names
         try {
             if (method_exists($user, 'getRoleNames')) {
                 $roleName = $user->getRoleNames()->first();
             }
         } catch (\Throwable $e) {
-            // ignore and fall back to relation below
+            // ignore
         }
 
-        // fallback: use loaded relation (avoids extra query if already eager-loaded)
         if (!$roleName && $user->relationLoaded('roles')) {
             $roleName = $user->roles->pluck('name')->first();
         }
 
-        // final fallback: attempt to query the relation
         if (!$roleName) {
             try {
                 $roleName = $user->roles()->pluck('name')->first();
@@ -52,20 +49,19 @@ class UserDashboardController extends Controller
             }
         }
 
-        // expose a simple property for the blade to use (keeps your blade unchanged)
         $user->role = $roleName ?? 'Member';
-
-        // expose a friendly status attribute for the view (view expects $user->status)
         $user->status = isset($user->is_active) ? ucfirst($user->is_active) : 'Unknown';
 
-        // Basic counts
+        // -------------------------
+        // Basic counts (only user-specific)
+        // -------------------------
         $counts = [
             'posts'     => $user->posts()->count(),
             'products'  => $user->products()->count(),
             'comments'  => $user->comments()->count(),
         ];
 
-        // Likes received on user's posts (counts entries in post_user_likes for posts belonging to this user)
+        // Likes received on user's posts
         $likesReceived = (int) DB::table('post_user_likes')
             ->join('posts', 'post_user_likes.post_id', '=', 'posts.id')
             ->where('posts.user_id', $user->id)
@@ -73,7 +69,9 @@ class UserDashboardController extends Controller
 
         $counts['likes_received'] = $likesReceived;
 
-        // Posts by status (pending / approved / rejected / expired)
+        // -------------------------
+        // Posts by status
+        // -------------------------
         $postStatuses = [
             'pending'  => $user->posts()->where('status', 'pending')->count(),
             'approved' => $user->posts()->where('status', 'approved')->count(),
@@ -81,41 +79,44 @@ class UserDashboardController extends Controller
             'expired'  => $user->posts()->where('status', 'expired')->count(),
         ];
 
-        // Products by status (pending / approved / rejected)
+        // -------------------------
+        // Products by status
+        // -------------------------
         $productStatuses = [
             'pending'  => $user->products()->where('status', 'pending')->count(),
             'approved' => $user->products()->where('status', 'approved')->count(),
             'rejected' => $user->products()->where('status', 'rejected')->count(),
         ];
 
-        // Paginated lists for the tabs
+        // -------------------------
+        // Paginated lists
+        // -------------------------
         $products = $user->products()->latest()->paginate(9)->withQueryString();
         $posts = $user->posts()->latest()->paginate(9)->withQueryString();
 
-        // Service reviews: attempt multiple strategies with safe fallback.
+        // -------------------------
+        // Service Reviews (for services created by this user)
+        // -------------------------
         $serviceReviews = null;
         try {
             if (class_exists(\App\Models\ServiceProviderReview::class)) {
-                // assumes ServiceProviderReview has relationship 'serviceProvider' pointing to service_providers table
-                $serviceReviews = \App\Models\ServiceProviderReview::whereHas('provider', function ($q) use ($user) {
-                    $q->where('user_id', $user->id);
-                })
-                    ->with(['provider', 'user']) // eager load for blade
+                $serviceReviews = \App\Models\ServiceProviderReview::whereIn(
+                    'service_provider_id',
+                    $user->serviceProviders->pluck('id')
+                )
+                    ->with(['provider', 'user'])
                     ->latest()
                     ->paginate(8)
                     ->withQueryString();
             } else {
-                // fallback to query builder join (if service_providers table exists)
                 $query = DB::table('service_provider_reviews')
                     ->join('service_providers', 'service_provider_reviews.service_provider_id', '=', 'service_providers.id')
                     ->where('service_providers.user_id', $user->id)
                     ->select('service_provider_reviews.*');
 
-                // query builder supports paginate()
                 $serviceReviews = $query->paginate(8);
             }
         } catch (\Throwable $e) {
-            // safe fallback: empty paginator (so view->count() and ->links() work)
             $serviceReviews = new LengthAwarePaginator([], 0, 8, 1, [
                 'path' => url()->current()
             ]);
