@@ -31,10 +31,11 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Name</th>
+                            <th>Sender</th>
                             <th>Phone</th>
                             <th>Email</th>
                             <th>Message</th>
+                            <th>Date</th>
                             <th>Status</th>
                             <th>Reply</th>
                         </tr>
@@ -46,6 +47,7 @@
                                 <td>{{ $contact->name }}</td>
                                 <td>{{ $contact->phone }}</td>
                                 <td>{{ $contact->email }}</td>
+                                <td>{{ $contact->created_at }}</td>
                                 <td>{{ Str::limit($contact->message, 50) }}</td>
                                 <td>
                                     @if ($contact->is_seen)
