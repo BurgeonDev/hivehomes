@@ -56,6 +56,8 @@
                                     <p class="mb-2 small text-muted">{{ Str::limit($plain, 110) }}</p>
 
                                     <div class="flex-wrap gap-2 mb-2 d-flex">
+                                        <span class="text-dark meta-pill bg-label-secondary">Posted By:
+                                            {{ $post->user->name }}</span>
                                         <span class="text-dark meta-pill bg-label-secondary">Words:
                                             {{ $words }}</span>
 
@@ -64,7 +66,7 @@
 
                                 {{-- bottom meta row inside body --}}
                                 <div class="mt-auto d-flex justify-content-between align-items-center">
-                                    <div class="d-flex align-items-center">
+                                    {{-- <div class="d-flex align-items-center">
                                         @if ($post->user && $post->user->profile_pic)
                                             <img src="{{ asset('storage/' . $post->user->profile_pic) }}"
                                                 class="rounded-circle me-2" width="32" height="32"
@@ -76,7 +78,7 @@
                                             </div>
                                         @endif
                                         <small class="text-muted">{{ optional($post->user)->name }}</small>
-                                    </div>
+                                    </div> --}}
 
                                     <div class="gap-2 d-flex align-items-center">
                                         <small class="text-muted">
