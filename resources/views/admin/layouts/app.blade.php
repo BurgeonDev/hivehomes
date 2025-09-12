@@ -284,8 +284,11 @@
                             .slice(0, 10),
                         className: 'd-none',
                         exportOptions: {
-                            columns: ':not(:last-child)'
-                        } // exclude last col (Actions)
+                            columns: ':not(:last-child)', // exclude Actions column
+                            format: {
+                                body: exportFormatter
+                            }
+                        }
                     },
                     {
                         extend: 'excel',
@@ -294,7 +297,10 @@
                             .slice(0, 10),
                         className: 'd-none',
                         exportOptions: {
-                            columns: ':not(:last-child)'
+                            columns: ':not(:last-child)',
+                            format: {
+                                body: exportFormatter
+                            }
                         }
                     },
                     {
@@ -304,7 +310,10 @@
                             .slice(0, 10),
                         className: 'd-none',
                         exportOptions: {
-                            columns: ':not(:last-child)'
+                            columns: ':not(:last-child)',
+                            format: {
+                                body: exportFormatter
+                            }
                         }
                     },
                     {
@@ -312,13 +321,16 @@
                         title: tableTitle,
                         className: 'd-none',
                         exportOptions: {
-                            columns: ':not(:last-child)'
+                            columns: ':not(:last-child)',
+                            format: {
+                                body: exportFormatter
+                            }
                         }
                     }
                 ]
             });
 
-            // Export triggers
+            // ✅ Export triggers
             $('#export-csv').on('click', e => {
                 e.preventDefault();
                 table.button(0).trigger();
@@ -335,8 +347,29 @@
                 e.preventDefault();
                 table.button(3).trigger();
             });
+
+            // ✅ Universal formatter for export
+            function exportFormatter(data, row, column, node) {
+                const $node = $(node);
+
+                // If checkbox
+                const $checkbox = $node.find('input[type="checkbox"]');
+                if ($checkbox.length) {
+                    return $checkbox.prop('checked') ? 'Active' : 'Inactive';
+                }
+
+                // If select/dropdown
+                const $select = $node.find('select');
+                if ($select.length) {
+                    return $select.find('option:selected').text().trim();
+                }
+
+                // Otherwise plain text (remove HTML)
+                return $node.text().trim();
+            }
         });
     </script>
+
 
 
 
