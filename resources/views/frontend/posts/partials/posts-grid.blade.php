@@ -46,9 +46,9 @@
 
                                     <p class="mb-1 small-muted">
                                         <span class="text-muted">
-                                            @if ($post->user)
+                                            {{-- @if ($post->user)
                                                 {{ $post->user->name }} &middot;
-                                            @endif
+                                            @endif --}}
                                             {{ $post->created_at->format('d M, Y') }}
                                         </span>
                                     </p>
@@ -58,11 +58,7 @@
                                     <div class="flex-wrap gap-2 mb-2 d-flex">
                                         <span class="text-dark meta-pill bg-label-secondary">Words:
                                             {{ $words }}</span>
-                                        <span class="text-dark meta-pill bg-label-secondary">Comments:
-                                            {{ $comments }}</span>
-                                        <span class="text-dark meta-pill bg-label-secondary">
-                                            Views: {{ number_format($post->views ?? 0) }}
-                                        </span>
+
                                     </div>
                                 </div>
 
@@ -85,14 +81,14 @@
                                     <div class="gap-2 d-flex align-items-center">
                                         <small class="text-muted">
                                             <i
-                                                class="menu-icon icon-base ti tabler-eye me-1"></i>{{ number_format($post->views ?? 0) }}
+                                                class="menu-icon icon-base ti tabler-eye me-1 text-warning"></i>{{ number_format($post->views ?? 0) }}
                                         </small>
                                         <small class="text-muted ms-2">
                                             <i
-                                                class="menu-icon icon-base ti tabler-message-circle me-1"></i>{{ $comments }}
+                                                class="menu-icon icon-base ti tabler-message-circle me-1 text-info"></i>{{ $comments }}
                                         </small>
                                         <small class="text-muted ms-2">
-                                            <i class="menu-icon icon-base ti tabler-heart me-1"></i>
+                                            <i class="menu-icon icon-base ti tabler-heart me-1 text-danger"></i>
                                             <span
                                                 class="like-count">{{ number_format($post->likes_count ?? 0) }}</span>
                                         </small>
@@ -116,7 +112,7 @@
                                 @php $liked = in_array($post->id, $likedPostIds); @endphp
 
                                 <button
-                                    class="btn btn-xl like-button {{ $liked ? 'btn-danger text-danger' : 'btn-outline-danger' }}"
+                                    class="btn btn-xl like-button rounded-pill {{ $liked ? 'btn-danger text-danger' : 'btn-outline-danger' }}"
                                     data-post-id="{{ $post->id }}" aria-pressed="{{ $liked ? 'true' : 'false' }}">
                                     <i class="ti tabler-heart"></i>
                                 </button>
@@ -124,7 +120,7 @@
 
                                 {{-- Owner-only Edit (preserves existing logic & modal include) --}}
                                 @if (auth()->id() === $post->user_id)
-                                    <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal"
+                                    <button class="btn btn-sm btn-outline-warning rounded-pill" data-bs-toggle="modal"
                                         data-bs-target="#editPostModal-{{ $post->id }}">
                                         <i class="ti tabler-edit me-1"></i> Edit
                                     </button>
