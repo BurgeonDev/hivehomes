@@ -116,7 +116,9 @@ class PostController extends Controller
     public function changeStatus(Request $request, Post $post)
     {
         $request->validate(['status' => 'required|in:pending,approved,rejected,expired']);
-        $post->update(['status' => $request->status]);
-        return back()->with('success', 'Status updated.');
+        $post->status = $request->status;
+        $post->save();
+        // $post->update(['status' => $request->status]);
+        return response()->json(['success' => true, 'message' => 'Post status updated.']);
     }
 }

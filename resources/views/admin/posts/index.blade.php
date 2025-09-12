@@ -176,7 +176,7 @@
                                 <td>{{ $post->user->name }}</td>
                                 <td>{{ $post->created_at ? \Carbon\Carbon::parse($post->created_at)->format('d-m-Y') : '' }}
                                 </td>
-                                <td>
+                                {{-- <td>
                                     <form method="POST" action="{{ route('admin.posts.changeStatus', $post) }}">
                                         @csrf
                                         <select name="status" class="form-select form-select-sm"
@@ -189,7 +189,25 @@
                                             @endforeach
                                         </select>
                                     </form>
+                                </td> --}}
+                                <td>
+                                    <select class="form-select form-select-sm status-dropdown"
+                                        data-post-id="{{ $post->id }}">
+                                        <option value="pending" {{ $post->status === 'pending' ? 'selected' : '' }}>
+                                            Pending
+                                        </option>
+                                        <option value="approved" {{ $post->status === 'approved' ? 'selected' : '' }}>
+                                            Approved
+                                        </option>
+                                        <option value="rejected" {{ $post->status === 'rejected' ? 'selected' : '' }}>
+                                            Rejected
+                                        </option>
+                                        <option value="rejected" {{ $post->status === 'expired' ? 'selected' : '' }}>
+                                            Expired
+                                        </option>
+                                    </select>
                                 </td>
+
                                 <td>
                                     <button class="btn btn-sm badge bg-label-info"
                                         onclick="editPost({{ $post }})">
@@ -432,5 +450,30 @@
 
         })();
     </script>
+    <script>
+        $(document).on('change', '.status-dropdown', function() {
+            const $select = $(this);
+            const postId = $select.data('post-id');
+            const newStatus = $select.val();
 
+            $.ajax({
+                url: `/admin/posts/${postId}/status`,
+                method: 'PATCH',
+                data: {
+                    status: newStatus,
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(res) {
+                    if (res.success) {
+                        notyf.success(res.message || 'Status updated successfully.');
+                    } else {
+                        notyf.error(res.message || 'Failed to update status.');
+                    }
+                },
+                error: function() {
+                    notyf.error('An error occurred. Please try again.');
+                }
+            });
+        });
+    </script>
 @endsection
