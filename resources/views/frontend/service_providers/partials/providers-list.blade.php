@@ -86,8 +86,8 @@
                 {{-- Footer --}}
                 <div class="card-footer border-top-0">
                     <a href="{{ route('service-providers.show', $provider->id) }}"
-                        class="btn btn-sm btn-primary w-100">
-                        <i class="menu-icon icon-base ti tabler-eye me-1"></i> View Profile
+                        class="btn btn-sm btn-outline-primary rounded-pill w-100">
+                        <i class=" menu-icon icon-base ti tabler-eye me-1"></i> View Profile
                     </a>
                 </div>
             </div>
