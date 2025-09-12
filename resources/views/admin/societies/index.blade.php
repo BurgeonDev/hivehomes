@@ -2,9 +2,8 @@
 @section('title', 'Societies')
 
 @section('vendor-css')
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css') }}" />
+
+
     <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />
 
 @endsection
@@ -192,9 +191,7 @@
 @endsection
 
 @section('vendor-js')
-    <script src="{{ asset('assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.js') }}"></script>
+
     <script src="{{ asset('assets/js/form-basic-inputs.js') }}"></script>
     <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
 @endsection

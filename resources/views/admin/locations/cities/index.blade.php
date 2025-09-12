@@ -2,7 +2,7 @@
 @section('title', 'Cities')
 
 @section('vendor-css')
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css') }}" />
+
 @endsection
 
 @section('content')
@@ -138,7 +138,7 @@
 @endsection
 
 @section('vendor-js')
-    <script src="{{ asset('assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
+
 @endsection
 
 @section('page-js')

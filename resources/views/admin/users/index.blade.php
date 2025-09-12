@@ -1,13 +1,12 @@
 @extends('admin.layouts.app')
-@section('title', 'Users')
+@section('title', 'Users List')
 
 @section('vendor-css')
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css') }}" />
+
 @endsection
 
 @section('content')
+
     <div class="container-xxl flex-grow-1 container-p-y">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
@@ -57,18 +56,32 @@
         </div>
 
         <div class="card">
-            <!-- Card Header -->
             <div class="px-3 mx-0 row card-header flex-column flex-md-row border-bottom">
                 <div class="col-md-auto me-auto">
-                    <h5 class="mb-0 card-title">Users</h5>
+                    <h5 class="mb-0 card-title">Posts</h5>
                 </div>
                 <div class="col-md-auto ms-auto">
                     <div class="flex-wrap mb-0 dt-buttons btn-group">
-                        <button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser"
-                            type="button">
+                        <div class="btn-group">
+                            <button class="btn btn-label-primary dropdown-toggle me-4" type="button"
+                                data-bs-toggle="dropdown">
+                                <span class="gap-2 d-flex align-items-center">
+                                    <i class="icon-base ti tabler-upload icon-xs me-sm-1"></i>
+                                    <span class="d-none d-sm-inline-block">Export</span>
+                                </span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" id="export-csv">CSV</a></li>
+                                <li><a class="dropdown-item" href="#" id="export-excel">Excel</a></li>
+                                <li><a class="dropdown-item" href="#" id="export-pdf">PDF</a></li>
+                                <li><a class="dropdown-item" href="#" id="export-print">Print</a></li>
+                            </ul>
+                        </div>
+                        <button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser">
                             <i class="icon-base ti tabler-plus icon-sm"></i>
                             <span class="d-none d-sm-inline-block">Add User</span>
                         </button>
+
                     </div>
                 </div>
             </div>
@@ -268,9 +281,7 @@
 @endsection
 
 @section('vendor-js')
-    <script src="{{ asset('assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.js') }}"></script>
+
 @endsection
 
 @section('page-js')
