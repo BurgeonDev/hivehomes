@@ -49,7 +49,7 @@
                                             {{ $product->price !== null ? number_format($product->price, 2) : 'N/A' }}</strong>
                                         &nbsp;&middot;&nbsp;
                                         <span
-                                            class="text-dark badge bg-label-info text-capitalize">{{ str_replace('_', ' ', $product->condition) }}</span>
+                                            class="rounded-pill text-dark badge bg-label-info text-capitalize">{{ str_replace('_', ' ', $product->condition) }}</span>
 
                                         @if ($product->is_negotiable)
                                             &nbsp;&middot;&nbsp;<span
@@ -58,12 +58,15 @@
                                     </p>
 
                                     <p class="mb-2 small-muted">
-                                        @if ($product->seller)
+                                        {{-- @if ($product->seller)
                                             {{ $product->seller->name }} &middot;
-                                        @endif
-                                        @if ($product->society)
-                                            {{ $product->society->name }} &middot;
-                                        @endif
+                                        @endif --}}
+                                        @role('super_admin')
+                                            @if ($product->society)
+                                                {{ $product->society->name }} &middot;
+                                            @endif
+                                        @endrole
+
                                         {{ $product->created_at->format('d M, Y') }}
                                     </p>
 
@@ -71,13 +74,16 @@
                                     </p>
 
                                     <div class="mb-2">
+                                        <span class="text-dark meta-pill bg-label-secondary">Posted By:
+                                            @if ($product->seller)
+                                                {{ $product->seller->name }}
+                                            @endif
+                                        </span>
                                         <span class="text-dark meta-pill bg-label-secondary">Qty:
                                             {{ $product->quantity }}</span>
 
                                     </div>
                                 </div>
-
-
                             </div>
                         </div>
                     </div>
