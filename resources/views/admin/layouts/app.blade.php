@@ -239,12 +239,14 @@
     </script>
     <script>
         $(document).ready(function() {
+            const tableTitle = $('.card-title').text().trim(); // Dynamic title from the page
+
             const table = $('.datatables-basic').DataTable({
                 responsive: true,
                 lengthChange: true,
                 order: [
                     [1, 'asc']
-                ], // Sort by 2nd column alphabetically (index 1)
+                ],
                 layout: {
                     topStart: {
                         rowClass: 'row mx-3 my-0 justify-content-between',
@@ -277,56 +279,59 @@
                 },
                 buttons: [{
                         extend: 'csv',
-                        title: 'Countries',
+                        title: tableTitle,
+                        filename: tableTitle.replace(/\s+/g, '_') + "_" + new Date().toISOString()
+                            .slice(0, 10),
                         className: 'd-none',
                         exportOptions: {
-                            columns: [0, 1]
-                        }
+                            columns: ':not(:last-child)'
+                        } // exclude last col (Actions)
                     },
                     {
                         extend: 'excel',
-                        title: 'Countries',
+                        title: tableTitle,
+                        filename: tableTitle.replace(/\s+/g, '_') + "_" + new Date().toISOString()
+                            .slice(0, 10),
                         className: 'd-none',
                         exportOptions: {
-                            columns: [0, 1]
+                            columns: ':not(:last-child)'
                         }
                     },
                     {
                         extend: 'pdf',
-                        title: 'Countries',
+                        title: tableTitle,
+                        filename: tableTitle.replace(/\s+/g, '_') + "_" + new Date().toISOString()
+                            .slice(0, 10),
                         className: 'd-none',
                         exportOptions: {
-                            columns: [0, 1]
+                            columns: ':not(:last-child)'
                         }
                     },
                     {
                         extend: 'print',
-                        title: 'Countries',
+                        title: tableTitle,
                         className: 'd-none',
                         exportOptions: {
-                            columns: [0, 1]
+                            columns: ':not(:last-child)'
                         }
                     }
                 ]
             });
 
-            // Manually trigger export buttons
-            $('#export-csv').on('click', function(e) {
+            // Export triggers
+            $('#export-csv').on('click', e => {
                 e.preventDefault();
                 table.button(0).trigger();
             });
-
-            $('#export-excel').on('click', function(e) {
+            $('#export-excel').on('click', e => {
                 e.preventDefault();
                 table.button(1).trigger();
             });
-
-            $('#export-pdf').on('click', function(e) {
+            $('#export-pdf').on('click', e => {
                 e.preventDefault();
                 table.button(2).trigger();
             });
-
-            $('#export-print').on('click', function(e) {
+            $('#export-print').on('click', e => {
                 e.preventDefault();
                 table.button(3).trigger();
             });
