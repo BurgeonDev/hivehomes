@@ -118,7 +118,7 @@
                                     @endphp
 
                                     <button
-                                        class="small btn btn-outline-secondary rounded-pill btn-sm me-3 btn-open-edit-product"
+                                        class="small btn btn-outline-warning rounded-pill btn-sm me-3 btn-open-edit-product"
                                         type="button" data-product='@json($productPayload)'>
                                         <i class="ti tabler-pencil me-1"></i> Edit
                                     </button>

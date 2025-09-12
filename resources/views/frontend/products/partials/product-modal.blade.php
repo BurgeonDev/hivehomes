@@ -94,9 +94,8 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary rounded-pill"
-                        data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary rounded-pill" id="productFormSubmit">Save</button>
+                    <button type="button" class="btn btn-secondary " data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary " id="productFormSubmit">Save</button>
                 </div>
             </form>
         </div>
