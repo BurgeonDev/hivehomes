@@ -110,6 +110,17 @@ class PostController extends Controller
 
         return redirect()->route('admin.posts.index')->with('success', 'Post updated!');
     }
+    public function destroy(Post $post)
+    {
+        // Delete image if exists
+        if (!empty($post->image) && is_string($post->image)) {
+            Storage::disk('public')->delete($post->image);
+        }
+
+        $post->delete();
+
+        return redirect()->route('admin.posts.index')->with('success', 'Post deleted successfully!');
+    }
 
 
     // New: inline status update
