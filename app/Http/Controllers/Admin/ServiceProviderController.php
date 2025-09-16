@@ -10,6 +10,7 @@ use App\Traits\AdminRoleCheck;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class ServiceProviderController extends Controller
 {
@@ -80,7 +81,22 @@ class ServiceProviderController extends Controller
         $rules = [
             'name'            => 'required|string|max:255',
             'type_id' => 'required|exists:service_provider_types,id',
-            'phone'           => 'nullable|string|max:50',
+            // 'phone'           => 'nullable|string|max:50',
+            'phone' => [
+                'nullable',
+                'string',
+                'max:50',
+                Rule::unique('service_providers')
+                    ->where(
+                        fn($query) =>
+                        $query->where(
+                            'society_id',
+                            $request->user()->hasRole('super_admin')
+                                ? $request->society_id
+                                : $request->user()->society_id
+                        )
+                    ),
+            ],
             'email'           => 'nullable|email|max:255',
             'cnic'            => 'nullable|string|max:20',
             'address'         => 'nullable|string',
@@ -122,7 +138,24 @@ class ServiceProviderController extends Controller
             'name'            => 'required|string|max:255',
             'type_id' => 'required|exists:service_provider_types,id',
 
-            'phone'           => 'nullable|string|max:50',
+            // 'phone'           => 'nullable|string|max:50',
+            'phone' => [
+                'nullable',
+                'string',
+                'max:50',
+                Rule::unique('service_providers')
+                    ->where(
+                        fn($query) =>
+                        $query->where(
+                            'society_id',
+                            $request->user()->hasRole('super_admin')
+                                ? $request->society_id
+                                : $request->user()->society_id
+                        )
+                    )
+                    ->ignore($service_provider->id),
+            ],
+
             'email'           => 'nullable|email|max:255',
             'cnic'            => 'nullable|string|max:20',
             'address'         => 'nullable|string',
