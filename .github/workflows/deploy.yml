@@ -34,8 +34,8 @@ jobs:
           ssh -p 21098 -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             cd /home/${{ secrets.SSH_USER }}/public_html
 
-            echo "🧹 Cleaning up all files except .env..."
-            find . -mindepth 1 ! -name '.env' -exec rm -rf {} +
+            echo "🧹 Cleaning up all files except .env and storage..."
+            find . -mindepth 1 ! -name '.env' ! -name 'storage' -exec rm -rf {} +
 
             echo "📦 Extracting deploy.zip..."
             unzip -o /home/${{ secrets.SSH_USER }}/deploy.zip -d /home/${{ secrets.SSH_USER }}/public_html
@@ -47,8 +47,7 @@ jobs:
             php artisan route:cache
             php artisan view:cache
             php artisan optimize:clear
-            php artisan migrate --force || true
-            php artisan db:seed --force || true
+            
 
             echo "✅ Deployment Complete!"
           EOF
