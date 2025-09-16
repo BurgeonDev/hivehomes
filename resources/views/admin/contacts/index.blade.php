@@ -46,7 +46,31 @@
                                 <td>{{ $contact->name }}</td>
                                 <td>{{ $contact->phone }}</td>
                                 <td>{{ $contact->email }}</td>
-                                <td>{{ Str::limit($contact->message, 50) }}</td>
+                                {{-- <td>{{ Str::limit($contact->message, 50) }}</td> --}}
+                                <td>
+                                    {{ Str::limit($contact->message, 50) }}
+                                    <a href="javascript:void(0)" data-bs-toggle="modal"
+                                        data-bs-target="#messageModal{{ $contact->id }}">
+                                        Read More
+                                    </a>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="messageModal{{ $contact->id }}" tabindex="-1">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Message from {{ $contact->name }}</h5>
+                                                    <button type="button" class="btn-close"
+                                                        data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>{{ $contact->message }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+
                                 <td>{{ $contact->created_at }}</td>
 
                                 <td>
