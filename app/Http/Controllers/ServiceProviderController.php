@@ -11,6 +11,7 @@ use App\Models\ServiceProvider;
 use App\Models\Society;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class ServiceProviderController extends Controller
 {
@@ -195,7 +196,23 @@ class ServiceProviderController extends Controller
         $rules = [
             'name'            => 'required|string|max:255',
             'type_id' => 'required|exists:service_provider_types,id',
-            'phone'           => 'nullable|string|max:50',
+            // 'phone'           => 'nullable|string|max:50',
+            'phone' => [
+                'nullable',
+                'string',
+                'max:50',
+                Rule::unique('service_providers')
+                    ->where(
+                        fn($query) =>
+                        $query->where(
+                            'society_id',
+                            $request->user()->hasRole('super_admin')
+                                ? $request->society_id
+                                : $request->user()->society_id
+                        )
+                    ),
+            ],
+
             'email'           => 'nullable|email|max:255',
             'cnic'            => 'nullable|string|max:20',
             'address'         => 'nullable|string',

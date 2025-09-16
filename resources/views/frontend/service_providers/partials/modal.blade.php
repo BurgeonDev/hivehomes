@@ -42,7 +42,7 @@
                     {{-- CNIC --}}
                     <div class="mb-3">
                         <label class="form-label">CNIC</label>
-                        <input type="text" name="cnic" class="form-control">
+                        <input type="number" name="cnic" class="form-control">
                     </div>
 
                     {{-- Address --}}
@@ -79,9 +79,8 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary rounded-pill"
-                        data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary rounded-pill">Save</button>
+                    <button type="button" class="btn btn-secondary " data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary ">Save</button>
                 </div>
             </form>
         </div>

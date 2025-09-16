@@ -185,9 +185,8 @@
                             </button>
 
                             <!-- Add Provider Button -->
-                            <button class="btn btn-primary rounded-pill" data-bs-toggle="modal"
-                                data-bs-target="#serviceProviderModal">
-                                Add Service Provider
+                            <button class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#serviceProviderModal">
+                                <i class="menu-icon icon-base ti tabler-plus me-1"></i> Add Service Provider
                             </button>
                             @include('frontend.service_providers.partials.modal')
                         </div>
