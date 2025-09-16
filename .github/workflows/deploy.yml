@@ -35,7 +35,11 @@ jobs:
             cd /home/${{ secrets.SSH_USER }}/public_html
 
             echo "🧹 Cleaning up all files except .env and storage..."
-            find . -mindepth 1 ! -name '.env' ! -name 'storage' -exec rm -rf {} +
+            find . -mindepth 1 \
+              ! -name '.env' \
+              ! -path './storage' \
+              ! -path './storage/*' \
+              -exec rm -rf {} +
 
             echo "📦 Extracting deploy.zip..."
             unzip -o /home/${{ secrets.SSH_USER }}/deploy.zip -d /home/${{ secrets.SSH_USER }}/public_html
@@ -47,7 +51,7 @@ jobs:
             php artisan route:cache
             php artisan view:cache
             php artisan optimize:clear
-            
+
 
             echo "✅ Deployment Complete!"
           EOF
