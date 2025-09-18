@@ -66,7 +66,7 @@
                     <div class="mb-3">
                         <label class="form-label">Existing Images</label>
                         <div id="existing-images" class="flex-wrap gap-2 d-flex"></div>
-                        <input type="hidden" name="removed_images" id="removedImages" value="[]">
+                        {{-- <input type="hidden" name="removed_images" id="removedImages" value="[]"> --}}
                     </div>
 
                     {{-- FilePond --}}

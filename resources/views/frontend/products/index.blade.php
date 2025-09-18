@@ -430,21 +430,24 @@
                 credits: false
             });
 
-            const removedInput = document.getElementById('removedImages');
+            const removedInputContainer = document.getElementById(
+            'existing-images'); // Use existing-images as container
             let removedIds = [];
 
             function renderExistingImages(images = []) {
                 const container = document.getElementById('existing-images');
                 container.innerHTML = '';
                 removedIds = [];
-                removedInput.value = JSON.stringify([]);
+
+                // Clear previous hidden inputs
+                document.querySelectorAll('input[name="delete_images[]"]').forEach(input => input.remove());
 
                 images.forEach(img => {
                     const wrapper = document.createElement('div');
                     wrapper.classList.add('position-relative');
                     wrapper.innerHTML = `
-              <img src="${img.url}" width="100" class="rounded">
-              <button type="button" class="top-0 btn btn-sm btn-danger position-absolute end-0 btn-remove-existing" data-id="${img.id}">&times;</button>
+                <img src="${img.url}" width="100" class="rounded">
+                <button type="button" class="top-0 btn btn-sm btn-danger position-absolute end-0 btn-remove-existing" data-id="${img.id}">&times;</button>
             `;
                     container.appendChild(wrapper);
                 });
@@ -455,10 +458,18 @@
                 if (e.target.classList.contains('btn-remove-existing')) {
                     const id = e.target.dataset.id;
                     removedIds.push(id);
-                    removedInput.value = JSON.stringify(removedIds);
+
+                    // Create a hidden input for each removed ID
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = 'delete_images[]';
+                    hiddenInput.value = id;
+                    removedInputContainer.appendChild(hiddenInput);
+
                     e.target.closest('div').remove();
                 }
             });
+
 
             // Add Product
             document.getElementById('btnAddProduct').addEventListener('click', () => {

@@ -236,6 +236,17 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
+        // Parse delete_images if it's a JSON string
+        $deleteImages = $request->input('delete_images');
+        if (is_string($deleteImages)) {
+            $deleteImages = json_decode($deleteImages, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                $deleteImages = []; // Fallback to empty array if JSON is invalid
+            }
+        } else {
+            $deleteImages = (array) $deleteImages;
+        }
+
         $data = $request->validate([
             'title'          => 'required|string|max:255',
             'description'    => 'nullable|string',
@@ -251,6 +262,10 @@ class ProductController extends Controller
             'delete_images'  => 'nullable|array',
             'delete_images.*' => 'integer|exists:product_images,id',
         ]);
+
+        // Override validated delete_images with parsed value
+        $data['delete_images'] = $deleteImages;
+
         // Again, enforce same society logic
         $data['society_id'] = $request->user()->hasRole('super_admin')
             ? $request->input('society_id', $product->society_id)
@@ -260,21 +275,19 @@ class ProductController extends Controller
         $data['status'] = 'pending';
         $product->update($data);
 
-        // delete selected images (single pass)
-        if ($request->filled('delete_images')) {
-            $toDelete = $product->images()->whereIn('id', $request->delete_images)->get();
+        // Delete selected images (single pass)
+        if (!empty($data['delete_images'])) {
+            $toDelete = $product->images()->whereIn('id', $data['delete_images'])->get();
             foreach ($toDelete as $img) {
                 Storage::disk('public')->delete($img->path);
                 $img->delete();
             }
         }
 
-        // add new images safely
+        // Add new images safely
         $errors = [];
         if ($request->hasFile('images')) {
-            // determine current last order index so we append new images
-            $lastOrder = $product->images()->max('order');
-            $lastOrder = is_null($lastOrder) ? -1 : (int)$lastOrder;
+            $lastOrder = $product->images()->max('order') ?? -1;
 
             foreach ($request->file('images') as $idx => $file) {
                 if (!$file || !$file->isValid()) {
