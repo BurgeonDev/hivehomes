@@ -2,10 +2,7 @@
 @section('title', 'Societies')
 
 @section('vendor-css')
-
-
     <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />
-
 @endsection
 
 @section('content')
@@ -100,8 +97,6 @@
                                         </span>
                                     </label>
                                 </td>
-
-
                                 <td>
                                     <button class="btn btn-sm badge bg-label-info"
                                         onclick='editSociety(@json($society))'> <i

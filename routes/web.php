@@ -24,7 +24,8 @@ use App\Http\Controllers\Admin\{
     ServiceProviderTypeController,
     ProductCategoryController,
     ProductController as AdminProductController,
-    PostCategoryController
+    PostCategoryController,
+    TrashController
 };
 
 // Frontend Public
@@ -112,6 +113,18 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
     Route::delete('/reviews/{review}', [ServiceProviderController::class, 'destroyReview'])
         ->name('reviews.destroy');
+
+
+
+
+    // Route::get('societies/trashed', [SocietyController::class, 'trashed'])->name('societies.trashed');
+    // Route::patch('societies/{id}/restore', [SocietyController::class, 'restore'])->name('societies.restore');
+    // Route::delete('societies/{id}/force-delete', [SocietyController::class, 'forceDelete'])->name('societies.forceDelete');
+    Route::prefix('trash')->name('trash.')->group(function () {
+        Route::get('{type}', [TrashController::class, 'index'])->name('index');
+        Route::patch('{type}/{id}/restore', [TrashController::class, 'restore'])->name('restore');
+        Route::delete('{type}/{id}/force-delete', [TrashController::class, 'forceDelete'])->name('forceDelete');
+    });
 });
 
 

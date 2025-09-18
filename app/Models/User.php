@@ -93,4 +93,18 @@ class User extends Authenticatable
     {
         return $this->hasMany(ServiceProvider::class, 'created_by');
     }
+    public function canRestoreBasedOnParents(): bool
+    {
+        // If the user has no society_id → fail restore
+        if (! $this->society_id) {
+            return false;
+        }
+
+        // If the parent society exists but is soft deleted → fail restore
+        if ($this->society && method_exists($this->society, 'trashed') && $this->society->trashed()) {
+            return false;
+        }
+
+        return true;
+    }
 }

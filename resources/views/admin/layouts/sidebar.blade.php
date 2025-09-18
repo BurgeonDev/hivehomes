@@ -59,11 +59,32 @@
                     <div data-i18n="Societies">Societies</div>
                 </a>
             </li>
+
             <li class="menu-item {{ request()->routeIs('admin.contacts.*') ? 'active open' : '' }}">
                 <a href="{{ route('admin.contacts.index') }}" class="menu-link">
                     <i class="menu-icon icon-base ti tabler-message-dots"></i>
                     <div data-i18n="Contact Messages">Contact Messages</div>
                 </a>
+            </li>
+            <li class="menu-item {{ request()->routeIs('admin.trash.*') ? 'active open' : '' }}">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                    <i class="menu-icon icon-base ti tabler-trash"></i>
+                    <div data-i18n="Trashed">Trashed</div>
+                </a>
+                <ul class="menu-sub">
+                    <li class="menu-item">
+                        <a href="{{ route('admin.trash.index', 'societies') }}" class="menu-link">Societies</a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{{ route('admin.trash.index', 'products') }}" class="menu-link">Products</a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{{ route('admin.trash.index', 'posts') }}" class="menu-link">Posts</a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{{ route('admin.trash.index', 'users') }}" class="menu-link">Users</a>
+                    </li>
+                </ul>
             </li>
         @endif
         <li class="menu-item {{ request()->routeIs('users.*') ? 'active open' : '' }}">
@@ -163,6 +184,12 @@
                 <div data-i18n="Products">Products</div>
             </a>
         </li>
+        <!-- ===== Trashed Section ===== -->
+        <li class="menu-header small">
+            <span class="menu-header-text" data-i18n="Trashed">Trashed</span>
+        </li>
+
+
 
 
     </ul>

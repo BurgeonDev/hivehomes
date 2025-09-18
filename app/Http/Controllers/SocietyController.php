@@ -86,21 +86,7 @@ class SocietyController extends Controller
         $societies = Society::where('city_id', $city_id)->get();
         return response()->json($societies);
     }
-    // public function updateStatus(Request $request, Society $society)
-    // {
-    //     $request->validate([
-    //         'status' => 'required|boolean'
-    //     ]);
 
-    //     $society->is_active = $request->status;
-    //     $society->save();
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Society status updated successfully.',
-    //         'status' => $society->is_active
-    //     ]);
-    // }
     public function updateStatus(Request $request, Society $society)
     {
         $this->authorizeSuperAdmin();
@@ -124,5 +110,33 @@ class SocietyController extends Controller
             'message' => 'Society status updated successfully.',
             'status' => $society->is_active
         ]);
+    }
+
+    public function trashed()
+    {
+        $this->authorizeSuperAdmin();
+
+        $societies = Society::onlyTrashed()->with(['city', 'state', 'country', 'admin'])->get();
+        return view('admin.societies.trashed', compact('societies'));
+    }
+
+    public function restore($id)
+    {
+        $this->authorizeSuperAdmin();
+
+        $society = Society::onlyTrashed()->findOrFail($id);
+        $society->restore();
+
+        return redirect()->route('admin.societies.trashed')->with('success', 'Society restored successfully.');
+    }
+
+    public function forceDelete($id)
+    {
+        $this->authorizeSuperAdmin();
+
+        $society = Society::onlyTrashed()->findOrFail($id);
+        $society->forceDelete();
+
+        return redirect()->route('admin.societies.trashed')->with('success', 'Society permanently deleted.');
     }
 }
