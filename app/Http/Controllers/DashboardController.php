@@ -94,6 +94,7 @@ class DashboardController extends Controller
         $dailyQuery = DB::table('posts')
             ->when(!$isSuper, fn($q) => $q->where('posts.society_id', $societyId))
             ->whereBetween('posts.created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
+            ->whereNull('posts.deleted_at') // 👈 exclude soft deleted
             ->select(DB::raw('DATE(posts.created_at) as date'), DB::raw('COUNT(*) as total'))
             ->groupBy('date')
             ->orderBy('date');
