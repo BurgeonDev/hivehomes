@@ -721,6 +721,12 @@
                                 @endforeach
                             </ul>
                         </div>
+                        <div class="text-center card-footer">
+                            <a href="{{ route('societies.index') }}" class="text-decoration-none fw-medium">
+                                View All <i class="ti tabler-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+
                     </div>
                 </div>
 
@@ -746,6 +752,11 @@
                                 @endforeach
                             </ul>
                         </div>
+                        <div class="text-center card-footer">
+                            <a href="{{ route('admin.products.index') }}" class="text-decoration-none fw-medium">
+                                View All <i class="ti tabler-arrow-right ms-1"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
 
@@ -770,6 +781,12 @@
                                     </li>
                                 @endforeach
                             </ul>
+                        </div>
+                        <div class="text-center card-footer">
+                            <a href="{{ route('admin.service-providers.index') }}"
+                                class="text-decoration-none fw-medium">
+                                View All <i class="ti tabler-arrow-right ms-1"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
