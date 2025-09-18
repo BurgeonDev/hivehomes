@@ -191,10 +191,7 @@
                 <div data-i18n="Products">Products</div>
             </a>
         </li>
-        <!-- ===== Trashed Section ===== -->
-        <li class="menu-header small">
-            <span class="menu-header-text" data-i18n="Trashed">Trashed</span>
-        </li>
+
 
 
 
