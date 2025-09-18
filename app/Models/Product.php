@@ -63,6 +63,17 @@ class Product extends Model
     {
         return $this->hasOne(ProductImage::class)->where('is_primary', true);
     }
+    public function getDisplayImageAttribute()
+    {
+        // Try primary image first
+        if ($this->primaryImage) {
+            return $this->primaryImage;
+        }
+
+        // Fallback: first non-primary image
+        return $this->images()->first();
+    }
+
 
     public function user()
     {

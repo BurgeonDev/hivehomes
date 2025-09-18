@@ -8,12 +8,20 @@
                         <div class="col-6">
                             <a href="{{ route('products.show', $product) }}" class="d-block h-100">
                                 <div class="product-image-wrap">
-                                    @if ($product->primaryImage)
+                                    {{-- @if ($product->primaryImage)
                                         <img src="{{ asset('storage/' . $product->primaryImage->path) }}"
                                             alt="{{ $product->title }}" class="product-media w-100">
                                     @else
                                         <div class="no-image-placeholder">No Image</div>
+                                    @endif --}}
+
+                                    @if ($product->display_image)
+                                        <img src="{{ asset('storage/' . $product->display_image->path) }}"
+                                            alt="{{ $product->title }}" class="product-media w-100">
+                                    @else
+                                        <div class="no-image-placeholder">No Image</div>
                                     @endif
+
 
                                     {{-- Category badge on image (solid look) --}}
                                     @if ($product->category)
