@@ -120,13 +120,14 @@
                                 </button>
 
 
-                                {{-- Owner-only Edit (preserves existing logic & modal include) --}}
-                                @if (auth()->id() === $post->user_id)
+                                {{-- Superadmin or Owner Edit --}}
+                                @if (auth()->user()->hasRole('super_admin') || auth()->id() === $post->user_id)
                                     <button class="btn btn-sm btn-outline-warning rounded-pill" data-bs-toggle="modal"
                                         data-bs-target="#editPostModal-{{ $post->id }}">
                                         <i class="ti tabler-edit me-1"></i> Edit
                                     </button>
                                 @endif
+
 
                                 <span class="small text-muted ms-2">{{ $post->created_at->diffForHumans() }}</span>
                             </div>
