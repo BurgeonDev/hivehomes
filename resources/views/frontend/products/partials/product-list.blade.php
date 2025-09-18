@@ -100,7 +100,7 @@
                                 </a>
                             </div>
                             <div class="d-flex align-items-center">
-                                @if (auth()->check() && auth()->id() == $product->user_id)
+                                @if (auth()->user()->hasRole('super_admin') || auth()->id() == $product->user_id)
                                     @php
                                         $productPayload = [
                                             'id' => $product->id,
