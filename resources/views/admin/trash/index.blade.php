@@ -78,13 +78,14 @@
                                     <form action="{{ route('admin.trash.restore', [$type, $item->id]) }}" method="POST"
                                         class="d-inline">
                                         @csrf @method('PATCH')
-                                        <button type="submit" class="btn btn-sm btn-success">Restore</button>
+                                        <button type="submit" class="btn btn-sm btn-success ">Restore</button>
                                     </form>
 
                                     <form action="{{ route('admin.trash.forceDelete', [$type, $item->id]) }}"
                                         method="POST" class="d-inline delete-form">
                                         @csrf @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger">Delete Permanently</button>
+                                        <button type="submit" class="btn btn-sm btn-danger show-confirm">Delete
+                                            Permanently</button>
                                     </form>
                                 </td>
                             </tr>

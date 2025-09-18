@@ -83,6 +83,7 @@
                                         <button type="submit" class="btn btn-sm badge bg-label-danger show-confirm"> <i
                                                 class="icon-base ti tabler-trash"></i></button>
                                     </form>
+
                                 </td>
                             </tr>
                         @endforeach
