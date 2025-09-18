@@ -66,27 +66,34 @@
                     <div data-i18n="Contact Messages">Contact Messages</div>
                 </a>
             </li>
+
+            <!-- Trashed Dropdown -->
             <li class="menu-item {{ request()->routeIs('admin.trash.*') ? 'active open' : '' }}">
-                <a href="javascript:void(0);" class="menu-link menu-toggle ">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <i class="menu-icon icon-base ti tabler-trash text-danger"></i>
                     <div data-i18n="Trashed" class="text-danger">Trashed</div>
                 </a>
                 <ul class="menu-sub">
-                    <li class="menu-item">
+                    <li
+                        class="menu-item {{ request()->fullUrlIs(route('admin.trash.index', 'societies')) ? 'active' : '' }}">
                         <a href="{{ route('admin.trash.index', 'societies') }}" class="menu-link">Societies</a>
                     </li>
-                    <li class="menu-item">
+                    <li
+                        class="menu-item {{ request()->fullUrlIs(route('admin.trash.index', 'products')) ? 'active' : '' }}">
                         <a href="{{ route('admin.trash.index', 'products') }}" class="menu-link">Products</a>
                     </li>
-                    <li class="menu-item">
+                    <li
+                        class="menu-item {{ request()->fullUrlIs(route('admin.trash.index', 'posts')) ? 'active' : '' }}">
                         <a href="{{ route('admin.trash.index', 'posts') }}" class="menu-link">Posts</a>
                     </li>
-                    <li class="menu-item">
+                    <li
+                        class="menu-item {{ request()->fullUrlIs(route('admin.trash.index', 'users')) ? 'active' : '' }}">
                         <a href="{{ route('admin.trash.index', 'users') }}" class="menu-link">Users</a>
                     </li>
                 </ul>
             </li>
         @endif
+
         <li class="menu-item {{ request()->routeIs('users.*') ? 'active open' : '' }}">
             <a href="{{ route('users.index') }}" class="menu-link">
                 <i class="menu-icon icon-base ti tabler-users"></i>
