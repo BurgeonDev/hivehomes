@@ -40,7 +40,7 @@ class TrashController extends Controller
         $model = $this->getModel($type)::onlyTrashed()->findOrFail($id);
 
         // Check parent status before restoring
-        if (method_exists($model, 'canRestoreBasedOnParents') && ! $model->canRestoreBasedOnParents()) {
+        if (! $this->canRestoreBasedOnParents($type, $model)) {
             return back()->with('error', 'Restore failed. Please restore the parent first.');
         }
 
@@ -48,6 +48,7 @@ class TrashController extends Controller
 
         return back()->with('success', ucfirst($type) . ' restored successfully!');
     }
+
 
 
     public function forceDelete($type, $id)
@@ -67,5 +68,38 @@ class TrashController extends Controller
             'societies' => Society::class,
             default => abort(404),
         };
+    }
+    private function canRestoreBasedOnParents(string $type, $model): bool
+    {
+        // Universal check → block if deleted_by_parent_at is set
+        if (! empty($model->deleted_by_parent_at)) {
+            return false;
+        }
+
+        switch ($type) {
+            case 'users':
+                // User must have society, and society must not be trashed
+                if (! $model->society_id) return false;
+                if ($model->society && $model->society->trashed()) return false;
+                break;
+
+            case 'posts':
+                // Example: post belongs to user
+                if (! $model->user_id) return false;
+                if ($model->user && $model->user->trashed()) return false;
+                break;
+
+            case 'products':
+                // Example: product belongs to society
+                if (! $model->society_id) return false;
+                if ($model->society && $model->society->trashed()) return false;
+                break;
+
+            // Societies don’t have a parent → always restorable
+            case 'societies':
+                return true;
+        }
+
+        return true;
     }
 }

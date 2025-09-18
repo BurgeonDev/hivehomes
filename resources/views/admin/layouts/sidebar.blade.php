@@ -67,9 +67,9 @@
                 </a>
             </li>
             <li class="menu-item {{ request()->routeIs('admin.trash.*') ? 'active open' : '' }}">
-                <a href="javascript:void(0);" class="menu-link menu-toggle">
-                    <i class="menu-icon icon-base ti tabler-trash"></i>
-                    <div data-i18n="Trashed">Trashed</div>
+                <a href="javascript:void(0);" class="menu-link menu-toggle ">
+                    <i class="menu-icon icon-base ti tabler-trash text-danger"></i>
+                    <div data-i18n="Trashed" class="text-danger">Trashed</div>
                 </a>
                 <ul class="menu-sub">
                     <li class="menu-item">
