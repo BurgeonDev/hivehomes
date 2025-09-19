@@ -66,6 +66,7 @@ class User extends Authenticatable
         'posts',
         'comments',
         'reviews',
+        'products',
         // don't include likedPosts (belongsToMany pivot) here yet — we'll convert likes to a model later if needed
     ];
 
