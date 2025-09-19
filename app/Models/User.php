@@ -65,6 +65,7 @@ class User extends Authenticatable
     protected $cascadeDeletes = [
         'posts',
         'comments',
+        'reviews',
         // don't include likedPosts (belongsToMany pivot) here yet — we'll convert likes to a model later if needed
     ];
 
@@ -106,5 +107,9 @@ class User extends Authenticatable
         }
 
         return true;
+    }
+    public function reviews()
+    {
+        return $this->hasMany(ServiceProviderReview::class, 'user_id');
     }
 }
