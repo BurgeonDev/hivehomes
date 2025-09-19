@@ -107,7 +107,7 @@
                                     <div class="mb-3 shadow-sm card">
                                         <div class="card-body">
                                             <div class="mb-2 d-flex align-items-center">
-                                                <strong>{{ $review->user->name }}</strong>
+                                                <strong>{{ $review->user->name ?? 'N/A' }}</strong>
                                                 <small
                                                     class="text-muted ms-2">{{ $review->created_at->diffForHumans() }}</small>
                                                 <span class="ms-auto text-warning me-2">
