@@ -52,7 +52,7 @@ class PostController extends Controller
         }
 
         // Paginate and preserve query string
-        $posts = $query->paginate(9)->withQueryString();
+        $posts = $query->paginate(10)->withQueryString();
         $likedPostIds = $user->likedPosts()->pluck('post_id')->toArray();
         // Total approved count (scoped)
         $approvedCountQuery = Post::where('status', 'approved');
