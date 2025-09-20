@@ -640,12 +640,12 @@
 
                                                                 {{-- Delete --}}
                                                                 <form action="{{ route('products.destroy', $product) }}"
-                                                                    method="POST" class="d-inline"
-                                                                    onsubmit="return confirm('Are you sure you want to delete this product?');">
+                                                                    method="POST" class="d-inline delete-form">
                                                                     @csrf
                                                                     @method('DELETE')
                                                                     <button type="submit"
-                                                                        class="btn btn-icon text-danger" title="Delete">
+                                                                        class="btn btn-icon text-danger show-confirm"
+                                                                        title="Delete">
                                                                         <i class="ti tabler-trash"></i>
                                                                     </button>
                                                                 </form>
@@ -1046,5 +1046,29 @@
         });
     </script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.show-confirm').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
 
+                    const form = this.closest('.delete-form');
+
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 @endsection
