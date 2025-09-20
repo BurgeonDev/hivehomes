@@ -530,25 +530,26 @@
                                     <div class="col-md-auto ms-auto">
                                         <div class="flex-wrap mb-0 dt-buttons btn-group">
                                             {{-- Export Dropdown --}}
+                                            <!-- Products Tab -->
                                             <div class="btn-group">
                                                 <button
                                                     class="btn buttons-collection btn-label-primary dropdown-toggle me-4"
-                                                    type="button" id="exportDropdown" data-bs-toggle="dropdown"
+                                                    type="button" id="products-exportDropdown" data-bs-toggle="dropdown"
                                                     aria-expanded="false">
                                                     <span class="gap-2 d-flex align-items-center">
                                                         <i class="icon-base ti tabler-upload icon-xs me-sm-1"></i>
                                                         <span class="d-none d-sm-inline-block">Export</span>
                                                     </span>
                                                 </button>
-                                                <ul class="dropdown-menu" aria-labelledby="exportDropdown">
-                                                    <li><a class="dropdown-item" href="#" id="export-csv">CSV</a>
-                                                    </li>
+                                                <ul class="dropdown-menu" aria-labelledby="products-exportDropdown">
                                                     <li><a class="dropdown-item" href="#"
-                                                            id="export-excel">Excel</a></li>
-                                                    <li><a class="dropdown-item" href="#" id="export-pdf">PDF</a>
-                                                    </li>
+                                                            id="products-export-csv">CSV</a></li>
                                                     <li><a class="dropdown-item" href="#"
-                                                            id="export-print">Print</a></li>
+                                                            id="products-export-excel">Excel</a></li>
+                                                    <li><a class="dropdown-item" href="#"
+                                                            id="products-export-pdf">PDF</a></li>
+                                                    <li><a class="dropdown-item" href="#"
+                                                            id="products-export-print">Print</a></li>
                                                 </ul>
                                             </div>
 
@@ -568,7 +569,7 @@
                                 <div class="card-body">
                                     @if ($products->count())
                                         <div class="p-3 card-datatable table-responsive">
-                                            <table class="table datatables-basic ">
+                                            <table class="table datatables-basic products-table">
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
@@ -683,25 +684,26 @@
                                     {{-- Export + Add Buttons --}}
                                     <div class="col-md-auto ms-auto">
                                         <div class="flex-wrap mb-0 dt-buttons btn-group">
+                                            <!-- Posts Tab -->
                                             <div class="btn-group">
                                                 <button
                                                     class="btn buttons-collection btn-label-primary dropdown-toggle me-4"
-                                                    type="button" id="exportDropdown" data-bs-toggle="dropdown"
+                                                    type="button" id="posts-exportDropdown" data-bs-toggle="dropdown"
                                                     aria-expanded="false">
                                                     <span class="gap-2 d-flex align-items-center">
                                                         <i class="icon-base ti tabler-upload icon-xs me-sm-1"></i>
                                                         <span class="d-none d-sm-inline-block">Export</span>
                                                     </span>
                                                 </button>
-                                                <ul class="dropdown-menu" aria-labelledby="exportDropdown">
-                                                    <li><a class="dropdown-item" href="#" id="export-csv">CSV</a>
-                                                    </li>
+                                                <ul class="dropdown-menu" aria-labelledby="posts-exportDropdown">
                                                     <li><a class="dropdown-item" href="#"
-                                                            id="export-excel">Excel</a></li>
-                                                    <li><a class="dropdown-item" href="#" id="export-pdf">PDF</a>
-                                                    </li>
+                                                            id="posts-export-csv">CSV</a></li>
                                                     <li><a class="dropdown-item" href="#"
-                                                            id="export-print">Print</a></li>
+                                                            id="posts-export-excel">Excel</a></li>
+                                                    <li><a class="dropdown-item" href="#"
+                                                            id="posts-export-pdf">PDF</a></li>
+                                                    <li><a class="dropdown-item" href="#"
+                                                            id="posts-export-print">Print</a></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -711,7 +713,7 @@
                                 <div class="card-body">
                                     @if ($posts->count())
                                         <div class="p-3 card-datatable table-responsive">
-                                            <table class="table datatables-basic ">
+                                            <table class="table datatables-basic posts-table">
                                                 <thead>
                                                     <tr>
                                                         <th>Title</th>
@@ -1013,9 +1015,8 @@
     </script>
     <script>
         $(document).ready(function() {
-            const tableTitle = $('.card-title').text().trim(); // Dynamic title from the page
-
-            const table = $('.datatables-basic').DataTable({
+            // Initialize Products DataTable
+            const productsTable = $('.products-table').DataTable({
                 responsive: true,
                 lengthChange: true,
                 order: [
@@ -1053,9 +1054,8 @@
                 },
                 buttons: [{
                         extend: 'csv',
-                        title: tableTitle,
-                        filename: tableTitle.replace(/\s+/g, '_') + "_" + new Date().toISOString()
-                            .slice(0, 10),
+                        title: 'Products',
+                        filename: 'Products_' + new Date().toISOString().slice(0, 10),
                         className: 'd-none',
                         exportOptions: {
                             columns: ':not(:last-child)', // exclude Actions column
@@ -1066,9 +1066,8 @@
                     },
                     {
                         extend: 'excel',
-                        title: tableTitle,
-                        filename: tableTitle.replace(/\s+/g, '_') + "_" + new Date().toISOString()
-                            .slice(0, 10),
+                        title: 'Products',
+                        filename: 'Products_' + new Date().toISOString().slice(0, 10),
                         className: 'd-none',
                         exportOptions: {
                             columns: ':not(:last-child)',
@@ -1079,9 +1078,8 @@
                     },
                     {
                         extend: 'pdf',
-                        title: tableTitle,
-                        filename: tableTitle.replace(/\s+/g, '_') + "_" + new Date().toISOString()
-                            .slice(0, 10),
+                        title: 'Products',
+                        filename: 'Products_' + new Date().toISOString().slice(0, 10),
                         className: 'd-none',
                         exportOptions: {
                             columns: ':not(:last-child)',
@@ -1092,7 +1090,7 @@
                     },
                     {
                         extend: 'print',
-                        title: tableTitle,
+                        title: 'Products',
                         className: 'd-none',
                         exportOptions: {
                             columns: ':not(:last-child)',
@@ -1104,25 +1102,130 @@
                 ]
             });
 
-            // ✅ Export triggers
-            $('#export-csv').on('click', e => {
-                e.preventDefault();
-                table.button(0).trigger();
-            });
-            $('#export-excel').on('click', e => {
-                e.preventDefault();
-                table.button(1).trigger();
-            });
-            $('#export-pdf').on('click', e => {
-                e.preventDefault();
-                table.button(2).trigger();
-            });
-            $('#export-print').on('click', e => {
-                e.preventDefault();
-                table.button(3).trigger();
+            // Initialize Posts DataTable
+            const postsTable = $('.posts-table').DataTable({
+                responsive: true,
+                lengthChange: true,
+                order: [
+                    [1, 'asc']
+                ],
+                layout: {
+                    topStart: {
+                        rowClass: 'row mx-3 my-0 justify-content-between',
+                        features: [{
+                            pageLength: {
+                                menu: [7, 10, 25, 50, 100],
+                                text: 'Show _MENU_ entries'
+                            }
+                        }]
+                    },
+                    topEnd: {
+                        search: {
+                            placeholder: 'Search...'
+                        }
+                    },
+                    bottomStart: {
+                        rowClass: 'row mx-3 justify-content-between',
+                        features: ['info']
+                    },
+                    bottomEnd: 'paging'
+                },
+                displayLength: 7,
+                language: {
+                    paginate: {
+                        next: '<i class="icon-base ti tabler-chevron-right scaleX-n1-rtl icon-18px"></i>',
+                        previous: '<i class="icon-base ti tabler-chevron-left scaleX-n1-rtl icon-18px"></i>',
+                        first: '<i class="icon-base ti tabler-chevrons-left scaleX-n1-rtl icon-18px"></i>',
+                        last: '<i class="icon-base ti tabler-chevrons-right scaleX-n1-rtl icon-18px"></i>'
+                    }
+                },
+                buttons: [{
+                        extend: 'csv',
+                        title: 'Posts',
+                        filename: 'Posts_' + new Date().toISOString().slice(0, 10),
+                        className: 'd-none',
+                        exportOptions: {
+                            columns: ':not(:last-child)', // exclude Actions column
+                            format: {
+                                body: exportFormatter
+                            }
+                        }
+                    },
+                    {
+                        extend: 'excel',
+                        title: 'Posts',
+                        filename: 'Posts_' + new Date().toISOString().slice(0, 10),
+                        className: 'd-none',
+                        exportOptions: {
+                            columns: ':not(:last-child)',
+                            format: {
+                                body: exportFormatter
+                            }
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        title: 'Posts',
+                        filename: 'Posts_' + new Date().toISOString().slice(0, 10),
+                        className: 'd-none',
+                        exportOptions: {
+                            columns: ':not(:last-child)',
+                            format: {
+                                body: exportFormatter
+                            }
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Posts',
+                        className: 'd-none',
+                        exportOptions: {
+                            columns: ':not(:last-child)',
+                            format: {
+                                body: exportFormatter
+                            }
+                        }
+                    }
+                ]
             });
 
-            // ✅ Universal formatter for export
+            // Export triggers for Products
+            $('#products-export-csv').on('click', e => {
+                e.preventDefault();
+                productsTable.button(0).trigger();
+            });
+            $('#products-export-excel').on('click', e => {
+                e.preventDefault();
+                productsTable.button(1).trigger();
+            });
+            $('#products-export-pdf').on('click', e => {
+                e.preventDefault();
+                productsTable.button(2).trigger();
+            });
+            $('#products-export-print').on('click', e => {
+                e.preventDefault();
+                productsTable.button(3).trigger();
+            });
+
+            // Export triggers for Posts
+            $('#posts-export-csv').on('click', e => {
+                e.preventDefault();
+                postsTable.button(0).trigger();
+            });
+            $('#posts-export-excel').on('click', e => {
+                e.preventDefault();
+                postsTable.button(1).trigger();
+            });
+            $('#posts-export-pdf').on('click', e => {
+                e.preventDefault();
+                postsTable.button(2).trigger();
+            });
+            $('#posts-export-print').on('click', e => {
+                e.preventDefault();
+                postsTable.button(3).trigger();
+            });
+
+            // Universal formatter for export
             function exportFormatter(data, row, column, node) {
                 const $node = $(node);
 
