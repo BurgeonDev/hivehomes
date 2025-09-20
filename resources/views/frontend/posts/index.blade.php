@@ -13,12 +13,12 @@
 
     <style>
         /**
-                     * Minimal product-style imports for posts
-                     * - Only includes the product-card/image/badge/footer styles used by posts
-                     * - Keeps post-specific styles for excerpt, author-chip, like button
-                     *
-                     * Replace the current <style> in your posts page with this block.
-                     */
+                         * Minimal product-style imports for posts
+                         * - Only includes the product-card/image/badge/footer styles used by posts
+                         * - Keeps post-specific styles for excerpt, author-chip, like button
+                         *
+                         * Replace the current <style> in your posts page with this block.
+                         */
 
         /* === Product card base (minimal) === */
         #postsContainer .product-card {

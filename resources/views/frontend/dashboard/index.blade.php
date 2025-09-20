@@ -8,6 +8,11 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css') }}" />
     <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
     <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/plyr/plyr.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/quill/typography.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/highlight/highlight.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/quill/katex.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/quill/editor.css') }}" />
 @endsection
 @section('content')
     @php
@@ -670,79 +675,177 @@
                         {{-- POSTS --}}
                         <div id="tab-posts" class="tab-pane fade">
                             <div class="mb-4 card">
-                                <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0">Your Posts</h5>
-                                    <small class="text-body-secondary">Total: {{ $counts['posts'] ?? 0 }}</small>
+                                <div class="px-3 mx-0 row card-header flex-column flex-md-row border-bottom">
+                                    {{-- Title --}}
+                                    <div class="col-md-auto me-auto">
+                                        <h5 class="mb-0 card-title">Posts</h5>
+                                    </div>
+
+                                    {{-- Export + Add Buttons --}}
+                                    <div class="col-md-auto ms-auto">
+                                        <div class="flex-wrap mb-0 dt-buttons btn-group">
+                                            {{-- Export Dropdown --}}
+                                            <div class="btn-group">
+                                                <button
+                                                    class="btn buttons-collection btn-label-primary dropdown-toggle me-4"
+                                                    type="button" id="exportDropdown" data-bs-toggle="dropdown"
+                                                    aria-expanded="false">
+                                                    <span class="gap-2 d-flex align-items-center">
+                                                        <i class="icon-base ti tabler-upload icon-xs me-sm-1"></i>
+                                                        <span class="d-none d-sm-inline-block">Export</span>
+                                                    </span>
+                                                </button>
+                                                <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                                                    <li><a class="dropdown-item" href="#" id="export-csv">CSV</a>
+                                                    </li>
+                                                    <li><a class="dropdown-item" href="#"
+                                                            id="export-excel">Excel</a></li>
+                                                    <li><a class="dropdown-item" href="#" id="export-pdf">PDF</a>
+                                                    </li>
+                                                    <li><a class="dropdown-item" href="#"
+                                                            id="export-print">Print</a></li>
+                                                </ul>
+                                            </div>
+
+
+                                            {{-- <button class="btn create-new btn-primary" data-bs-toggle="offcanvas"
+                                            data-bs-target="#offcanvasProduct" aria-controls="offcanvasProduct"
+                                            id="btnAddProduct" type="button">
+                                            <span class="gap-2 d-flex align-items-center">
+                                                <i class="icon-base ti tabler-plus icon-sm"></i>
+                                                <span class="d-none d-sm-inline-block">Add Product</span>
+                                            </span>
+                                        </button> --}}
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="card-body">
                                     @if ($posts->count())
-                                        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-                                            @foreach ($posts as $post)
-                                                <div class="col">
-                                                    <div class="border-0 shadow-sm card h-100 rounded-4">
+                                        <div class="p-3 card-datatable table-responsive">
+                                            <table class="table datatables-basic ">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Title</th>
+                                                        <th>Status</th>
+                                                        <th>Created</th>
+                                                        <th>Content</th>
+                                                        <th>Comments</th>
+                                                        <th>Likes</th>
+                                                        <th>Views</th>
+                                                        <th>Author</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($posts as $post)
+                                                        <tr>
+                                                            {{-- Title --}}
+                                                            <td class="fw-bold text-truncate" style="max-width:180px;"
+                                                                title="{{ $post->title }}">
+                                                                {{ $post->title }}
+                                                            </td>
 
-                                                        {{-- Post Header --}}
-                                                        <div
-                                                            class="card-header bg-light d-flex justify-content-between align-items-center rounded-top-4">
-                                                            <h6 class="mb-0 fw-bold text-truncate"
-                                                                title="{{ $post->title }}">{{ $post->title }}</h6>
+                                                            {{-- Status --}}
+                                                            <td>
+                                                                <span
+                                                                    class="badge
+                                            @if ($post->status == 'approved') bg-label-success
+                                            @elseif($post->status == 'pending') bg-label-warning
+                                            @else bg-label-danger @endif">
+                                                                    {{ ucfirst($post->status ?? 'N/A') }}
+                                                                </span>
+                                                            </td>
 
-                                                            <span
-                                                                class="badge
-                    @if ($post->status == 'approved') bg-label-success
-                    @elseif($post->status == 'pending') bg-label-warning
-                    @else bg-label-danger @endif">
-                                                                {{ ucfirst($post->status ?? 'N/A') }}
-                                                            </span>
-                                                        </div>
+                                                            {{-- Created Date --}}
+                                                            <td>
+                                                                <small class="text-muted">
+                                                                    <i class="icon-base ti tabler-calendar-time me-1"></i>
+                                                                    {{ $post->created_at->diffForHumans() }}
+                                                                </small>
+                                                            </td>
 
-                                                        {{-- Post Body --}}
-                                                        <div class="card-body d-flex flex-column">
-                                                            <small class="mb-2 text-muted d-block">
-                                                                <i class="icon-base ti tabler-calendar-time me-1"></i>
-                                                                {{ $post->created_at->diffForHumans() }}
+                                                            {{-- Content Preview --}}
+                                                            <td style="max-width:250px;">
+                                                                <small class="text-muted">
+                                                                    {!! Str::limit($post->body ?? '<em>No content</em>', 80) !!}
+                                                                </small>
+                                                            </td>
 
-                                                            </small>
-                                                            <div class="mb-3 card-text small text-muted">
-                                                                {!! Str::limit($post->body ?? '<em>No content</em>', 200) !!}
-                                                            </div>
-
-                                                            <div
-                                                                class="mt-auto d-flex justify-content-between align-items-center">
+                                                            {{-- Comments --}}
+                                                            <td>
                                                                 <span class="badge bg-label-primary">
                                                                     <i class="icon-base ti tabler-message-circle me-1"></i>
-                                                                    {{ $post->comments->count() ?? 0 }} Comments
+                                                                    {{ $post->comments->count() ?? 0 }}
                                                                 </span>
+                                                            </td>
 
-                                                                <div class="gap-2 d-flex align-items-center">
-                                                                    <span class="badge bg-label-danger">
-                                                                        <i class="icon-base ti tabler-heart me-1"></i>
-                                                                        {{ $post->likes_count ?? $post->likedByUsers->count() }}
-                                                                        Likes
-                                                                    </span>
+                                                            {{-- Likes --}}
+                                                            <td>
+                                                                <span class="badge bg-label-danger">
+                                                                    <i class="icon-base ti tabler-heart me-1"></i>
+                                                                    {{ $post->likes_count ?? $post->likedByUsers->count() }}
+                                                                </span>
+                                                            </td>
 
+                                                            {{-- Views --}}
+                                                            <td>
+                                                                <small class="text-muted">
+                                                                    <i
+                                                                        class="icon-base ti tabler-eye me-1"></i>{{ $post->views ?? 0 }}
+                                                                </small>
+                                                            </td>
+
+                                                            {{-- Author --}}
+                                                            <td>
+                                                                <small class="text-muted">
+                                                                    {{ $post->author->name ?? ($post->user->name ?? 'You') }}
+                                                                </small>
+                                                            </td>
+
+                                                            {{-- Actions --}}
+                                                            <td>
+                                                                <div class="gap-2 d-flex">
+                                                                    {{-- Read --}}
                                                                     <a href="{{ route('posts.show', $post) }}"
-                                                                        class="btn btn-sm btn-outline-primary">Read</a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                                        class="btn btn-icon" title="View">
+                                                                        <i class="ti tabler-eye text-info"></i>
+                                                                    </a>
 
-                                                        {{-- Footer --}}
-                                                        <div
-                                                            class="bg-transparent border-0 card-footer d-flex justify-content-between align-items-center">
-                                                            <small class="text-muted">By
-                                                                {{ $post->author->name ?? ($post->user->name ?? 'You') }}</small>
-                                                            <small class="text-muted"><i
-                                                                    class="icon-base ti tabler-eye me-1"></i>{{ $post->views ?? 0 }}</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            @endforeach
+                                                                    {{-- Edit --}}
+                                                                    <button class="btn btn-icon" data-bs-toggle="modal"
+                                                                        data-bs-target="#editPostModal-{{ $post->id }}"
+                                                                        title="Edit">
+                                                                        <i class="ti tabler-pencil text-warning"></i>
+                                                                    </button>
+
+                                                                    {{-- Delete --}}
+                                                                    <form action="{{ route('posts.destroy', $post->id) }}"
+                                                                        method="POST" class="d-inline delete-form">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <button type="submit"
+                                                                            class="btn btn-icon text-danger show-confirm"
+                                                                            title="Delete">
+                                                                            <i class="ti tabler-trash"></i>
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            </td>
+
+                                                        </tr>
+
+                                                        {{-- Include Edit Modal --}}
+                                                        @include('frontend.posts.partials.edit-post', [
+                                                            'post' => $post,
+                                                        ])
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
                                         </div>
 
                                         {{-- Pagination --}}
-                                        <div class="mt-4">
+                                        <div class="mt-3">
                                             {{ $posts->links() }}
                                         </div>
                                     @else
@@ -754,6 +857,7 @@
                                 </div>
                             </div>
                         </div>
+
 
 
 
@@ -826,6 +930,12 @@
     <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
     <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
     <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+    <script src="{{ asset('assets/vendor/libs/quill/katex.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/highlight/highlight.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/quill/quill.js') }}"></script>
+    <script src="{{ asset('assets/js/app-academy-course.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/select2/select2.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/plyr/plyr.js') }}"></script>
 @endsection
 @section('page-js')
 

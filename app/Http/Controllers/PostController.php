@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Society;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -198,5 +199,16 @@ class PostController extends Controller
             'liked'       => $liked,
             'likes_count' => $post->likedByUsers()->count(),
         ]);
+    }
+    public function destroy(Post $post)
+    {
+        // Delete image if exists
+        if (!empty($post->image) && is_string($post->image)) {
+            Storage::disk('public')->delete($post->image);
+        }
+
+        $post->delete();
+
+        return redirect()->back()->with('success', 'Post deleted successfully!');
     }
 }
