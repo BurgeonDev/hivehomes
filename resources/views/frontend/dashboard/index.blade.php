@@ -3,7 +3,6 @@
 
 @section('page-css')
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/app-academy.css') }}">
-
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css') }}" />
     <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
@@ -684,7 +683,6 @@
                                     {{-- Export + Add Buttons --}}
                                     <div class="col-md-auto ms-auto">
                                         <div class="flex-wrap mb-0 dt-buttons btn-group">
-                                            {{-- Export Dropdown --}}
                                             <div class="btn-group">
                                                 <button
                                                     class="btn buttons-collection btn-label-primary dropdown-toggle me-4"
@@ -706,16 +704,6 @@
                                                             id="export-print">Print</a></li>
                                                 </ul>
                                             </div>
-
-
-                                            {{-- <button class="btn create-new btn-primary" data-bs-toggle="offcanvas"
-                                            data-bs-target="#offcanvasProduct" aria-controls="offcanvasProduct"
-                                            id="btnAddProduct" type="button">
-                                            <span class="gap-2 d-flex align-items-center">
-                                                <i class="icon-base ti tabler-plus icon-sm"></i>
-                                                <span class="d-none d-sm-inline-block">Add Product</span>
-                                            </span>
-                                        </button> --}}
                                         </div>
                                     </div>
                                 </div>
@@ -926,7 +914,7 @@
 @section('vendor-js')
     <script src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
-    <script src="{{ asset('assets/vendor/js/bootstrap.js') }}"></script>
+    {{-- <script src="{{ asset('assets/vendor/js/bootstrap.js') }}"></script> --}}
     <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
     <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
     <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
