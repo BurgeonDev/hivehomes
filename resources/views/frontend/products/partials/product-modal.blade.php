@@ -1,5 +1,6 @@
-<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 <div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
     <div class="modal-dialog modal-lg modal-simple modal-dialog-centered">
         <div class="modal-content">
             <form id="productForm" method="POST" action="{{ route('products.store') }}" enctype="multipart/form-data">

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ProductCategory;
+use App\Models\Society;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -121,7 +123,8 @@ class UserDashboardController extends Controller
                 'path' => url()->current()
             ]);
         }
-
+        $categories = ProductCategory::all();
+        $societies = Society::all();
         return view('frontend.dashboard.index', compact(
             'user',
             'counts',
@@ -129,7 +132,9 @@ class UserDashboardController extends Controller
             'productStatuses',
             'products',
             'posts',
-            'serviceReviews'
+            'serviceReviews',
+            'categories',
+            'societies',
         ));
     }
 }

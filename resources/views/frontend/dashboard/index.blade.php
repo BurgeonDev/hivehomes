@@ -1,6 +1,14 @@
 @extends('frontend.layouts.app')
 @section('title', 'Dashboard')
 
+@section('page-css')
+    <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/app-academy.css') }}">
+
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css') }}" />
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
+@endsection
 @section('content')
     @php
         // compute initials and bg color
@@ -484,7 +492,10 @@
                                                             </div>
                                                             <div class="card-info">
                                                                 <h5 class="mb-0">
-                                                                    {{ \App\Models\ServiceProviderReview::whereIn('service_provider_id', $user->serviceProviders->pluck('id'))->count() }}
+                                                                    {{ \App\Models\ServiceProviderReview::whereIn(
+                                                                        'service_provider_id',
+                                                                        $user->serviceProviders->pluck('id'),
+                                                                    )->count() }}
                                                                 </h5>
                                                                 <small class="text-muted">Total Reviews</small>
                                                             </div>
@@ -505,78 +516,145 @@
                         {{-- PRODUCTS --}}
                         <div id="tab-products" class="tab-pane fade">
                             <div class="mb-4 card">
-                                <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0">Your Products</h5>
-                                    <small class="text-body-secondary">Total: {{ $counts['products'] ?? 0 }}</small>
+                                <div class="px-3 mx-0 row card-header flex-column flex-md-row border-bottom">
+                                    {{-- Title --}}
+                                    <div class="col-md-auto me-auto">
+                                        <h5 class="mb-0 card-title">Products</h5>
+                                    </div>
+
+                                    {{-- Export + Add Buttons --}}
+                                    <div class="col-md-auto ms-auto">
+                                        <div class="flex-wrap mb-0 dt-buttons btn-group">
+                                            {{-- Export Dropdown --}}
+                                            <div class="btn-group">
+                                                <button
+                                                    class="btn buttons-collection btn-label-primary dropdown-toggle me-4"
+                                                    type="button" id="exportDropdown" data-bs-toggle="dropdown"
+                                                    aria-expanded="false">
+                                                    <span class="gap-2 d-flex align-items-center">
+                                                        <i class="icon-base ti tabler-upload icon-xs me-sm-1"></i>
+                                                        <span class="d-none d-sm-inline-block">Export</span>
+                                                    </span>
+                                                </button>
+                                                <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                                                    <li><a class="dropdown-item" href="#" id="export-csv">CSV</a>
+                                                    </li>
+                                                    <li><a class="dropdown-item" href="#"
+                                                            id="export-excel">Excel</a></li>
+                                                    <li><a class="dropdown-item" href="#" id="export-pdf">PDF</a>
+                                                    </li>
+                                                    <li><a class="dropdown-item" href="#"
+                                                            id="export-print">Print</a></li>
+                                                </ul>
+                                            </div>
+
+
+                                            {{-- <button class="btn create-new btn-primary" data-bs-toggle="offcanvas"
+                                            data-bs-target="#offcanvasProduct" aria-controls="offcanvasProduct"
+                                            id="btnAddProduct" type="button">
+                                            <span class="gap-2 d-flex align-items-center">
+                                                <i class="icon-base ti tabler-plus icon-sm"></i>
+                                                <span class="d-none d-sm-inline-block">Add Product</span>
+                                            </span>
+                                        </button> --}}
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="card-body">
                                     @if ($products->count())
-                                        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-                                            @foreach ($products as $product)
-                                                <div class="col">
-                                                    <div class="border-0 shadow-sm card h-100 rounded-4">
-                                                        {{-- Optional image (uncomment if available) --}}
-                                                        {{-- @if ($product->thumbnail) <img src="{{ $product->thumbnail }}" class="card-img-top rounded-top-4" alt="{{ $product->title }}"> @endif --}}
+                                        <div class="p-3 card-datatable table-responsive">
+                                            <table class="table datatables-basic ">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Title</th>
+                                                        <th>Description</th>
+                                                        <th>Category</th>
+                                                        <th>Price</th>
+                                                        <th>Quantity</th>
+                                                        <th>Status</th>
+                                                        <th>Views</th>
+                                                        <th>Added</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($products as $index => $product)
+                                                        <tr>
+                                                            <td>{{ $index + 1 }}</td>
+                                                            <td>{{ $product->title }}</td>
+                                                            <td>{{ Str::limit($product->description, 50) }}</td>
+                                                            <td>{{ $product->category->name ?? 'N/A' }}</td>
+                                                            <td>{{ number_format($product->price, 2) }}</td>
+                                                            <td>{{ $product->quantity }}</td>
+                                                            <td>
+                                                                <span
+                                                                    class="badge
+                                            @if ($product->status == 'approved') bg-success
+                                            @elseif($product->status == 'pending') bg-warning
+                                            @else bg-danger @endif">
+                                                                    {{ ucfirst($product->status) }}
+                                                                </span>
+                                                            </td>
+                                                            <td>{{ $product->views }}</td>
+                                                            <td>{{ $product->created_at->diffForHumans() }}</td>
+                                                            <td class="text-center">
+                                                                {{-- View --}}
+                                                                <a href="{{ route('products.show', $product) }}"
+                                                                    class="btn btn-icon " title="View">
+                                                                    <i class="ti tabler-eye text-info"></i>
+                                                                </a>
 
-                                                        {{-- Product Header --}}
-                                                        <div
-                                                            class="card-header bg-light d-flex justify-content-between align-items-center rounded-top-4">
-                                                            <h6 class="mb-0 fw-bold text-truncate"
-                                                                title="{{ $product->title }}">{{ $product->title }}</h6>
+                                                                {{-- Edit --}}
+                                                                @php
+                                                                    $productPayload = [
+                                                                        'id' => $product->id,
+                                                                        'title' => $product->title,
+                                                                        'description' => $product->description,
+                                                                        'category_id' => $product->category_id,
+                                                                        'price' => $product->price,
+                                                                        'quantity' => $product->quantity,
+                                                                        'condition' => $product->condition,
+                                                                        'is_negotiable' =>
+                                                                            (int) $product->is_negotiable,
+                                                                        'is_featured' => (int) $product->is_featured,
+                                                                        'society_id' => $product->society_id,
+                                                                        'society_name' => optional($product->society)
+                                                                            ->name,
+                                                                        'images' => $product->images->map(
+                                                                            fn($img) => [
+                                                                                'id' => $img->id,
+                                                                                'url' => asset('storage/' . $img->path),
+                                                                            ],
+                                                                        ),
+                                                                    ];
+                                                                @endphp
+                                                                <button
+                                                                    class="btn btn-icon text-warning btn-open-edit-product"
+                                                                    type="button"
+                                                                    data-product='@json($productPayload)'>
+                                                                    <i class="ti tabler-pencil text-warning"></i>
+                                                                </button>
 
-                                                            <span
-                                                                class="badge
-                    @if ($product->status == 'approved') bg-label-success
-                    @elseif($product->status == 'pending') bg-label-warning
-                    @else bg-label-danger @endif">
-                                                                {{ ucfirst($product->status ?? 'N/A') }}
-                                                            </span>
-                                                        </div>
 
-                                                        {{-- Product Body --}}
-                                                        <div class="card-body d-flex flex-column">
+                                                                {{-- Delete --}}
+                                                                <form action="{{ route('products.destroy', $product) }}"
+                                                                    method="POST" class="d-inline"
+                                                                    onsubmit="return confirm('Are you sure you want to delete this product?');">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit"
+                                                                        class="btn btn-icon text-danger" title="Delete">
+                                                                        <i class="ti tabler-trash"></i>
+                                                                    </button>
+                                                                </form>
+                                                            </td>
 
-                                                            <p class="mb-3 card-text small text-muted">
-                                                                {{ Str::limit($product->description ?? 'No description', 120) }}
-                                                            </p>
-
-
-
-                                                            <div
-                                                                class="mt-auto d-flex justify-content-between align-items-center">
-                                                                <div>
-                                                                    <span class="badge bg-label-info me-2">
-                                                                        <i class="icon-base ti tabler-package me-1"></i>
-                                                                        {{ $product->price ?? 'N/A' }}
-                                                                    </span>
-                                                                    <small class="text-muted ms-1">Quantity:
-                                                                        {{ $product->quantity ?? '—' }}</small>
-                                                                </div>
-
-                                                                <div class="text-end">
-                                                                    <a href="{{ route('products.show', $product) }}"
-                                                                        class="btn btn-sm btn-outline-primary">View</a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        {{-- Footer with small meta --}}
-                                                        <div
-                                                            class="bg-transparent border-0 card-footer d-flex justify-content-between align-items-center">
-                                                            <small class="text-muted">Added
-                                                                {{ $product->created_at->diffForHumans() }}</small>
-                                                            <small class="text-muted"><i
-                                                                    class="icon-base ti tabler-eye me-1"></i>{{ $product->views ?? 0 }}</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            @endforeach
-                                        </div>
-
-                                        {{-- Pagination --}}
-                                        <div class="mt-4">
-                                            {{ $products->links() }}
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
                                         </div>
                                     @else
                                         <div class="py-4 text-center text-muted">
@@ -587,6 +665,7 @@
                                 </div>
                             </div>
                         </div>
+                        @include('frontend.products.partials.product-modal')
 
                         {{-- POSTS --}}
                         <div id="tab-posts" class="tab-pane fade">
@@ -701,7 +780,8 @@
                                                         <div class="mb-2 text-warning">
                                                             @for ($i = 1; $i <= 5; $i++)
                                                                 <i
-                                                                    class="icon-base ti tabler-star{{ $i <= $review->rating ? '' : '-off' }}"></i>
+                                                                    class="icon-base ti tabler-star{{ $i <= $review->rating ? '' : '-off' }}">
+                                                                </i>
                                                             @endfor
                                                             <small class="text-muted">({{ $review->rating }}/5)</small>
                                                         </div>
@@ -733,7 +813,238 @@
                     </div>
                     <!-- END Tab Content -->
                 </main>
+
             </div>
         </div>
     </section>
+
+@endsection
+@section('vendor-js')
+    <script src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
+    <script src="{{ asset('assets/vendor/js/bootstrap.js') }}"></script>
+    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+@endsection
+@section('page-js')
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            FilePond.registerPlugin(FilePondPluginImagePreview, FilePondPluginFileValidateType);
+            let pond = FilePond.create(document.querySelector('#product-images'), {
+                allowMultiple: true,
+                acceptedFileTypes: ['image/*'],
+                storeAsFile: true,
+                credits: false
+            });
+
+            const removedInputContainer = document.getElementById(
+                'existing-images'); // Use existing-images as container
+            let removedIds = [];
+
+            function renderExistingImages(images = []) {
+                const container = document.getElementById('existing-images');
+                container.innerHTML = '';
+                removedIds = [];
+
+                // Clear previous hidden inputs
+                document.querySelectorAll('input[name="delete_images[]"]').forEach(input => input.remove());
+
+                images.forEach(img => {
+                    const wrapper = document.createElement('div');
+                    wrapper.classList.add('position-relative');
+                    wrapper.innerHTML = `
+                <img src="${img.url}" width="100" class="rounded">
+                <button type="button" class="top-0 btn btn-sm btn-danger position-absolute end-0 btn-remove-existing" data-id="${img.id}">&times;</button>
+            `;
+                    container.appendChild(wrapper);
+                });
+            }
+
+            // Remove existing image click
+            document.addEventListener('click', e => {
+                if (e.target.classList.contains('btn-remove-existing')) {
+                    const id = e.target.dataset.id;
+                    removedIds.push(id);
+
+                    // Create a hidden input for each removed ID
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = 'delete_images[]';
+                    hiddenInput.value = id;
+                    removedInputContainer.appendChild(hiddenInput);
+
+                    e.target.closest('div').remove();
+                }
+            });
+
+
+            // Edit Product
+            document.addEventListener('click', e => {
+                if (e.target.closest('.btn-open-edit-product')) {
+                    const product = JSON.parse(e.target.closest('.btn-open-edit-product').dataset.product);
+
+                    document.getElementById('productId').value = product.id;
+                    document.getElementById('prod-title').value = product.title;
+                    document.getElementById('prod-category').value = product.category_id;
+                    document.getElementById('prod-price').value = product.price;
+                    document.getElementById('prod-quantity').value = product.quantity;
+                    document.getElementById('prod-condition').value = product.condition;
+                    document.getElementById('prod-description').value = product.description;
+
+                    // ✅ society select only if exists (super admin)
+                    const societySelect = document.getElementById('prod-society');
+                    if (societySelect) {
+                        societySelect.value = product.society_id;
+                    }
+
+                    renderExistingImages(product.images ?? []);
+                    pond.removeFiles();
+
+                    document.getElementById('productFormMethod').value = 'PUT';
+                    document.getElementById('productModalTitle').innerText = 'Edit Product';
+                    document.getElementById('productForm').action = "/products/" + product.id;
+
+                    new bootstrap.Modal(document.getElementById('productModal')).show();
+                }
+            });
+
+
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            const tableTitle = $('.card-title').text().trim(); // Dynamic title from the page
+
+            const table = $('.datatables-basic').DataTable({
+                responsive: true,
+                lengthChange: true,
+                order: [
+                    [1, 'asc']
+                ],
+                layout: {
+                    topStart: {
+                        rowClass: 'row mx-3 my-0 justify-content-between',
+                        features: [{
+                            pageLength: {
+                                menu: [7, 10, 25, 50, 100],
+                                text: 'Show _MENU_ entries'
+                            }
+                        }]
+                    },
+                    topEnd: {
+                        search: {
+                            placeholder: 'Search...'
+                        }
+                    },
+                    bottomStart: {
+                        rowClass: 'row mx-3 justify-content-between',
+                        features: ['info']
+                    },
+                    bottomEnd: 'paging'
+                },
+                displayLength: 7,
+                language: {
+                    paginate: {
+                        next: '<i class="icon-base ti tabler-chevron-right scaleX-n1-rtl icon-18px"></i>',
+                        previous: '<i class="icon-base ti tabler-chevron-left scaleX-n1-rtl icon-18px"></i>',
+                        first: '<i class="icon-base ti tabler-chevrons-left scaleX-n1-rtl icon-18px"></i>',
+                        last: '<i class="icon-base ti tabler-chevrons-right scaleX-n1-rtl icon-18px"></i>'
+                    }
+                },
+                buttons: [{
+                        extend: 'csv',
+                        title: tableTitle,
+                        filename: tableTitle.replace(/\s+/g, '_') + "_" + new Date().toISOString()
+                            .slice(0, 10),
+                        className: 'd-none',
+                        exportOptions: {
+                            columns: ':not(:last-child)', // exclude Actions column
+                            format: {
+                                body: exportFormatter
+                            }
+                        }
+                    },
+                    {
+                        extend: 'excel',
+                        title: tableTitle,
+                        filename: tableTitle.replace(/\s+/g, '_') + "_" + new Date().toISOString()
+                            .slice(0, 10),
+                        className: 'd-none',
+                        exportOptions: {
+                            columns: ':not(:last-child)',
+                            format: {
+                                body: exportFormatter
+                            }
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        title: tableTitle,
+                        filename: tableTitle.replace(/\s+/g, '_') + "_" + new Date().toISOString()
+                            .slice(0, 10),
+                        className: 'd-none',
+                        exportOptions: {
+                            columns: ':not(:last-child)',
+                            format: {
+                                body: exportFormatter
+                            }
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        title: tableTitle,
+                        className: 'd-none',
+                        exportOptions: {
+                            columns: ':not(:last-child)',
+                            format: {
+                                body: exportFormatter
+                            }
+                        }
+                    }
+                ]
+            });
+
+            // ✅ Export triggers
+            $('#export-csv').on('click', e => {
+                e.preventDefault();
+                table.button(0).trigger();
+            });
+            $('#export-excel').on('click', e => {
+                e.preventDefault();
+                table.button(1).trigger();
+            });
+            $('#export-pdf').on('click', e => {
+                e.preventDefault();
+                table.button(2).trigger();
+            });
+            $('#export-print').on('click', e => {
+                e.preventDefault();
+                table.button(3).trigger();
+            });
+
+            // ✅ Universal formatter for export
+            function exportFormatter(data, row, column, node) {
+                const $node = $(node);
+
+                // If checkbox
+                const $checkbox = $node.find('input[type="checkbox"]');
+                if ($checkbox.length) {
+                    return $checkbox.prop('checked') ? 'Active' : 'Inactive';
+                }
+
+                // If select/dropdown
+                const $select = $node.find('select');
+                if ($select.length) {
+                    return $select.find('option:selected').text().trim();
+                }
+
+                // Otherwise plain text (remove HTML)
+                return $node.text().trim();
+            }
+        });
+    </script>
+
+
 @endsection

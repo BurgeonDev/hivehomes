@@ -431,7 +431,7 @@
             });
 
             const removedInputContainer = document.getElementById(
-            'existing-images'); // Use existing-images as container
+                'existing-images'); // Use existing-images as container
             let removedIds = [];
 
             function renderExistingImages(images = []) {
