@@ -254,7 +254,7 @@
                                 @foreach ($types as $typeItem)
                                     <li class="list-group-item d-flex justify-content-between {{ request('type') == $typeItem->id ? 'active' : '' }}"
                                         data-type="{{ $typeItem->id }}">
-                                        <span>{{ $typeItem->name }}</span>
+                                        <span>{{ $typeItem->name ?? 'N/A' }}</span>
                                         <span class="badge bg-label-secondary">{{ $typeItem->approved_count }}</span>
                                     </li>
                                 @endforeach

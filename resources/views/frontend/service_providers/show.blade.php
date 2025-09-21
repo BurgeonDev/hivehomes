@@ -55,7 +55,7 @@
                             <div class="mb-4 d-flex align-items-center">
                                 @if ($provider->profile_image)
                                     <img src="{{ asset('storage/' . $provider->profile_image) }}"
-                                        alt="{{ $provider->name }}" class="rounded-circle me-3" width="80"
+                                        alt="{{ $provider->name ?? 'N/A' }}" class="rounded-circle me-3" width="80"
                                         height="80" style="object-fit:cover;">
                                 @else
                                     <div class="text-white avatar avatar-lg bg-primary rounded-circle d-inline-flex align-items-center justify-content-center me-3"
@@ -64,7 +64,7 @@
                                     </div>
                                 @endif
                                 <div>
-                                    <h2 class="mb-1">{{ $provider->name }}</h2>
+                                    <h2 class="mb-1">{{ $provider->name ?? 'N/A' }}</h2>
                                     <span class="badge bg-label-primary text-capitalize">{{ $provider->type->name }}</span>
                                 </div>
                             </div>

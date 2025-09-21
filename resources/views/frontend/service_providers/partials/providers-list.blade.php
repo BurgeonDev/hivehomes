@@ -15,11 +15,11 @@
                                             '&background=random';
                                 @endphp
 
-                                <img src="{{ $image }}" alt="{{ $provider->name }}" class="rounded-circle me-3"
-                                    width="80" height="80" style="object-fit:cover;">
+                                <img src="{{ $image }}" alt="{{ $provider->name ?? 'N/A' }}"
+                                    class="rounded-circle me-3" width="80" height="80" style="object-fit:cover;">
 
                                 <div>
-                                    <h6 class="mb-0">{{ $provider->name }}</h6>
+                                    <h6 class="mb-0">{{ $provider->name ?? 'N/A' }}</h6>
                                     @php
                                         $count = $provider->reviews_count ?? 0;
                                     @endphp

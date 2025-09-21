@@ -24,7 +24,7 @@
                                     {{-- Category badge on image (solid look) --}}
                                     @if ($post->category)
                                         <span class="text-dark badge bg-label-primary product-cat-badge">
-                                            {{ $post->category->name }}
+                                            {{ $post->category->name ?? 'N/A' }}
                                         </span>
                                     @endif
                                 </div>
@@ -57,7 +57,7 @@
 
                                     <div class="flex-wrap gap-2 mb-2 d-flex">
                                         <span class="text-dark meta-pill bg-label-secondary">Posted By:
-                                            {{ $post->user->name }}</span>
+                                            {{ $post->user->name ?? 'N/A' }}</span>
                                         <span class="text-dark meta-pill bg-label-secondary">Words:
                                             {{ $words }}</span>
 

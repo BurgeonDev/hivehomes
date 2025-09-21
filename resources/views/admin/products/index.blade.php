@@ -179,7 +179,7 @@
                                     </select>
                                 </td>
 
-                                <td>{{ $p->seller->name }}</td>
+                                <td>{{ $p->seller->name ?? 'N/A' }}</td>
                                 <td>{{ $p->created_at ? \Carbon\Carbon::parse($p->created_at)->format('d-m-Y') : '' }}
                                 <td class="text-end">
                                     <button class="btn btn-sm badge bg-label-info btn-edit-product"

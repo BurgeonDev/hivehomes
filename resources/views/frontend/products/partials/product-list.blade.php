@@ -26,7 +26,7 @@
                                     {{-- Category badge on image (solid look) --}}
                                     @if ($product->category)
                                         <span class="text-dark badge bg-label-primary product-cat-badge">
-                                            {{ $product->category->name }}
+                                            {{ $product->category->name ?? 'N/A' }}
                                         </span>
                                     @endif
 
@@ -71,7 +71,7 @@
                                         @endif --}}
                                         @role('super_admin')
                                             @if ($product->society)
-                                                {{ $product->society->name }} &middot;
+                                                {{ $product->society->name ?? 'N/A' }} &middot;
                                             @endif
                                         @endrole
 
@@ -84,7 +84,7 @@
                                     <div class="mb-2">
                                         <span class="text-dark meta-pill bg-label-secondary">Posted By:
                                             @if ($product->seller)
-                                                {{ $product->seller->name }}
+                                                {{ $product->seller->name ?? 'N/A' }}
                                             @endif
                                         </span>
                                         <span class="text-dark meta-pill bg-label-secondary">Qty:

@@ -128,8 +128,8 @@
                                 <div class="card-body d-flex align-items-center">
                                     @if (!empty($post->user->profile_pic))
                                         <img src="{{ asset('storage/' . $post->user->profile_pic) }}"
-                                            alt="{{ $post->user->name }}" class="rounded-circle me-3" width="64"
-                                            height="64" style="object-fit: cover;">
+                                            alt="{{ $post->user->name ?? 'N/A' }}" class="rounded-circle me-3"
+                                            width="64" height="64" style="object-fit: cover;">
                                     @else
                                         <div class="text-white avatar avatar-md bg-primary rounded-circle d-inline-flex align-items-center justify-content-center me-3"
                                             style="width:64px;height:64px;">
@@ -138,7 +138,7 @@
                                     @endif
 
                                     <div>
-                                        <div class="fw-semibold">{{ $post->user->name }}</div>
+                                        <div class="fw-semibold">{{ $post->user->name ?? 'N/A' }}</div>
                                         <small
                                             class="text-muted">{{ $post->user->getRoleNames()->first() ?? 'User' }}</small>
                                     </div>
@@ -172,7 +172,7 @@
 
                                                 <div class="flex-grow-1">
                                                     <div class="d-flex align-items-center">
-                                                        <strong>{{ $comment->user->name }}</strong>
+                                                        <strong>{{ $comment->user->name ?? 'N/A' }}</strong>
                                                         <small
                                                             class="text-muted ms-3">{{ $comment->created_at->diffForHumans() }}</small>
 
@@ -205,7 +205,7 @@
                                                                 <div class="mb-2 card card-sm">
                                                                     <div class="p-2 card-body">
                                                                         <small
-                                                                            class="text-muted"><strong>{{ $reply->user->name }}</strong>
+                                                                            class="text-muted"><strong>{{ $reply->user->name ?? 'N/A' }}</strong>
                                                                             ·
                                                                             {{ $reply->created_at->diffForHumans() }}</small>
                                                                         <div class="mt-1">{{ $reply->body }}</div>
@@ -274,8 +274,8 @@
                             <div class="text-center card-body">
                                 @if (!empty($post->user->profile_pic))
                                     <img src="{{ asset('storage/' . $post->user->profile_pic) }}"
-                                        alt="{{ $post->user->name }}" class="mb-2 rounded-circle" width="80"
-                                        height="80" style="object-fit:cover;">
+                                        alt="{{ $post->user->name ?? 'N/A' }}" class="mb-2 rounded-circle"
+                                        width="80" height="80" style="object-fit:cover;">
                                 @else
                                     <div class="mb-2 text-white avatar avatar-lg bg-primary rounded-circle d-inline-flex align-items-center justify-content-center"
                                         style="width:80px;height:80px;">
@@ -283,7 +283,7 @@
                                     </div>
                                 @endif
 
-                                <h6 class="mb-0">{{ $post->user->name }}</h6>
+                                <h6 class="mb-0">{{ $post->user->name ?? 'N/A' }}</h6>
                                 <small
                                     class="badge bg-label-primary">{{ $post->user->getRoleNames()->first() ?? 'User' }}</small>
 
@@ -376,8 +376,8 @@
 
                     <div class="modal-body">
                         <ul class="mb-0 list-unstyled">
-                            <li><strong>Name:</strong> {{ $post->user->name }}</li>
-                            <li><strong>Email:</strong> {{ $post->user->email }}</li>
+                            <li><strong>Name:</strong> {{ $post->user->name ?? 'N/A' }}</li>
+                            <li><strong>Email:</strong> {{ $post->user->email ?? 'N/A' }}</li>
                             <li><strong>Phone:</strong> {{ $post->user->phone ?? 'Not provided' }}</li>
                             <li><strong>Society:</strong> {{ optional($post->society)->name ?? '—' }}</li>
                         </ul>

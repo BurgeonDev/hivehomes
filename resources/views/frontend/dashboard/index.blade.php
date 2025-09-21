@@ -866,7 +866,7 @@
                                                         <h6 class="mb-2">
                                                             <a href="{{ route('service-providers.show', $review->provider->id) }}"
                                                                 class="text-decoration-none fw-bold">
-                                                                {{ $review->provider->name }}
+                                                                {{ $review->provider->name ?? 'N/A' }}
                                                             </a>
                                                         </h6>
 

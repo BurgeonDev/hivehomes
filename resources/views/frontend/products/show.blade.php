@@ -68,7 +68,8 @@
                             <h1 class="mb-1 h3">{{ $product->title }}</h1>
 
                             <div class="mb-3 d-flex align-items-center">
-                                <small class="text-muted me-3">By <strong>{{ $product->user->name }}</strong></small>
+                                <small class="text-muted me-3">By
+                                    <strong>{{ $product->user->name ?? 'N/A' }}</strong></small>
                                 <small class="text-muted me-3">·
                                     {{ optional($product->created_at)->format('F j, Y') }}</small>
 
@@ -237,8 +238,8 @@
                             <div class="text-center card-body">
                                 @if (!empty($product->user->profile_pic))
                                     <img src="{{ asset('storage/' . $product->user->profile_pic) }}"
-                                        alt="{{ $product->user->name }}" class="mb-2 rounded-circle" width="80"
-                                        height="80" style="object-fit:cover;">
+                                        alt="{{ $product->user->name ?? 'N/A' }}" class="mb-2 rounded-circle"
+                                        width="80" height="80" style="object-fit:cover;">
                                 @else
                                     <div class="mb-2 text-white avatar avatar-lg bg-primary rounded-circle d-inline-flex align-items-center justify-content-center"
                                         style="width:80px;height:80px;">
@@ -246,7 +247,7 @@
                                     </div>
                                 @endif
 
-                                <h6 class="mb-0">{{ $product->user->name }}</h6>
+                                <h6 class="mb-0">{{ $product->user->name ?? 'N/A' }}</h6>
                                 <small
                                     class="badge bg-label-primary">{{ $product->user->getRoleNames()->first() ?? 'User' }}</small>
 
@@ -371,8 +372,8 @@
 
                     <div class="modal-body">
                         <ul class="mb-0 list-unstyled">
-                            <li><strong>Name:</strong> {{ $product->user->name }}</li>
-                            <li><strong>Email:</strong> {{ $product->user->email }}</li>
+                            <li><strong>Name:</strong> {{ $product->user->name ?? 'N/A' }}</li>
+                            <li><strong>Email:</strong> {{ $product->user->email ?? 'N/A' }}</li>
                             <li><strong>Phone:</strong> {{ $product->user->phone ?? 'Not provided' }}</li>
                             <li><strong>Society:</strong> {{ optional($product->society)->name ?? '—' }}</li>
                         </ul>
