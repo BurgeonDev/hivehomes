@@ -574,7 +574,7 @@
                                                     <tr>
                                                         <th>#</th>
                                                         <th>Title</th>
-                                                        <th>Description</th>
+                                                        {{-- <th>Description</th> --}}
                                                         <th>Category</th>
                                                         <th>Price</th>
                                                         <th>Quantity</th>
@@ -589,7 +589,7 @@
                                                         <tr>
                                                             <td>{{ $index + 1 }}</td>
                                                             <td>{{ $product->title }}</td>
-                                                            <td>{{ Str::limit($product->description, 50) }}</td>
+                                                            {{-- <td>{{ Str::limit($product->description, 50) }}</td> --}}
                                                             <td>{{ $product->category->name ?? 'N/A' }}</td>
                                                             <td>{{ number_format($product->price, 2) }}</td>
                                                             <td>{{ $product->quantity }}</td>
@@ -719,7 +719,7 @@
                                                         <th>Title</th>
                                                         <th>Status</th>
                                                         <th>Created</th>
-                                                        <th>Content</th>
+                                                        {{-- <th>Content</th> --}}
                                                         <th>Comments</th>
                                                         <th>Likes</th>
                                                         <th>Views</th>
@@ -756,11 +756,11 @@
                                                             </td>
 
                                                             {{-- Content Preview --}}
-                                                            <td style="max-width:250px;">
+                                                            {{-- <td style="max-width:250px;">
                                                                 <small class="text-muted">
                                                                     {!! Str::limit($post->body ?? '<em>No content</em>', 80) !!}
                                                                 </small>
-                                                            </td>
+                                                            </td> --}}
 
                                                             {{-- Comments --}}
                                                             <td>
