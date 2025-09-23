@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ProductCategory;
+use App\Models\ServiceProviderType;
 use App\Models\Society;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -125,6 +126,10 @@ class UserDashboardController extends Controller
         }
         $categories = ProductCategory::all();
         $societies = Society::all();
+        $providers = $user->serviceProviders ?? collect();
+        $serviceTypes = ServiceProviderType::all();
+
+
         return view('frontend.dashboard.index', compact(
             'user',
             'counts',
@@ -135,6 +140,8 @@ class UserDashboardController extends Controller
             'serviceReviews',
             'categories',
             'societies',
+            'providers',
+            'serviceTypes'
         ));
     }
 }

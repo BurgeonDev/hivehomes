@@ -11,6 +11,7 @@ use App\Models\ServiceProvider;
 use App\Models\Society;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class ServiceProviderController extends Controller
@@ -245,5 +246,65 @@ class ServiceProviderController extends Controller
         return redirect()
             ->route('service-providers.index')
             ->with('success', 'Service Provider added successfully.');
+    }
+    public function update(Request $request, ServiceProvider $service_provider)
+    {
+        $rules = [
+            'name'            => 'required|string|max:255',
+            'type_id' => 'required|exists:service_provider_types,id',
+
+            // 'phone'           => 'nullable|string|max:50',
+            'phone' => [
+                'nullable',
+                'string',
+                'max:50',
+                Rule::unique('service_providers')
+                    ->where(
+                        fn($query) =>
+                        $query->where(
+                            'society_id',
+                            $request->user()->hasRole('super_admin')
+                                ? $request->society_id
+                                : $request->user()->society_id
+                        )
+                    )
+                    ->ignore($service_provider->id),
+            ],
+
+            'email'           => 'nullable|email|max:255',
+            'cnic'            => 'nullable|string|max:20',
+            'address'         => 'nullable|string',
+            'bio'             => 'nullable|string',
+            'profile_image'   => 'nullable|image|max:2048',
+        ];
+
+        if ($request->user()->hasRole('super_admin')) {
+            $rules['society_id'] = 'required|exists:societies,id';
+        }
+
+        $data = $request->validate($rules);
+
+        if (! $request->user()->hasRole('super_admin')) {
+            $data['society_id'] = $request->user()->society_id;
+        }
+
+        $data['is_approved'] = $request->boolean('is_approved', false);
+
+        // Handle new profile image
+        if ($request->hasFile('profile_image')) {
+            if ($service_provider->profile_image) {
+                // Delete old file
+                Storage::disk('public')->delete($service_provider->profile_image);
+            }
+
+            $path = $request->file('profile_image')->store('service_providers', 'public');
+            $data['profile_image'] = $path;
+        }
+
+        $service_provider->update($data);
+
+        return redirect()
+            ->back()
+            ->with('success', 'Service Provider updated successfully.');
     }
 }

@@ -219,8 +219,8 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" data-bs-toggle="pill" href="#tab-reviews" role="tab">
-                                    <i class="icon-base ti tabler-star me-2"></i> Service Reviews
+                                <a class="nav-link" data-bs-toggle="pill" href="#tab-providers" role="tab">
+                                    <i class="icon-base ti tabler-star me-2"></i> Service Proivders
                                 </a>
                             </li>
                         </ul>
@@ -543,11 +543,13 @@
                                                 </button>
                                                 <ul class="dropdown-menu" aria-labelledby="products-exportDropdown">
                                                     <li><a class="dropdown-item" href="#"
-                                                            id="products-export-csv">CSV</a></li>
+                                                            id="products-export-csv">CSV</a>
+                                                    </li>
                                                     <li><a class="dropdown-item" href="#"
                                                             id="products-export-excel">Excel</a></li>
                                                     <li><a class="dropdown-item" href="#"
-                                                            id="products-export-pdf">PDF</a></li>
+                                                            id="products-export-pdf">PDF</a>
+                                                    </li>
                                                     <li><a class="dropdown-item" href="#"
                                                             id="products-export-print">Print</a></li>
                                                 </ul>
@@ -699,11 +701,13 @@
                                                     <li><a class="dropdown-item" href="#"
                                                             id="posts-export-csv">CSV</a></li>
                                                     <li><a class="dropdown-item" href="#"
-                                                            id="posts-export-excel">Excel</a></li>
+                                                            id="posts-export-excel">Excel</a>
+                                                    </li>
                                                     <li><a class="dropdown-item" href="#"
                                                             id="posts-export-pdf">PDF</a></li>
                                                     <li><a class="dropdown-item" href="#"
-                                                            id="posts-export-print">Print</a></li>
+                                                            id="posts-export-print">Print</a>
+                                                    </li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -757,10 +761,10 @@
 
                                                             {{-- Content Preview --}}
                                                             {{-- <td style="max-width:250px;">
-                                                                <small class="text-muted">
-                                                                    {!! Str::limit($post->body ?? '<em>No content</em>', 80) !!}
-                                                                </small>
-                                                            </td> --}}
+                                                    <small class="text-muted">
+                                                        {!! Str::limit($post->body ?? '<em>No content</em>', 80) !!}
+                                                    </small>
+                                                </td> --}}
 
                                                             {{-- Comments --}}
                                                             <td>
@@ -848,60 +852,108 @@
                             </div>
                         </div>
 
-
-
-
-                        {{-- REVIEWS --}}
-                        <div id="tab-reviews" class="tab-pane fade">
-                            <div class="p-3 mb-4 card dashboard-card">
-                                <h5 class="mb-3">Service Reviews</h5>
-
-                                @if ($serviceReviews->count())
-                                    <div class="row g-3">
-                                        @foreach ($serviceReviews as $review)
-                                            <div class="col-md-6">
-                                                <div class="shadow-sm card h-100 rounded-4">
-                                                    <div class="card-body">
-                                                        {{-- Provider link --}}
-                                                        <h6 class="mb-2">
-                                                            <a href="{{ route('service-providers.show', $review->provider->id) }}"
-                                                                class="text-decoration-none fw-bold">
-                                                                {{ $review->provider->name ?? 'N/A' }}
-                                                            </a>
-                                                        </h6>
-
-                                                        {{-- Star Rating --}}
-                                                        <div class="mb-2 text-warning">
-                                                            @for ($i = 1; $i <= 5; $i++)
-                                                                <i
-                                                                    class="icon-base ti tabler-star{{ $i <= $review->rating ? '' : '-off' }}">
-                                                                </i>
-                                                            @endfor
-                                                            <small class="text-muted">({{ $review->rating }}/5)</small>
-                                                        </div>
-
-                                                        {{-- Comment --}}
-                                                        <p class="mb-2">{{ Str::limit($review->comment, 140) }}</p>
-
-                                                        {{-- Reviewer Info --}}
-                                                        <div class="small text-muted">
-                                                            By <strong>{{ $review->user->name ?? 'Anonymous' }}</strong>
-                                                            • {{ $review->created_at->diffForHumans() }}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
+                        {{-- SERVICE PROVIDERS TAB --}}
+                        <div id="tab-providers" class="tab-pane fade">
+                            <div class="mb-4 card">
+                                <div class="px-3 mx-0 row card-header flex-column flex-md-row border-bottom">
+                                    <div class="col-md-auto me-auto">
+                                        <h5 class="mb-0 card-title">My Service Providers</h5>
                                     </div>
-
-                                    <div class="mt-3">
-                                        {{ $serviceReviews->links() }}
+                                    <div class="col-md-auto ms-auto">
+                                        <a href="{{ route('service-providers.create') }}" class="btn btn-primary">
+                                            <i class="ti tabler-plus me-1"></i> Add Provider
+                                        </a>
                                     </div>
-                                @else
-                                    <p class="text-muted">No reviews found for your services.</p>
-                                @endif
+                                </div>
+
+                                <div class="card-body">
+                                    @if ($providers->count())
+                                        <div class="p-3 card-datatable table-responsive">
+                                            <table class="table datatables-basic">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Type</th>
+                                                        <th>Status</th>
+                                                        <th>Approved</th>
+                                                        <th>Created</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($providers as $sp)
+                                                        <tr>
+                                                            <td>
+                                                                <div class="d-flex align-items-center">
+                                                                    <img src="{{ $sp->profile_image_url }}"
+                                                                        class="rounded-circle me-2" width="32"
+                                                                        height="32">
+                                                                    {{ $sp->name }}
+                                                                </div>
+                                                            </td>
+                                                            <td>{{ $sp->type->name ?? 'N/A' }}</td>
+                                                            <td>
+                                                                <span
+                                                                    class="badge {{ $sp->is_active ? 'bg-label-success' : 'bg-label-danger' }}">
+                                                                    {{ $sp->is_active ? 'Active' : 'Inactive' }}
+                                                                </span>
+                                                            </td>
+                                                            <td>
+                                                                <span
+                                                                    class="badge {{ $sp->is_approved ? 'bg-label-primary' : 'bg-label-warning' }}">
+                                                                    {{ $sp->is_approved ? 'Approved' : 'Pending' }}
+                                                                </span>
+                                                            </td>
+                                                            <td>{{ $sp->created_at->diffForHumans() }}</td>
+                                                            <td>
+                                                                <div class="gap-2 d-flex">
+                                                                    {{-- View --}}
+                                                                    <a href="{{ route('service-providers.show', $sp->id) }}"
+                                                                        class="btn btn-icon" title="View">
+                                                                        <i class="ti tabler-eye text-info"></i>
+                                                                    </a>
+
+                                                                    {{-- Edit --}}
+                                                                    <button class="btn btn-icon" data-bs-toggle="modal"
+                                                                        data-bs-target="#editProviderModal-{{ $sp->id }}"
+                                                                        title="Edit">
+                                                                        <i class="ti tabler-pencil text-warning"></i>
+                                                                    </button>
+                                                                    @include(
+                                                                        'frontend.service_providers.partials.edit-modal',
+                                                                        ['sp' => $sp]
+                                                                    )
+                                                                    {{-- Delete --}}
+                                                                    <form
+                                                                        action="{{ route('service-providers.destroy', $sp->id) }}"
+                                                                        method="POST" class="d-inline delete-form">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <button type="submit"
+                                                                            class="btn btn-icon text-danger show-confirm"
+                                                                            title="Delete">
+                                                                            <i class="ti tabler-trash"></i>
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            </td>
+
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    @else
+                                        <div class="py-4 text-center text-muted">
+                                            <i class="mb-2 ti tabler-user icon-lg"></i>
+                                            <p class="mb-0">You haven't added any service providers yet.</p>
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                         </div>
+
+
 
 
                     </div>
