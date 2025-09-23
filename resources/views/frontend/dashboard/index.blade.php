@@ -856,20 +856,48 @@
                         <div id="tab-providers" class="tab-pane fade">
                             <div class="mb-4 card">
                                 <div class="px-3 mx-0 row card-header flex-column flex-md-row border-bottom">
+                                    {{-- Title --}}
                                     <div class="col-md-auto me-auto">
-                                        <h5 class="mb-0 card-title">My Service Providers</h5>
+                                        <h5 class="mb-0 card-title">Service Providers</h5>
                                     </div>
+
+                                    {{-- Export + Add Buttons --}}
                                     <div class="col-md-auto ms-auto">
-                                        <a href="{{ route('service-providers.create') }}" class="btn btn-primary">
-                                            <i class="ti tabler-plus me-1"></i> Add Provider
-                                        </a>
+                                        <div class="flex-wrap mb-0 dt-buttons btn-group">
+                                            <!-- Posts Tab -->
+                                            <div class="btn-group">
+                                                <button
+                                                    class="btn buttons-collection btn-label-primary dropdown-toggle me-4"
+                                                    type="button" id="posts-exportDropdown" data-bs-toggle="dropdown"
+                                                    aria-expanded="false">
+                                                    <span class="gap-2 d-flex align-items-center">
+                                                        <i class="icon-base ti tabler-upload icon-xs me-sm-1"></i>
+                                                        <span class="d-none d-sm-inline-block">Export</span>
+                                                    </span>
+                                                </button>
+                                                <ul class="dropdown-menu" aria-labelledby="providers-exportDropdown">
+                                                    <li><a class="dropdown-item" href="#"
+                                                            id="providers-export-csv">CSV</a>
+                                                    </li>
+                                                    <li><a class="dropdown-item" href="#"
+                                                            id="providers-export-excel">Excel</a>
+                                                    </li>
+                                                    <li><a class="dropdown-item" href="#"
+                                                            id="providers-export-pdf">PDF</a>
+                                                    </li>
+                                                    <li><a class="dropdown-item" href="#"
+                                                            id="providers-export-print">Print</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <div class="card-body">
                                     @if ($providers->count())
                                         <div class="p-3 card-datatable table-responsive">
-                                            <table class="table datatables-basic">
+                                            <table class="table datatables-basic providers-table">
                                                 <thead>
                                                     <tr>
                                                         <th>Name</th>
@@ -885,13 +913,24 @@
                                                         <tr>
                                                             <td>
                                                                 <div class="d-flex align-items-center">
-                                                                    <img src="{{ $sp->profile_image_url }}"
-                                                                        class="rounded-circle me-2" width="32"
-                                                                        height="32">
-                                                                    {{ $sp->name }}
+                                                                    @if ($sp->profile_image)
+                                                                        <img src="{{ $sp->profile_image_url }}"
+                                                                            class="rounded-circle me-2" width="32"
+                                                                            height="32">
+                                                                    @else
+                                                                        <img src="https://ui-avatars.com/api/?name={{ urlencode($sp->name) }}&background=ddd&color=555"
+                                                                            class="rounded-circle me-2" width="32"
+                                                                            height="32">
+                                                                    @endif
+
+                                                                    <a href="{{ route('service-providers.show', $sp->id) }}"
+                                                                        class="text-primary fw-semibold">
+                                                                        {{ $sp->name }}
+                                                                    </a>
                                                                 </div>
                                                             </td>
-                                                            <td>{{ $sp->type->name ?? 'N/A' }}</td>
+                                                            <td>
+                                                                {{ $sp->type->name ?? 'N/A' }}</td>
                                                             <td>
                                                                 <span
                                                                     class="badge {{ $sp->is_active ? 'bg-label-success' : 'bg-label-danger' }}">
@@ -1239,6 +1278,111 @@
                         }
                     }
                 ]
+            });
+
+            // Initialize Providers DataTable
+            const providersTable = $('.providers-table').DataTable({
+                responsive: true,
+                lengthChange: true,
+                order: [
+                    [1, 'asc']
+                ],
+                layout: {
+                    topStart: {
+                        rowClass: 'row mx-3 my-0 justify-content-between',
+                        features: [{
+                            pageLength: {
+                                menu: [7, 10, 25, 50, 100],
+                                text: 'Show _MENU_ entries'
+                            }
+                        }]
+                    },
+                    topEnd: {
+                        search: {
+                            placeholder: 'Search...'
+                        }
+                    },
+                    bottomStart: {
+                        rowClass: 'row mx-3 justify-content-between',
+                        features: ['info']
+                    },
+                    bottomEnd: 'paging'
+                },
+                displayLength: 7,
+                language: {
+                    paginate: {
+                        next: '<i class="icon-base ti tabler-chevron-right scaleX-n1-rtl icon-18px"></i>',
+                        previous: '<i class="icon-base ti tabler-chevron-left scaleX-n1-rtl icon-18px"></i>',
+                        first: '<i class="icon-base ti tabler-chevrons-left scaleX-n1-rtl icon-18px"></i>',
+                        last: '<i class="icon-base ti tabler-chevrons-right scaleX-n1-rtl icon-18px"></i>'
+                    }
+                },
+                buttons: [{
+                        extend: 'csv',
+                        title: 'Providers',
+                        filename: 'Providers_' + new Date().toISOString().slice(0, 10),
+                        className: 'd-none',
+                        exportOptions: {
+                            columns: ':not(:last-child)',
+                            format: {
+                                body: exportFormatter
+                            }
+                        }
+                    },
+                    {
+                        extend: 'excel',
+                        title: 'Providers',
+                        filename: 'Providers_' + new Date().toISOString().slice(0, 10),
+                        className: 'd-none',
+                        exportOptions: {
+                            columns: ':not(:last-child)',
+                            format: {
+                                body: exportFormatter
+                            }
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        title: 'Providers',
+                        filename: 'Providers_' + new Date().toISOString().slice(0, 10),
+                        className: 'd-none',
+                        exportOptions: {
+                            columns: ':not(:last-child)',
+                            format: {
+                                body: exportFormatter
+                            }
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Providers',
+                        className: 'd-none',
+                        exportOptions: {
+                            columns: ':not(:last-child)',
+                            format: {
+                                body: exportFormatter
+                            }
+                        }
+                    }
+                ]
+            });
+
+            // Export triggers for Providers
+            $('#providers-export-csv').on('click', e => {
+                e.preventDefault();
+                providersTable.button(0).trigger();
+            });
+            $('#providers-export-excel').on('click', e => {
+                e.preventDefault();
+                providersTable.button(1).trigger();
+            });
+            $('#providers-export-pdf').on('click', e => {
+                e.preventDefault();
+                providersTable.button(2).trigger();
+            });
+            $('#providers-export-print').on('click', e => {
+                e.preventDefault();
+                providersTable.button(3).trigger();
             });
 
             // Export triggers for Products
